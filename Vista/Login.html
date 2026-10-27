@@ -1,42 +1,36 @@
-
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <title>Iniciar Sesión - CLUB ADSO</title>
-    <!-- Ruta actualizada a tu archivo principal -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLUB ADSO - Iniciar Sesión</title> 
     <link rel="stylesheet" href="../Assets/css/estilos.css">
 </head>
+
 <body>
-    <div class="login-container">
-        <h2>Iniciar Sesión</h2>
-        <p class="subtitle">Bienvenido de nuevo a Acerias</p>
+    <div class="contenedor-registro">
+        <h2>Iniciar Sesión - Acerías</h2>
 
         <form id="formLogin" action="" method="post">
             <div class="grupo-input">
-                <label for="DocumentoLogin">Documento:</label>
-                <input id="DocumentoLogin" type="number" required placeholder="Ejemplo: 1057000111">
+                <label for="Email">Correo Electrónico:</label>
+                <input type="email" id="Email" required placeholder="correo@ejemplo.com">
             </div>
 
             <div class="grupo-input">
                 <label for="Password">Contraseña:</label>
-                <input id="Password" type="password" required placeholder="Ingresa tu contraseña">
-            </div>
-
-            <div class="opciones-extra">
-                <label class="recordar">
-                    <input type="checkbox"> Recordarme
-                </label>
-                <a href="#" class="link-olvido">¿Olvidaste tu contraseña?</a>
+                <input type="password" id="Password" required placeholder="Ingrese su contraseña">
             </div>
 
             <div class="grupo-botones">
-                <button type="submit" class="btn-ingresar">Ingresar</button>
+                <button type="submit">Ingresar</button>
+                <button type="reset" class="btn-secundario">Cancelar</button>
             </div>
             
-            <div class="registro-link">
-                <p>¿No tienes una cuenta? <a href="registro.html">Regístrate aquí</a></p>
-            </div>
+            <p class="texto-link">
+                ¿No tienes una cuenta? <a href="registro.html">Regístrate aquí</a>
+            </p>
         </form>
     </div>
 </body>
+<script src="../Controladores/login.js"></script>
 </html>
