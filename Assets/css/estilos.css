@@ -5,7 +5,7 @@
 }
 
 body{
-    background-color: rgb(231, 178, 108);
+    background-color: rgb(196, 114, 82);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -229,4 +229,83 @@ button[type="submit"]{
     background-color: rgb(11, 180, 124);
     color: white;
 
+}
+
+/*Actividades, Asociados, Pagos y Prestamos*/
+:root {
+    --neon-green: #d4ff00;
+    --bg-dark: #881c1c;
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --text-main: #e0e4ea;
+    --text-muted: #e1e8f0;
+}
+
+body-gestion {
+    background-color: #9ac556; /* Marrón rojizo profundo */
+    color: #ca770b; /* Terracota para los textos principales */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    padding-top: 100px;
+    padding-bottom: 2rem;
+}
+
+/* Menú de Navegación */
+.navbar-custom {
+    background: rgba(124, 31, 31, 0.95);
+    border-bottom: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+}
+
+.navbar-custom .nav-link {
+    color: var(--text-main);
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.navbar-custom .nav-link:hover, .navbar-custom .nav-link.active {
+    color: var(--neon-green);
+}
+
+/* Tarjetas y Formularios */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.form-control, .form-select {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    color: var(--text-main);
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: var(--neon-green);
+    color: #ffffff;
+    box-shadow: 0 0 0 0.25rem rgba(212, 255, 0, 0.25);
+}
+
+.form-label { 
+    font-size: 0.9rem; 
+    color: var(--text-muted); 
+}
+
+.btn-custom {
+    background-color: var(--neon-green);
+    color: #121212;
+    font-weight: 600;
+    border: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-custom:hover {
+    background-color: #b5db00;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(212, 255, 0, 0.3);
 }
