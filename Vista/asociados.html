@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Asociados</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="../Assets/css/estilos.css">
+</head>
+
+<body class="body-gestion">
+
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+        <div class="container">
+            <a class="navbar-brand" style="color: var(--neon-green); font-weight: bold;" href="#">
+                <i class="bi bi-layers-fill"></i> GESTIÓN
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="asociados.html"><i class="bi bi-people"></i>
+                            Asociados</a></li>
+                    <li class="nav-item"><a class="nav-link" href="actividades.html"><i
+                                class="bi bi-calendar-event"></i> Actividades</a></li>
+                    <li class="nav-item"><a class="nav-link" href="pagos.html"><i class="bi bi-cash-coin"></i> Pagos</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="prestamos.html"><i class="bi bi-bank"></i>
+                            Préstamos</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="glass-card">
+                    <h3 class="mb-4 text-center" style="color: var(--neon-green);">
+                        <i class="bi bi-person-plus"></i> Registro de Asociado
+                    </h3>
+                    <form>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Documento de Identidad</label>
+                                <input type="number" class="form-control" placeholder="Ej. 1002345678" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Nombres Completos</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Apellidos Completos</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-control" placeholder="correo@ejemplo.com" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Teléfono / Celular</label>
+                                <input type="tel" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Fecha de Ingreso</label>
+                                <input type="date" class="form-control" required>
+                            </div>
+                            <div class="col-12 mt-4 text-end">
+                                <button type="submit" class="btn btn-custom px-4">Guardar Asociado</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
