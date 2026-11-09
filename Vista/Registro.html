@@ -10,35 +10,35 @@
     <div class="contenedor-formulario">
         <h2> Registro de Asociado - Acerias </h2>
 
-        <form id="formRegistro" action="" method="post">
+        <form id="formRegistro" action="../Modelo/guardarAsociado.php" method="post">
             <div class="grupo-input">
                 <label> Ingresar Documento: </label>
-                <input id="Documento" type="number" placeholder="ejemplo: 1057000111">
+                <input id="Documento" name="documento" type="number" placeholder="ejemplo: 1057000111">
             </div>
 
             <div class="grupo-input">
                 <label>Nombre: </label>
-                <input type="text" id="Nombre" required placeholder="Ingrese nombres completos">
+                <input type="text" id="Nombre" name="nombre" required placeholder="Ingrese nombres completos">
             </div>
 
             <div class="grupo-input">
                 <label>Apellido: </label>
-                <input type="text" id="Apellido" required placeholder="Ingrese apellidos completos">
+                <input type="text" id="Apellido" name="apellido" required placeholder="Ingrese apellidos completos">
             </div>
 
             <div class="grupo-input">
                 <label>Fecha de Nacimiento: </label>
-                <input type="date" id="fechaNacimiento">
+                <input type="date" id="fechaNacimiento" name="fecha_nacimiento">
             </div>
 
             <div class="grupo-input">
                 <label>Direccion de Residencia: </label>
-                <input type="text" id="direccionResidencia" required placeholder="Ejm: Calle">
+                <input type="text" id="direccionResidencia" name="direccion_residencia" required placeholder="Ejm: Calle">
             </div>
 
             <div class="grupo-input">
                 <label>Ciudad: </label>
-                <select id="ciudad" required>
+                <select id="ciudad" name="ciudad" required>
                     <option value="Sogamoso"> Sogamoso </option>
                     <option value="Duitama"> Duitama </option>
                     <option value="Tunja"> Tunja </option>
@@ -47,28 +47,38 @@
 
             <div class="grupo-input">
                 <label>Telefono: </label>
-                <input type="text" id="Telefono" required placeholder="3122478951">
+                <input type="text" id="Telefono" name="telefono" required placeholder="3122478951">
             </div>
 
             <div class="grupo-input">
                 <label>Email: </label>
-                <input type="email" id="Email" required placeholder="correo@ejemplo.com">
+                <input type="email" id="Email" name="email" required placeholder="correo@ejemplo.com">
+            </div>
+
+            <div class="grupo-input">
+                <label>Contraseña: </label> 
+                <input type="password" id="password" name="password_hash" minlength="8" required placeholder="Minimo 8 caracteres">
+            </div>
+
+            <div class="grupo-input">
+                <label>Confirmar Contraseña: </label> 
+                <input type="password" id="ConfirmarPassword" name="confirmar_password" minlength="8" required placeholder="Ingrese su contraseña nuevamente">
             </div>
 
             <div class="grupo-input">
                 <label> Género</label>
                 <label>
-                    <input type="radio" id="femenino" name="genero" values="femenino">
+                    <input type="radio" id="femenino" name="genero" value="femenino">
                     <span> Femenino</span>
                 </label>
 
                 <label>
-                    <input type="radio" id="masculino" name="genero" values="masculino">
+                    <input type="radio" id="masculino" name="genero" value="masculino">
                     <span> Masculino</span>
                 </label>
 
                 <label>
-                    <input type="radio" id="otro" name="genero" values="otro">
+                    <input type="radio" id="otro" name="genero" value="otro">
                     <span> Otro</span>
                 </label>
 
@@ -78,9 +88,10 @@
                 <button type="submit"> Guardar </button>
                 <button type="reset"> Limpiar Formulario </button>
             </div>
-
+            <p id="mensajeRegistro" role="status" aria-live="polite"></p>
         </form>
     </div>
+     <script src="../Controladores/asociados.js"></script>
 </body>
 
 </html>
