@@ -20,7 +20,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function cerrarSesion() {
+async function cerrarSesion() {
+    try{
+    const respuesta = await fetch("../Modelo/cerrarSesion.php",{Method:"POST"});
+
+    if (!respuesta.ok) {
+        throw new Error("Error al cerrar sesión");
+    }
+
     localStorage.clear();
     window.location.href = '../Vista/login.html';
+    }catch(error){
+        console.error('Error al cerrar sesión:', error);
+    }
 }

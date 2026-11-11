@@ -1,8 +1,9 @@
 <html lang="es">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLUB ADSO - Iniciar Sesión</title> 
+    <title>CLUB ADSO - Iniciar Sesión</title>
     <link rel="stylesheet" href="../Assets/css/estilos.css">
 </head>
 
@@ -10,7 +11,7 @@
     <div class="contenedor-registro">
         <h2>Iniciar Sesión - Acerías</h2>
 
-        <form id="formLogin" action="" method="post">
+        <form id="formLogin" action="../Modelo/iniciarSesion.php" method="post">
             <div class="grupo-input">
                 <label for="Email">Correo Electrónico:</label>
                 <input type="email" id="Email" required placeholder="correo@ejemplo.com">
@@ -25,12 +26,19 @@
                 <button type="submit">Ingresar</button>
                 <button type="reset" class="btn-secundario">Cancelar</button>
             </div>
-            
             <p class="texto-link">
-                ¿No tienes una cuenta? <a href="registro.html">Regístrate aquí</a>
+                ¿No tienes una cuenta?
+                <a href="registro.html">Regístrate aquí</a>
             </p>
+
+            <div class="mensajeLogin">
+                <!-- Mensajes de error o éxito se mostrarán aquí -->
+            </div>
+            <p id="mensajeLogin" class="text-danger mt-3 mb-0" role="alert"></p>
+
         </form>
     </div>
 </body>
 <script src="../Controladores/login.js"></script>
+
 </html>

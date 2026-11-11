@@ -1,43 +1,79 @@
-const formulario = document.getElementById("formRegistro");
+const formulario = document.getElementById("formRegistro") || document.getElementById("formAsociados");
 
-formulario.addEventListener("submit", async function (event) {
-    //evita recargar la pag al enviar el formulario
-    event.preventDefault();
+if (formulario) {
+    formulario.addEventListener("submit", async function (event) {
+        event.preventDefault();
 
-    const botonGuardar = formulario.querySelector('button[type="submit"]');
+        const botonGuardar = formulario.querySelector('button[type="submit"]');
+        const Asociado = Object.fromEntries(new FormData(formulario).entries());
+        const mensajeEl = document.getElementById("mensajeRegistro");
 
-    // Lee los campos del formulario y los convierte en un objeto
-    const asociado = Object.fromEntries(new FormData(formulario).entries());
+        // Validar coincidencia de contraseñas si existe campo de confirmación
+        const pass = Asociado.contraseña || Asociado.contrasena || Asociado.password || Asociado.clave;
+        const confirmPass = Asociado.confirmarContraseña || Asociado.confirmarContrasena || Asociado.confirmPassword;
 
-    if (asociado.password_hash !== asociado.confirmar_password) {
-        document.getElementById("mensajeRegistro").textContent = "Las contraseñas no coinciden.";
-        return;
-    }
-
-    delete asociado.confirmar_password; // Elimina el campo de confirmación de contraseña antes de enviarlo al servidor
-
-    botonGuardar.disabled = true; // Deshabilita el botón de guardar mientras se procesa la solicitud
-    try {
-        const respuesta = await fetch(formulario.action, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(asociado) });
-        
-        //pasar la respuesta Json a un objeto de JS
-        const resultado = await respuesta.json();
-        document.getElementById("mensajeRegistro").textContent = "Guardando...";
-
-        //limpia cualquier mensaje previo
-        document.getElementById("mensajeRegistro").dataset.tipo='';
-
-        document.getElementById("mensajeRegistro").textContent = resultado.mensaje;
-
-        if(respuesta.ok && resultado.success) {
-            formulario.reset(); // Limpia el formulario si la respuesta es exitosa
+        if (confirmPass !== undefined && confirmPass !== "" && pass !== confirmPass) {
+            if (mensajeEl) {
+                mensajeEl.textContent = "Las contraseñas no coinciden.";
+                mensajeEl.style.color = "red";
+                mensajeEl.style.fontWeight = "bold";
+            } else {
+                alert("Las contraseñas no coinciden.");
+            }
+            return;
         }
 
-    } catch (error) {
-        console.error("Error al enviar el formulario:", error);
-        document.getElementById("mensajeRegistro").textContent = "Error al enviar el formulario. Por favor, inténtelo de nuevo.";
-    }finally {
-        botonGuardar.disabled = false; // Habilita el botón de guardar después de procesar la solicitud
-    }
+        // Limpiar confirmación y asegurar campo contraseña
+        delete Asociado.confirmarContraseña;
+        delete Asociado.confirmarContrasena;
+        delete Asociado.confirmPassword;
+        Asociado.contraseña = pass;
 
-});
+        if (botonGuardar) botonGuardar.disabled = true;
+
+        if (mensajeEl) {
+            mensajeEl.textContent = "Guardando...";
+            mensajeEl.style.color = "#333";
+            mensajeEl.style.fontWeight = "bold";
+        }
+
+        try {
+            const urlDestino = formulario.action || '../Modelo/guardarAsociado.php';
+            const respuesta = await fetch(urlDestino, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(Asociado)
+            });
+
+            let resultado;
+            try {
+                resultado = await respuesta.json();
+            } catch {
+                throw new Error(`El servidor respondió con HTTP ${respuesta.status}, pero no devolvió JSON.`);
+            }
+
+            if (mensajeEl) {
+                mensajeEl.textContent = resultado.message;
+                mensajeEl.style.color = resultado.success ? "green" : "red";
+                mensajeEl.style.fontWeight = "bold";
+                mensajeEl.style.marginTop = "10px";
+            } else {
+                alert(resultado.message);
+            }
+
+            if (respuesta.ok && resultado.success) {
+                formulario.reset();
+            }
+        } catch (error) {
+            console.error("Error al enviar el formulario: ", error);
+            if (mensajeEl) {
+                mensajeEl.textContent = error.message || "Ocurrió un error al enviar el formulario.";
+                mensajeEl.style.color = "red";
+            } else {
+                alert(error.message || "Ocurrió un error al enviar el formulario.");
+            }
+        } finally {
+            if (botonGuardar) botonGuardar.disabled = false;
+        }
+    });
+}

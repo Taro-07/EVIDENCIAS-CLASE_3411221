@@ -5,27 +5,28 @@ class Asociado {
     private $documento;
     private $nombres;
     private $apellidos;
-    private $direccionResidencia;
+    private $DireccionResidencia;
     private $ciudad;
     private $telefono;
     private $email;
     private $genero;
-    private $fechaNacimiento;
-    private $password_hash;
-
+    private $FechaNacimiento;
+    private $contrasena;
+    private $rol;
     private $conexion;
 
     public function __construct($datos) {
         $this->documento = $datos['documento'] ?? '';
         $this->nombres = $datos['nombres'] ?? '';
         $this->apellidos = $datos['apellidos'] ?? '';
-        $this->direccionResidencia = $datos['direccionResidencia'] ?? ($datos['direcciónResidencia'] ?? '');
+        $this->DireccionResidencia = $datos['DireccionResidencia'] ?? ($datos['DirecciónResidencia'] ?? '');
         $this->ciudad = $datos['ciudad'] ?? '';
         $this->telefono = $datos['telefono'] ?? '';
         $this->email = $datos['email'] ?? '';
-        $this->genero = $datos['genero'] ?? '';
-        $this->fechaNacimiento = $datos['fechaNacimiento'] ?? '';
-        $this->password_hash = password_hash($datos['password_hash'] ?? '', PASSWORD_DEFAULT);
+        $this->genero = $datos['genero'] ?? 'Otro';
+        $this->FechaNacimiento = $datos['FechaNacimiento'] ?? '';
+        $this->contrasena = $datos['contrasena'] ?? ($datos['clave'] ?? ($datos['password'] ?? ''));
+        $this->rol = $datos['rol'] ?? ($datos['Rol'] ?? 'Asociado');
 
         $conexion = new Conexion();
         $this->conexion = $conexion->conectar();
@@ -36,23 +37,24 @@ class Asociado {
             ":documento" => $this->documento,
             ":nombres" => $this->nombres,
             ":apellidos" => $this->apellidos,
-            ":direccionResidencia" => $this->direccionResidencia,
+            ":DireccionResidencia" => $this->DireccionResidencia,
             ":ciudad" => $this->ciudad,
             ":telefono" => $this->telefono,
             ":email" => $this->email,
             ":genero" => $this->genero,
-            ":fechaNacimiento" => $this->fechaNacimiento,
-            ":password_hash" => $this->password_hash,
+            ":FechaNacimiento" => $this->FechaNacimiento,
+            ":contrasena" => $this->contrasena,
+            ":rol" => $this->rol
         ];
 
         try {
-            $sql = "INSERT INTO asociados (documento, nombres, apellidos, direccionResidencia, ciudad, telefono, email, genero, fechaNacimiento, password_hash) VALUES (:documento, :nombres, :apellidos, :direccionResidencia, :ciudad, :telefono, :email, :genero, :fechaNacimiento, :password_hash)";
+            $sql = "INSERT INTO asociados (documento, nombres, apellidos, DireccionResidencia, ciudad, telefono, email, genero, FechaNacimiento, contrasena, Rol) VALUES (:documento, :nombres, :apellidos, :DireccionResidencia, :ciudad, :telefono, :email, :genero, :FechaNacimiento, :contrasena, :rol)";
             $consulta = $this->conexion->prepare($sql);
             return $consulta->execute($params);
         } catch (PDOException $e) {
             // Compatibilidad por si la columna en MySQL fue creada con tilde (`direcciónResidencia`)
-            if (strpos($e->getMessage(), 'direccionResidencia') !== false) {
-                $sql = "INSERT INTO asociados (documento, nombres, apellidos, `direcciónResidencia`, ciudad, telefono, email, genero, fechaNacimiento, password_hash) VALUES (:documento, :nombres, :apellidos, :direccionResidencia, :ciudad, :telefono, :email, :genero, :fechaNacimiento, :password_hash)";
+            if (strpos($e->getMessage(), 'DireccionResidencia') !== false) {
+                $sql = "INSERT INTO asociados (documento, nombres, apellidos, `direcciónResidencia`, ciudad, telefono, email, genero, FechaNacimiento, contrasena, Rol) VALUES (:documento, :nombres, :apellidos, :DireccionResidencia, :ciudad, :telefono, :email, :genero, :FechaNacimiento, :contrasena, :rol)";
                 $consulta = $this->conexion->prepare($sql);
                 return $consulta->execute($params);
             }

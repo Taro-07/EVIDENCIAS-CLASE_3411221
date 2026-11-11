@@ -1,97 +1,75 @@
+<!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CLUB ADSO</title>
-    <link rel="stylesheet" href="../Assets/css/estilos.css">
+    <link rel="stylesheet" href="../assets/css/estilos.css">
 </head>
-
 <body>
     <div class="contenedor-formulario">
-        <h2> Registro de Asociado - Acerias </h2>
-
-        <form id="formRegistro" action="../Modelo/guardarAsociado.php" method="post">
+        <h2>Registro de Asociados Acerias</h2>
+        <form id="formRegistro" action="../modelo/guardarAsociado.php" method="POST">
             <div class="grupo-input">
-                <label> Ingresar Documento: </label>
-                <input id="Documento" name="documento" type="number" placeholder="ejemplo: 1057000111">
+                <label for="documento">Documento</label> 
+                <input id="documento" name="documento" type="number" required placeholder="ej: 1012345678">
             </div>
-
             <div class="grupo-input">
-                <label>Nombre: </label>
-                <input type="text" id="Nombre" name="nombre" required placeholder="Ingrese nombres completos">
+                <label for="nombres">Nombre</label>
+                <input id="nombres" name="nombres" type="text" required placeholder="ej: Juana">
             </div>
-
             <div class="grupo-input">
-                <label>Apellido: </label>
-                <input type="text" id="Apellido" name="apellido" required placeholder="Ingrese apellidos completos">
+                <label for="apellidos">Apellido</label>
+                <input id="apellidos" name="apellidos" type="text" required placeholder="ej: Gonzalez">
             </div>
-
             <div class="grupo-input">
-                <label>Fecha de Nacimiento: </label>
-                <input type="date" id="fechaNacimiento" name="fecha_nacimiento">
+                <label for="telefono">Teléfono</label>
+                <input id="telefono" name="telefono" type="tel" required placeholder="ej: 3001234567">
             </div>
-
             <div class="grupo-input">
-                <label>Direccion de Residencia: </label>
-                <input type="text" id="direccionResidencia" name="direccion_residencia" required placeholder="Ejm: Calle">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" required placeholder="ej: juana@gmail.com">
             </div>
-
             <div class="grupo-input">
-                <label>Ciudad: </label>
+                <label for="FechaNacimiento">Fecha de nacimiento</label>
+                <input id="FechaNacimiento" name="FechaNacimiento" type="date" required>
+            </div>
+            <div class="grupo-input">
+                <label for="DireccionResidencia">Dirección</label>
+                <input id="DireccionResidencia" name="DireccionResidencia" type="text" required placeholder="ej: Cra 6 #15A-15">
+            </div>
+            <div class="grupo-input">
+                <label for="ciudad">Ciudad</label>
                 <select id="ciudad" name="ciudad" required>
-                    <option value="Sogamoso"> Sogamoso </option>
-                    <option value="Duitama"> Duitama </option>
-                    <option value="Tunja"> Tunja </option>
-                </select>
+                    <option value="" disabled selected>Seleccione una ciudad</option>
+                    <option value="Sogamoso">Sogamoso</option>
+                    <option value="Duitama">Duitama</option>
+                    <option value="Tunja">Tunja</option>
+                    <option value="Bogota">Bogotá</option>
+                </select>               
             </div>
-
             <div class="grupo-input">
-                <label>Telefono: </label>
-                <input type="text" id="Telefono" name="telefono" required placeholder="3122478951">
+                <label for="contrasena">Contraseña:</label>
+                <input type="password" id="contrasena" name="contrasena" minlength="4" autocomplete="new-password" required placeholder="Ingrese su contraseña">
             </div>
-
             <div class="grupo-input">
-                <label>Email: </label>
-                <input type="email" id="Email" name="email" required placeholder="correo@ejemplo.com">
+                <label for="confirmarContrasena">Confirmar Contraseña:</label>
+                <input type="password" id="confirmarContrasena" name="confirmarContrasena" minlength="4" autocomplete="new-password" required placeholder="Confirme su contraseña">
             </div>
-
             <div class="grupo-input">
-                <label>Contraseña: </label> 
-                <input type="password" id="password" name="password_hash" minlength="8" required placeholder="Minimo 8 caracteres">
+                <label>Género:</label>
+                <label><input type="radio" name="genero" value="Femenino" required> Femenino</label>
+                <label><input type="radio" name="genero" value="Masculino"> Masculino</label>
+                <label><input type="radio" name="genero" value="Otro"> Otro</label>
             </div>
-
-            <div class="grupo-input">
-                <label>Confirmar Contraseña: </label> 
-                <input type="password" id="ConfirmarPassword" name="confirmar_password" minlength="8" required placeholder="Ingrese su contraseña nuevamente">
-            </div>
-
-            <div class="grupo-input">
-                <label> Género</label>
-                <label>
-                    <input type="radio" id="femenino" name="genero" value="femenino">
-                    <span> Femenino</span>
-                </label>
-
-                <label>
-                    <input type="radio" id="masculino" name="genero" value="masculino">
-                    <span> Masculino</span>
-                </label>
-
-                <label>
-                    <input type="radio" id="otro" name="genero" value="otro">
-                    <span> Otro</span>
-                </label>
-
-            </div>
-
             <div class="grupo-botones">
-                <button type="submit"> Guardar </button>
-                <button type="reset"> Limpiar Formulario </button>
+                <button type="submit">Guardar</button>
+                <button type="reset">Limpiar Formulario</button>
             </div>
             <p id="mensajeRegistro" role="status" aria-live="polite"></p>
         </form>
     </div>
-     <script src="../Controladores/asociados.js"></script>
+    <!-- Dejar solo la ruta correcta de tu script -->
+    <script src="../Controlador/Asociado.js"></script>
 </body>
-
 </html>
