@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const logueado = localStorage.getItem('logueado');
 
     if (logueado !== 'true') {
-        window.location.href = 'login.html';
+        window.location.href = 'Vista/Login.html';
         return;
     }
 
@@ -29,7 +29,7 @@ async function cerrarSesion() {
     }
 
     localStorage.clear();
-    window.location.href = '../Vista/login.html';
+    window.location.href = '../Vista/Login.html';
     }catch(error){
         console.error('Error al cerrar sesión:', error);
     }

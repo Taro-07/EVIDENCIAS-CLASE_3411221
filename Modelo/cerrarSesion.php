@@ -22,4 +22,4 @@ session_destroy();
 echo json_encode([
     "success" => true,
     "mensaje" => "Sesión cerrada correctamente"
-]);,,,
+]);

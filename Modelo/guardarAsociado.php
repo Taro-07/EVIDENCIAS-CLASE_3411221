@@ -1,6 +1,6 @@
 <?php
 header("Content-Type: application/json; charset=utf-8");
-require_once __DIR__.'/../Modelos/asociado.php';
+require_once __DIR__.'/../Modelo/asociado.php';
 
 try {
     if($_SERVER['REQUEST_METHOD']!=='POST'){
@@ -20,7 +20,7 @@ try {
         $datos = $_POST;
     }
 
-    $campos=["documento","nombres","apellidos","FechaNacimiento","genero","DireccionResidencia","ciudad","telefono","email","contrasena"];
+    $campos=["documento","nombres","apellidos","FechaNacimiento","genero","DireccionResidencia","ciudad","telefono","email","contraseña"];
     foreach($campos as $campo){ 
         if (!isset($datos[$campo])) {
             http_response_code(400);
@@ -32,30 +32,25 @@ try {
         throw new Exception("Email invalido");
     }
 
-  // Instanciar y ejecutar el guardado una sola vez
     $asociado = new Asociado($datos);
     $resultado = $asociado->guardar();
 
-    if ($resultado) {
+    if($resultado){
         http_response_code(201);
-        echo json_encode(["success" => true, "mensaje" => "Asociado guardado con exito"]);
+        echo json_encode(["success" => true, "mensaje" => "Asociado guardado con exito", "redirect" => "../Vista/Login.html"]);
     } else {
         http_response_code(500);
         echo json_encode(["success" => false, "mensaje" => "Error al guardar el asociado"]);
     }
-
-} catch (PDOException $e) {
-    if ($e->getCode() == 23000) {
+    
+}catch (PDOException $e) {
+    if($e->getCode() == 23000){
         http_response_code(409);
         echo json_encode(["success" => false, "mensaje" => "El documento ya existe en la base de datos"]);
-    } else {
+    }else{  
         http_response_code(500);
         echo json_encode(["success" => false, "mensaje" => "Error en la base de datos: " . $e->getMessage()]);
     }
-} catch (Exception $e) {
-    if (http_response_code() === 200) {
-        http_response_code(400);
-    }
+}catch (Exception $e) {
     echo json_encode(["success" => false, "mensaje" => $e->getMessage()]);
 }
-?>

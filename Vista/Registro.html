@@ -9,7 +9,7 @@
 <body>
     <div class="contenedor-formulario">
         <h2>Registro de Asociados Acerias</h2>
-        <form id="formRegistro" action="../modelo/guardarAsociado.php" method="POST">
+        <form id="formRegistro" action="../Modelo/guardarAsociado.php" method="POST">
             <div class="grupo-input">
                 <label for="documento">Documento</label> 
                 <input id="documento" name="documento" type="number" required placeholder="ej: 1012345678">
@@ -50,11 +50,11 @@
             </div>
             <div class="grupo-input">
                 <label for="contrasena">Contraseña:</label>
-                <input type="password" id="contrasena" name="contrasena" minlength="4" autocomplete="new-password" required placeholder="Ingrese su contraseña">
+                <input type="password" id="contrasena" name="contraseña" minlength="4" autocomplete="new-password" required placeholder="Ingrese su contraseña">
             </div>
             <div class="grupo-input">
                 <label for="confirmarContrasena">Confirmar Contraseña:</label>
-                <input type="password" id="confirmarContrasena" name="confirmarContrasena" minlength="4" autocomplete="new-password" required placeholder="Confirme su contraseña">
+                <input type="password" id="confirmarContrasena" name="confirmarContraseña" minlength="4" autocomplete="new-password" required placeholder="Confirme su contraseña">
             </div>
             <div class="grupo-input">
                 <label>Género:</label>
@@ -70,6 +70,6 @@
         </form>
     </div>
     <!-- Dejar solo la ruta correcta de tu script -->
-    <script src="../Controlador/Asociado.js"></script>
+    <script src="../Controladores/asociado.js"></script>
 </body>
 </html>
