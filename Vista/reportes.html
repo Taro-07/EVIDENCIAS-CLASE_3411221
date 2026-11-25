@@ -1,0 +1,192 @@
+<!-- Declara documento HTML5 -->
+<!DOCTYPE html>
+<!-- Idioma español -->
+<html lang="es">
+
+<!-- Cabecera con Bootstrap, Bootstrap Icons y la hoja de estilos del proyecto -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes Financieros y Saldos - CLUB ADSO</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="../Assets/css/estilos.css?v=10">
+</head>
+
+<!-- Vista exclusiva para rol Admin con la paleta morada y clara del panel principal -->
+<body class="body-gestion">
+
+    <!-- Barra de navegación superior fija (se oculta automáticamente al imprimir) -->
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top no-print">
+        <div class="container">
+            <!-- Marca GESTIÓN con redirección al panel principal -->
+            <a class="navbar-brand" style="color: var(--neon-green); font-weight: bold;" href="dashboard.html?v=4">
+                <i class="bi bi-layers-fill"></i> GESTIÓN
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link" href="asociados.html?v=4"><i class="bi bi-people"></i>
+                            Asociados</a></li>
+                    <li class="nav-item"><a class="nav-link" href="actividades.html?v=3"><i
+                                class="bi bi-calendar-event"></i> Actividades</a></li>
+                    <li class="nav-item"><a class="nav-link" href="pagos.html?v=4"><i class="bi bi-cash-coin"></i>
+                            Pagos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="prestamos.html?v=3"><i class="bi bi-bank"></i>
+                            Préstamos</a></li>
+                    <!-- Apartado activo actual: Reportes -->
+                    <li class="nav-item"><a class="nav-link active" href="reportes.html?v=1"><i
+                                class="bi bi-graph-up-arrow"></i> Reportes</a></li>
+                    <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+                        <button type="button" class="btn btn-danger btn-sm btn-cerrar-sesion" onclick="cerrarSesion()">
+                            <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido principal de reportes -->
+    <div class="container">
+        <!-- Encabezado con título, subtítulo y botones de imprimir / volver al panel -->
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+            <div>
+                <h2 class="titulo-reportes-admin mb-1">
+                    <i class="bi bi-graph-up-arrow me-2"></i>Reportes: Consultas y Saldos
+                </h2>
+                <p class="subtitulo-reportes-admin mb-0">
+                    Balance financiero global, cartera de préstamos y recaudos del club
+                </p>
+            </div>
+            <div class="d-flex gap-2 no-print">
+                <button type="button" class="btn btn-imprimir-reporte" onclick="window.print()">
+                    <i class="bi bi-printer me-1"></i>Imprimir Reporte
+                </button>
+                <a href="dashboard.html?v=4" class="btn btn-volver-admin">
+                    <i class="bi bi-arrow-left me-1"></i>Volver al Panel
+                </a>
+            </div>
+        </div>
+
+        <!-- Alerta en caso de error al consultar reportes -->
+        <div id="alertaReportes" class="alert alert-danger d-none mb-4" role="alert"></div>
+
+        <!-- 4 tarjetas KPI de resumen financiero global -->
+        <div class="row g-3 mb-4 kpi-row-print">
+            <div class="col-sm-6 col-xl-3">
+                <div class="kpi-card kpi-prestado">
+                    <div>
+                        <div class="kpi-etiqueta">TOTAL PRESTADO</div>
+                        <div id="kpiTotalPrestado" class="kpi-valor">$ 0</div>
+                    </div>
+                    <i class="bi bi-cash-stack kpi-icono"></i>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="kpi-card kpi-pagado">
+                    <div>
+                        <div class="kpi-etiqueta">TOTAL PAGADO CUOTAS</div>
+                        <div id="kpiTotalPagado" class="kpi-valor">$ 0</div>
+                    </div>
+                    <i class="bi bi-check-circle kpi-icono"></i>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="kpi-card kpi-cartera">
+                    <div>
+                        <div class="kpi-etiqueta">CARTERA PENDIENTE</div>
+                        <div id="kpiCarteraPendiente" class="kpi-valor">$ 0</div>
+                    </div>
+                    <i class="bi bi-exclamation-octagon kpi-icono"></i>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="kpi-card kpi-actividades">
+                    <div>
+                        <div class="kpi-etiqueta">RECAUDO ACTIVIDADES</div>
+                        <div id="kpiRecaudoActividades" class="kpi-valor">$ 0</div>
+                    </div>
+                    <i class="bi bi-calendar-event kpi-icono"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla 1: Estados de Cuenta y Cartera por Asociado -->
+        <div class="card reporte-card shadow-sm mb-4">
+            <div class="card-header reporte-card-header d-flex flex-wrap justify-content-between align-items-center gap-3 py-3 px-4">
+                <h5 class="mb-0 fw-bold titulo-bloque-reporte">
+                    <i class="bi bi-people-fill me-2"></i>Estados de Cuenta y Cartera por Asociado
+                </h5>
+                <div class="buscador-cartera no-print">
+                    <i class="bi bi-search"></i>
+                    <input type="text" id="buscarCartera" class="form-control form-control-sm" placeholder="Buscar por nombre o doc">
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">Documento</th>
+                            <th scope="col">Asociado</th>
+                            <th scope="col">Teléfono</th>
+                            <th scope="col" class="text-center">N° Créditos</th>
+                            <th scope="col">Total Prestado</th>
+                            <th scope="col">Total Pagado</th>
+                            <th scope="col">Saldo Pendiente</th>
+                            <th scope="col">Estado de Cartera</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaCarteraAsociados">
+                        <tr>
+                            <td colspan="8" class="text-center py-4 text-muted">
+                                Cargando estados de cuenta...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tabla 2: Balance Histórico de Actividades y Distribución (50% Club / 50% Asociados) -->
+        <div class="card reporte-card shadow-sm mb-4">
+            <div class="card-header reporte-card-header py-3 px-4">
+                <h5 class="mb-0 fw-bold titulo-bloque-reporte">
+                    <i class="bi bi-trophy-fill me-2"></i>Balance Histórico de Actividades y Distribución (50% Club / 50% Asociados)
+                </h5>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="thead-actividades-reporte">
+                        <tr>
+                            <th scope="col">Actividad</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Municipio</th>
+                            <th scope="col">Total Recaudado</th>
+                            <th scope="col" class="text-center">Participantes</th>
+                            <th scope="col">50% Club</th>
+                            <th scope="col">50% Distribuido</th>
+                            <th scope="col">Ganancia / Asociado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaBalanceActividades">
+                        <tr>
+                            <td colspan="8" class="text-center py-4 text-muted">
+                                Cargando balance de actividades...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts de Bootstrap, control de sesión y controlador de Reportes -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../Controladores/sesion.js?v=5"></script>
+    <script src="../Controladores/reportes.js?v=1"></script>
+</body>
+
+</html>

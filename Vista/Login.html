@@ -1,44 +1,65 @@
+<!-- Documento HTML en español para la pantalla de inicio de sesión -->
 <html lang="es">
 
+<!-- Cabecera: metadatos, título de la pestaña y hoja de estilos -->
 <head>
+    <!-- Codificación UTF-8 para soportar tildes y la letra ñ -->
     <meta charset="utf-8">
+    <!-- Hace que la vista se adapte correctamente a pantallas móviles y de escritorio -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Título que aparece en la pestaña del navegador -->
     <title>CLUB ADSO - Iniciar Sesión</title>
-    <link rel="stylesheet" href="../Assets/css/estilos.css">
+    <!-- Carga los estilos globales del proyecto -->
+    <link rel="stylesheet" href="../Assets/css/estilos.css?v=5">
 </head>
 
-<body>
+<!-- Cuerpo visible de la página con tema intermedio entre Admin y Asociado -->
+<body class="body-login">
+    <!-- Contenedor principal centrado para el formulario de acceso -->
     <div class="contenedor-registro">
+        <!-- Encabezado principal del formulario -->
         <h2>Iniciar Sesión - Acerías</h2>
+        <!-- Subtítulo descriptivo del club -->
+        <p class="subtitulo-login">Acceso al portal de asociados y administración</p>
 
+        <!-- Formulario que apunta a ../Modelo/Login.php (interceptado por login.js con fetch) -->
         <form id="formLogin" action="../Modelo/Login.php" method="post">
+            <!-- Campo para el correo electrónico del asociado -->
             <div class="grupo-input">
                 <label for="Email">Correo Electrónico:</label>
-                <input type="email" id="Email" required placeholder="correo@ejemplo.com">
+                <!-- name="email" permite que FormData envíe esta clave hacia Login.php -->
+                <input type="email" id="Email" name="email" required placeholder="correo@ejemplo.com">
             </div>
 
+            <!-- Campo para la contraseña del asociado -->
             <div class="grupo-input">
                 <label for="Password">Contraseña:</label>
-                <input type="password" id="Password" required placeholder="Ingrese su contraseña">
+                <!-- name="contraseña" coincide con la clave que valida Login.php -->
+                <input type="password" id="Password" name="contraseña" required placeholder="Ingrese su contraseña">
             </div>
 
+            <!-- Grupo de botones para enviar o limpiar el formulario -->
             <div class="grupo-botones">
                 <button type="submit">Ingresar</button>
                 <button type="reset" class="btn-secundario">Cancelar</button>
             </div>
+            <!-- Enlace hacia la pantalla de registro de nuevos asociados -->
             <p class="texto-link">
                 ¿No tienes una cuenta?
-                <a href="registro.html">Regístrate aquí</a>
+                <a href="Registro.html">Regístrate aquí</a>
             </p>
 
+            <!-- Contenedor auxiliar de mensajes -->
             <div class="mensajeLogin">
                 <!-- Mensajes de error o éxito se mostrarán aquí -->
             </div>
+            <!-- Párrafo donde login.js imprime alertas de error (ej. contraseña incorrecta) -->
             <p id="mensajeLogin" class="text-danger mt-3 mb-0" role="alert"></p>
 
         </form>
     </div>
+    <!-- Controlador JS que envía las credenciales por fetch y redirige al dashboard -->
+    <script src="../Controladores/login.js?v=2"></script>
 </body>
-<script src="../Controladores/login.js"></script>
 
 </html>

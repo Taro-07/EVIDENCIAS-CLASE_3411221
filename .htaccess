@@ -1,0 +1,12 @@
+# Verifica que el módulo mod_headers de Apache esté habilitado antes de aplicar reglas
+<IfModule mod_headers.c>
+    # Aplica estas cabeceras únicamente a archivos HTML, JS y CSS
+    <FilesMatch "\.(html|htm|js|css)$">
+        # Indica al navegador que no almacene en caché estas páginas para cargar siempre los últimos cambios
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        # Cabecera de compatibilidad con navegadores HTTP/1.0 para desactivar caché
+        Header set Pragma "no-cache"
+        # Marca el contenido como expirado inmediatamente
+        Header set Expires "0"
+    </FilesMatch>
+</IfModule>

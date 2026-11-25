@@ -1,26 +1,42 @@
+<!-- Declara documento HTML5 -->
 <!DOCTYPE html>
+<!-- Elemento raíz de la vista del panel principal -->
 <html lang="en">
 
+<!-- Cabecera con librerías Bootstrap, íconos y estilos propios del panel -->
 <head>
+    <!-- Codificación UTF-8 -->
     <meta charset="UTF-8">
+    <!-- Escala adaptable a móviles y escritorio -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Hoja de estilos de Bootstrap 5 desde CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <!-- Librería de íconos Bootstrap Icons desde CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- Título de la pestaña -->
     <title>Proyecto ADSO</title>
+    <!-- Estilos internos para los temas visuales del rol Admin y del rol Asociado -->
     <style>
-           .header-mr{
+        /* Encabezado superior por defecto (rol Admin: morado oscuro con texto blanco) */
+        .header-mr{
             background-color:rgb(102, 5, 86);
             color:white;
             padding: 20px 30px;
         }
+        /* Estilo base de cada tarjeta de módulo con borde superior azul y animación suave */
         .modulo-card{
             border-top:4px solid #0d6efd;
             border-radius: 10px;
-            transition: 0,2s;
+            transition: 0.2s;
             cursor:pointer;
             height:100%;
         }
+        /* Efecto de elevación al pasar el puntero sobre una tarjeta */
+        .modulo-card:hover {
+            transform: translateY(-4px);
+        }
 
+        /* Colores y tamaño de los íconos de cada módulo en el tema Admin */
         .icono-asociados {
             font-size: 45px;
             color: rgb(183, 0, 255);
@@ -40,69 +56,226 @@
             font-size: 45px;
             color: rgb(170, 17, 157);
         }
+
+        .icono-reportes {
+            font-size: 45px;
+            color: rgb(102, 5, 86);
+        }
+
+        /* Tema visual cálido y ameno aplicado por dashboard.js cuando el usuario tiene rol Asociado */
+        body.tema-asociado {
+            background: linear-gradient(160deg, #faf3ee 0%, #f3e2d6 55%, #ead0be 100%) !important;
+            min-height: 100vh;
+            color: #3d241c;
+        }
+
+        /* Encabezado superior vino profundo con degradado sutil */
+        body.tema-asociado .header-mr {
+            background: linear-gradient(90deg, #6e1b22 0%, #86252b 100%);
+            border-bottom: 3px solid #d49a6a;
+            box-shadow: 0 4px 16px rgba(110, 27, 34, 0.22);
+        }
+
+        /* Título del encabezado en marfil cálido muy legible */
+        body.tema-asociado .header-mr h3 {
+            color: #fff8f0;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        /* Nombre de usuario en tono crema suave */
+        body.tema-asociado #nombreUsuario {
+            color: #f7dfd0;
+            font-weight: 500;
+            margin-right: 8px;
+        }
+
+        /* Subtítulo de la sección en vino oscuro */
+        body.tema-asociado h5 {
+            color: #5c1d22;
+            letter-spacing: 0.2px;
+        }
+
+        /* Tarjetas claras cálidas con borde superior terracota-vino y sombra suave */
+        body.tema-asociado .modulo-card {
+            background: #fffdfb;
+            border: 1px solid #e6d3c5;
+            border-top: 4px solid #a83c32;
+            border-radius: 14px;
+            color: #3d241c;
+            box-shadow: 0 6px 20px rgba(110, 27, 34, 0.08) !important;
+            transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+        }
+
+        /* Elevación suave y realce cálido al pasar el cursor */
+        body.tema-asociado .modulo-card:hover {
+            transform: translateY(-5px);
+            border-top-color: #7c1f24;
+            box-shadow: 0 12px 26px rgba(110, 27, 34, 0.16) !important;
+        }
+
+        /* Títulos de tarjetas en vino elegante */
+        body.tema-asociado .modulo-card h4 {
+            color: #7c1f24 !important;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+
+        /* Subtítulo en marrón expreso */
+        body.tema-asociado .modulo-card strong {
+            color: #4a2c22;
+        }
+
+        /* Íconos en tonos terracota y cobre armónicos con el fondo */
+        body.tema-asociado .modulo-card .icono-asociados {
+            color: #a63a2f;
+        }
+
+        body.tema-asociado .modulo-card .icono-actividades {
+            color: #c25b38;
+        }
+
+        body.tema-asociado .modulo-card .icono-pagos {
+            color: #8f2933;
+        }
+
+        body.tema-asociado .modulo-card .icono-prestamos {
+            color: #b86a35;
+        }
+
+        /* Texto descriptivo en marrón suave de excelente contraste */
+        body.tema-asociado .modulo-card p {
+            color: #6e5348 !important;
+        }
     </style>
 </head>
 
+<!-- Cuerpo principal con fondo claro por defecto -->
 <body class="bg-light">
-    <div class="header-mr d-flex justify-content-between alling-items-center">
+    <!-- Banner superior con el título del club, nombre del usuario y botón de cierre de sesión -->
+    <div class="header-mr d-flex justify-content-between align-items-center">
         <h3>CLUB ACERIAS - Panel principal</h3>
         <div class="text-end">
+            <!-- dashboard.js reemplaza este texto con el nombre del usuario autenticado -->
             <small id="nombreUsuario">Abby Gelvez</small>
+            <!-- Botón que invoca la función cerrarSesion() definida en dashboard.js -->
             <button class="btn btn-danger btn-sm mt-1" onclick="cerrarSesion()">
-                <i class="bi bi-person-heart"></i>Cerrar sesión
+                <i class="bi bi-person-heart"></i> Cerrar sesión
             </button>
         </div>
     </div>
-    <div class="container" py-4>
-        <h5 class="mb-4 fw-bold">Modulos del club de asociados</h5>
-        <div id="tarjetasAdministrador" class="row g-4">
-            <div class="col md-3">
-                <div class="card modulo-card shhadow-sm p-3">
+    <!-- Contenedor principal con los módulos disponibles -->
+    <div class="container py-4">
+        <h5 class="mb-4 fw-bold">Módulos del club de asociados</h5>
+        <!-- Bloque de 5 tarjetas visibles únicamente cuando el rol es Admin -->
+        <div id="tarjetasAdministrador" class="row row-cols-1 row-cols-sm-2 row-cols-lg-5 g-4">
+            <!-- Tarjeta que redirige al módulo de Asociados -->
+            <div class="col">
+                <div class="card modulo-card shadow-sm p-3" onclick="window.location.href='asociados.html?v=4'">
                     <i class="bi bi-people icono-asociados"></i>
-                    <h4 class="text primary">Asociados</h4>
+                    <h4 class="text-primary">Asociados</h4>
                     <strong>Gestión de asociados</strong>
                     <p class="small text-muted mt-2">
                         Administra la información de los asociados, incluyendo sus datos
-                        personales, historial de membresía y estado de cuenta
+                        personales, historial de membresía y estado de cuenta.
                     </p>
                 </div>
             </div>
-            <div class="col md-3">
-                <div class="card modulo-card shhadow-sm p-3">
+            <!-- Tarjeta que redirige al módulo de Actividades -->
+            <div class="col">
+                <div class="card modulo-card shadow-sm p-3" onclick="window.location.href='actividades.html?v=3'">
                     <i class="bi bi-bar-chart-fill icono-actividades"></i>
-                    <h4 class="text primary">Actividades</h4>
+                    <h4 class="text-primary">Actividades</h4>
                     <strong>Gestión de actividades</strong>
                     <p class="small text-muted mt-2">
-                        Administra la información de los asociados, incluyendo sus datos
-                        personales, historial de membresía y estado de cuenta
+                        Crea, edita y administra las actividades programadas del club.
                     </p>
                 </div>
             </div>
-            <div class="col md-3">
-                <div class="card modulo-card shhadow-sm p-3">
+            <!-- Tarjeta que redirige al módulo de Pagos -->
+            <div class="col">
+                <div class="card modulo-card shadow-sm p-3" onclick="window.location.href='pagos.html?v=4'">
                     <i class="bi bi-coin icono-pagos"></i>
-                    <h4 class="text primary">pagos</h4>
+                    <h4 class="text-primary">Pagos</h4>
                     <strong>Gestión de pagos</strong>
                     <p class="small text-muted mt-2">
-                        Administra la información de los asociados, incluyendo sus datos
-                        personales, historial de membresía y estado de cuenta
+                        Registra y controla los pagos, aportes y estados de cuenta.
                     </p>
                 </div>
             </div>
-            <div class="col md-3">
-                <div class="card modulo-card shhadow-sm p-3">
-                    <i class="bi bi-people icono-prestamos"></i>
-                    <h4 class="text primary">Prestamos</h4>
-                    <strong>Gestión de Pretamos</strong>
+            <!-- Tarjeta que redirige al módulo de Préstamos -->
+            <div class="col">
+                <div class="card modulo-card shadow-sm p-3" onclick="window.location.href='prestamos.html?v=3'">
+                    <i class="bi bi-bank icono-prestamos"></i>
+                    <h4 class="text-primary">Préstamos</h4>
+                    <strong>Gestión de préstamos</strong>
                     <p class="small text-muted mt-2">
-                        Administra la información de los asociados, incluyendo sus datos
-                        personales, historial de membresía y estado de cuenta
+                        Administra las solicitudes, aprobaciones y seguimiento de préstamos.
+                    </p>
+                </div>
+            </div>
+            <!-- Tarjeta que redirige al módulo de Reportes financieros y saldos -->
+            <div class="col">
+                <div class="card modulo-card shadow-sm p-3" onclick="window.location.href='reportes.html?v=1'">
+                    <i class="bi bi-graph-up-arrow icono-reportes"></i>
+                    <h4 class="text-primary">Reportes</h4>
+                    <strong>Consultas y saldos</strong>
+                    <p class="small text-muted mt-2">
+                        Consulta el balance financiero global, cartera de préstamos y recaudos del club.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- Bloque de 4 tarjetas visibles únicamente cuando el rol es Asociado -->
+        <div id="tarjetasAsociados" class="row g-4 d-none">
+            <!-- Acceso a la ficha personal del asociado autenticado -->
+            <div class="col-md-3">
+                <div class="card modulo-card shadow-sm p-3" onclick="window.location.href='asociados.html?v=4'">
+                    <i class="bi bi-person-vcard icono-asociados"></i>
+                    <h4 class="text-primary">Mis Datos Personales</h4>
+                    <strong>Ficha del asociado</strong>
+                    <p class="small text-muted mt-2">
+                        Consulta y actualiza tu información registrada en la plataforma.
+                    </p>
+                </div>
+            </div>
+            <!-- Acceso a la lista de actividades en modo lectura -->
+            <div class="col-md-3">
+                <div class="card modulo-card shadow-sm p-3" onclick="window.location.href='actividades.html?v=3'">
+                    <i class="bi bi-bar-chart-fill icono-actividades"></i>
+                    <h4 class="text-primary">Actividades</h4>
+                    <strong>Mis actividades</strong>
+                    <p class="small text-muted mt-2">
+                        Consulta e inscríbete en las actividades disponibles del club.
+                    </p>
+                </div>
+            </div>
+            <!-- Acceso a Mis Pagos e Historial de Cuotas -->
+            <div class="col-md-3">
+                <div class="card modulo-card shadow-sm p-3" onclick="window.location.href='pagos.html?v=4'">
+                    <i class="bi bi-coin icono-pagos"></i>
+                    <h4 class="text-primary">Mis Pagos</h4>
+                    <strong>Historial de cuotas y saldos</strong>
+                    <p class="small text-muted mt-2">
+                        Consulta el saldo pendiente de tus préstamos y registra tus comprobantes de pago.
+                    </p>
+                </div>
+            </div>
+            <!-- Acceso a la lista de préstamos en modo lectura -->
+            <div class="col-md-3">
+                <div class="card modulo-card shadow-sm p-3" onclick="window.location.href='prestamos.html?v=3'">
+                    <i class="bi bi-bank icono-prestamos"></i>
+                    <h4 class="text-primary">Préstamos</h4>
+                    <strong>Mis préstamos</strong>
+                    <p class="small text-muted mt-2">
+                        Consulta tus solicitudes y estado de préstamos.
                     </p>
                 </div>
             </div>
         </div>
     </div>
-    <script src="../Controladores/dashboard.js"></script>
+    <!-- Controlador JS que verifica la sesión, aplica el tema por rol y maneja cerrarSesion() -->
+    <script src="../Controladores/dashboard.js?v=3"></script>
 </body>
 
 </html>

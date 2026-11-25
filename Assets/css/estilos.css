@@ -1,9 +1,15 @@
+/* ==========================================================================
+   ESTILOS BASE PARA LOGIN Y REGISTRO
+   ========================================================================== */
+
+/* Reinicio básico de márgenes, relleno y fuente tipográfica */
 *{
     margin:0;
     padding:0;
     font-family: 'Segoe IU' 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Diseño base del body para centrar formularios vertical y horizontalmente */
 body{
     background-color: rgb(196, 114, 82);
     display: flex;
@@ -13,6 +19,7 @@ body{
     padding: 20px;
 }
 
+/* Estilo base para títulos h2 en formularios */
 h2{
     color:rgb(226, 147, 118);
     margin-bottom:20px;
@@ -22,19 +29,21 @@ h2{
     padding-bottom: 10px;
 }
 
+/* Contenedor de cada par etiqueta + campo de entrada */
 .grupo-input{
     margin-bottom: 12px;
     display: flex;
     flex-direction: column;
 }
 
-
+/* Fila flexible para agrupar los botones del formulario */
 .grupo-botones{
     display: flex;
     gap: 10px;
     margin-top: 20px;
 }
 
+/* Estilo general de botones en Login y Registro */
 button{
     flex: 1;
     padding: 12px;
@@ -46,6 +55,7 @@ button{
     transition: background-color 0.2s;
 }
 
+/* Estilo general de campos input y select */
 input, select{
     padding: 10px;
     border: 1px solid skyblue;
@@ -53,11 +63,13 @@ input, select{
     font-size: 15px;
 }
 
+/* Resaltado cuando un input o select recibe foco */
 input:focus, select:focus{
     border-color: rgb(54,54,212);
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
+/* Box-sizing border-box global para que padding y bordes no desborden los anchos */
 * {
     margin: 0;
     padding: 0;
@@ -65,8 +77,8 @@ input:focus, select:focus{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Fondo degradado en tonos tierra cálidos aplicado a Login y Registro */
 body {
-    /* Degradado en tonos tierra cálidos */
     background: linear-gradient(135deg, #ebad8e 0%, #855036 100%);
     display: flex;
     justify-content: center;
@@ -75,6 +87,7 @@ body {
     padding: 20px;
 }
 
+/* Tarjeta efecto cristal (glassmorphism) con animación de entrada */
 .login-container {
     background: rgba(25, 25, 25, 0.25);
     backdrop-filter: blur(12px);
@@ -86,13 +99,12 @@ body {
     width: 100%;
     max-width: 400px;
     color: #ffffff;
-
-    /* Animacion*/
     animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     opacity: 0;
     transform: translateY(20px);
 }
 
+/* Encabezado blanco sobre el fondo degradado */
 h2 {
     text-align: center;
     font-size: 28px;
@@ -101,6 +113,7 @@ h2 {
     letter-spacing: 1px;
 }
 
+/* Subtítulo auxiliar de autenticación */
 .subtitle {
     text-align: center;
     font-size: 14px;
@@ -108,18 +121,21 @@ h2 {
     margin-bottom: 30px;
 }
 
+/* Espaciado vertical entre campos en Login y Registro */
 .grupo-input {
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
 }
 
+/* Etiquetas claras sobre fondo cálido */
 .grupo-input label {
     margin-bottom: 8px;
     font-size: 14px;
     color: #e0e0e0;
 }
 
+/* Campos traslúcidos en Login y Registro */
 .grupo-input input {
     padding: 12px;
     background: rgba(255, 255, 255, 0.1);
@@ -131,16 +147,19 @@ h2 {
     transition: all 0.3s ease;
 }
 
+/* Color suave del texto placeholder */
 .grupo-input input::placeholder {
     color: rgba(255, 255, 255, 0.5);
 }
 
+/* Borde neón al escribir en los campos de Login/Registro */
 .grupo-input input:focus {
     border-color: #d4ff00;
     box-shadow: 0 0 8px rgba(212, 255, 0, 0.3);
     background: rgba(255, 255, 255, 0.15);
 }
 
+/* Opciones adicionales (recordar usuario / enlace olvidó contraseña) */
 .opciones-extra {
     display: flex;
     justify-content: space-between;
@@ -171,6 +190,7 @@ h2 {
     margin-bottom: 20px;
 }
 
+/* Botón destacado alternativo de ingreso */
 .btn-ingresar {
     flex: 1;
     padding: 12px;
@@ -191,6 +211,7 @@ h2 {
     transform: translateY(-2px);
 }
 
+/* Enlace inferior para alternar entre Login y Registro */
 .registro-link {
     text-align: center;
     font-size: 14px;
@@ -208,7 +229,7 @@ h2 {
     text-decoration: underline;
 }
 
-/*Animacion de entrada */
+/* Animación de aparición suave hacia arriba */
 @keyframes fadeUp {
     to {
         opacity: 1;
@@ -216,6 +237,7 @@ h2 {
     }
 }
 
+/* Tarjeta principal del formulario de Registro.html */
 .contenedor-formulario{
     background-color: rgb(247, 121, 62);
     padding: 30px;
@@ -225,87 +247,1180 @@ h2 {
     max-width: 500px;
 }
 
+/* Botón de envío verde esmeralda para Login y Registro */
 button[type="submit"]{
     background-color: rgb(11, 180, 124);
     color: white;
-
 }
 
-/*Actividades, Asociados, Pagos y Prestamos*/
+/* ==========================================================================
+   MÓDULOS INTERNOS (ASOCIADOS, ACTIVIDADES, PAGOS Y PRÉSTAMOS)
+   Paleta del Panel Principal para rol Admin (.body-gestion)
+   ========================================================================== */
+
+/* Variables CSS reutilizables de la paleta morada del panel principal */
 :root {
-    --neon-green: #d4ff00;
-    --bg-dark: #881c1c;
-    --glass-bg: rgba(255, 255, 255, 0.03);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --text-main: #e0e4ea;
-    --text-muted: #e1e8f0;
+    --neon-green: rgb(102, 5, 86);
+    --purple-primary: rgb(102, 5, 86);
+    --purple-hover: rgb(132, 12, 112);
+    --purple-accent: rgb(153, 0, 255);
+    --card-border-top: #0d6efd;
+    --bg-light-panel: #f4f5f9;
+    --border-soft: #e3d6e8;
+    --text-main: #212529;
+    --text-muted: #4a2346;
 }
 
-body-gestion {
-    background-color: #9ac556; /* Marrón rojizo profundo */
-    color: #ca770b; /* Terracota para los textos principales */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* Contenedor body de los 4 apartados internos: flujo vertical y espacio bajo la barra fija */
+.body-gestion {
+    display: block;
+    background: var(--bg-light-panel);
+    color: var(--text-main);
     min-height: 100vh;
-    padding-top: 100px;
+    padding-top: 90px;
     padding-bottom: 2rem;
 }
 
-/* Menú de Navegación */
+/* Tamaño compacto del botón rojo Cerrar sesión en la barra de navegación */
+.btn-cerrar-sesion {
+    flex: 0 0 auto;
+    padding: 6px 14px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Barra superior morada igual al panel principal (rol Admin) */
 .navbar-custom {
-    background: rgba(124, 31, 31, 0.95);
-    border-bottom: 1px solid var(--glass-border);
-    backdrop-filter: blur(10px);
+    background: var(--purple-primary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 2px 10px rgba(102, 5, 86, 0.25);
 }
 
+/* Texto de la marca GESTIÓN en blanco */
+.navbar-custom .navbar-brand {
+    color: #ffffff !important;
+    letter-spacing: 0.5px;
+}
+
+/* Ícono de capas junto a GESTIÓN en lila claro */
+.navbar-custom .navbar-brand i {
+    color: #f0abfc;
+}
+
+/* Enlaces del menú superior */
 .navbar-custom .nav-link {
-    color: var(--text-main);
+    color: rgba(255, 255, 255, 0.85);
     font-weight: 500;
-    transition: 0.3s;
+    border-radius: 6px;
+    padding: 0.45rem 0.8rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.navbar-custom .nav-link:hover, .navbar-custom .nav-link.active {
-    color: var(--neon-green);
+/* Estado activo y hover de los enlaces de navegación */
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link.active {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.16);
 }
 
-/* Tarjetas y Formularios */
+/* Tarjeta blanca para los formularios de administración con borde superior azul */
 .glass-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
-    border-radius: 15px;
+    background: #ffffff;
+    border: 1px solid var(--border-soft);
+    border-top: 4px solid var(--card-border-top);
+    border-radius: 12px;
     padding: 2rem;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-}
-
-.form-control, .form-select {
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--glass-border);
+    box-shadow: 0 4px 18px rgba(102, 5, 86, 0.08);
     color: var(--text-main);
 }
 
-.form-control:focus, .form-select:focus {
-    background-color: rgba(255, 255, 255, 0.08);
-    border-color: var(--neon-green);
+/* Títulos de los formularios en morado oscuro */
+.body-gestion .glass-card h3 {
+    color: var(--purple-primary) !important;
+    font-weight: 700;
+}
+
+/* Íconos dentro de los títulos de formulario en violeta */
+.body-gestion .glass-card h3 i {
+    color: var(--purple-accent);
+}
+
+/* Mensajes de estado (éxito/error) legibles en morado sobre la tarjeta blanca */
+.body-gestion .glass-card p[role="status"] {
+    color: var(--purple-primary) !important;
+}
+
+/* Inputs y selects limpios sobre fondo blanco */
+.body-gestion .form-control,
+.body-gestion .form-select {
+    background-color: #ffffff;
+    border: 1px solid #d5c4dc;
+    color: #212529;
+}
+
+.body-gestion .form-control::placeholder {
+    color: #8c7a93;
+}
+
+/* Opciones desplegables legibles en todos los navegadores */
+.body-gestion .form-select option {
+    background-color: #ffffff;
+    color: #212529;
+}
+
+/* Resaltado violeta cuando el usuario enfoca un campo */
+.body-gestion .form-control:focus,
+.body-gestion .form-select:focus {
+    background-color: #ffffff;
+    border-color: var(--purple-accent);
+    color: #212529;
+    box-shadow: 0 0 0 0.2rem rgba(153, 0, 255, 0.18);
+}
+
+/* Etiquetas de formulario en morado oscuro */
+.body-gestion .form-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+/* Botón principal de guardado en los módulos de administración */
+.body-gestion button[type="submit"],
+.body-gestion .btn-custom {
+    flex: 0 0 auto;
+    background-color: var(--purple-primary);
     color: #ffffff;
-    box-shadow: 0 0 0 0.25rem rgba(212, 255, 0, 0.25);
-}
-
-.form-label { 
-    font-size: 0.9rem; 
-    color: var(--text-muted); 
-}
-
-.btn-custom {
-    background-color: var(--neon-green);
-    color: #121212;
     font-weight: 600;
     border: none;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    padding: 10px 22px;
+    font-size: 15px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
-.btn-custom:hover {
-    background-color: #b5db00;
+/* Hover del botón principal */
+.body-gestion button[type="submit"]:hover,
+.body-gestion .btn-custom:hover {
+    background-color: var(--purple-hover);
+    color: #ffffff;
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(212, 255, 0, 0.3);
+    box-shadow: 0 4px 14px rgba(102, 5, 86, 0.3);
+}
+
+/* Botón Cancelar edición */
+.body-gestion .btn-secondary {
+    flex: 0 0 auto;
+    padding: 10px 18px;
+    font-size: 15px;
+}
+
+/* Tarjeta contenedora de las tablas de registros */
+.body-gestion .card {
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(102, 5, 86, 0.08);
+}
+
+/* Encabezado superior de cada tabla en morado oscuro */
+.body-gestion .card-header.bg-dark {
+    background-color: var(--purple-primary) !important;
+    color: #ffffff;
+    border-bottom: none;
+}
+
+/* Insignia contadora de registros dentro del encabezado de tabla */
+.body-gestion .card-header .badge {
+    background-color: rgba(255, 255, 255, 0.22) !important;
+    color: #ffffff;
+}
+
+/* Encabezado de columnas de tabla (thead) en morado complementario */
+.body-gestion .table-dark {
+    --bs-table-bg: #7c0e6b;
+    --bs-table-border-color: #922381;
+    --bs-table-color: #ffffff;
+}
+
+/* ==========================================================================
+   TEMA CÁLIDO Y AMENO PARA ROL ASOCIADO EN LOS APARTADOS (.body-gestion.tema-asociado)
+   ========================================================================== */
+
+/* Fondo crema-terracota suave y descansado a la vista */
+.body-gestion.tema-asociado {
+    background: linear-gradient(160deg, #faf3ee 0%, #f3e2d6 55%, #ead0be 100%);
+    color: #3d241c;
+}
+
+/* Barra superior vino elegante con acento dorado cálido */
+.body-gestion.tema-asociado .navbar-custom {
+    background: linear-gradient(90deg, #6e1b22 0%, #86252b 100%);
+    border-bottom: 3px solid #d49a6a;
+    box-shadow: 0 4px 16px rgba(110, 27, 34, 0.22);
+}
+
+/* Marca GESTIÓN en marfil cálido con ícono en dorado champán */
+.body-gestion.tema-asociado .navbar-custom .navbar-brand {
+    color: #fff8f0 !important;
+}
+
+.body-gestion.tema-asociado .navbar-custom .navbar-brand i {
+    color: #f5d08a !important;
+}
+
+/* Enlaces del menú superior en crema suave y estado activo resaltado */
+.body-gestion.tema-asociado .navbar-custom .nav-link {
+    color: #f3dfd5;
+}
+
+.body-gestion.tema-asociado .navbar-custom .nav-link:hover,
+.body-gestion.tema-asociado .navbar-custom .nav-link.active {
+    color: #fff8f0;
+    background-color: rgba(245, 208, 138, 0.22);
+}
+
+/* Tarjetas de tablas limpias en tono marfil con borde suave */
+.body-gestion.tema-asociado .card {
+    background-color: #fffdfb;
+    border: 1px solid #e6d3c5;
+    border-radius: 14px;
+    box-shadow: 0 6px 22px rgba(110, 27, 34, 0.1);
+}
+
+/* Encabezado de tabla en vino profundo con texto marfil */
+.body-gestion.tema-asociado .card-header.bg-dark {
+    background: linear-gradient(90deg, #6e1b22 0%, #86252b 100%) !important;
+    color: #fff8f0;
+}
+
+/* Insignia contadora en dorado suave */
+.body-gestion.tema-asociado .card-header .badge {
+    background-color: rgba(245, 208, 138, 0.28) !important;
+    color: #fff8f0;
+}
+
+/* Cabecera de columnas de tabla en terracota vino armonizado */
+.body-gestion.tema-asociado .table-dark {
+    --bs-table-bg: #98342f;
+    --bs-table-border-color: #ad4842;
+    --bs-table-color: #fff8f0;
+}
+
+/* Filas de tabla con contraste cálido suave */
+.body-gestion.tema-asociado .table-striped > tbody > tr:nth-of-type(odd) > * {
+    --bs-table-bg-type: #fcf7f3;
+}
+
+.body-gestion.tema-asociado .table-hover > tbody > tr:hover > * {
+    --bs-table-bg-state: #f7ebe2;
+}
+
+/* ==========================================================================
+   FICHA PERSONAL "MIS DATOS PERSONALES" PARA ROL ASOCIADO
+   Mantiene la paleta cálida vino, terracota y marfil del rol Asociado
+   ========================================================================== */
+
+/* Título principal "Mis Datos Personales" en vino elegante */
+.titulo-ficha-asociado {
+    color: #7c1f24;
+    font-size: 1.9rem;
+    font-weight: 700;
+    text-align: left;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 4px;
+    letter-spacing: 0.2px;
+}
+
+/* Subtítulo suave bajo el título principal */
+.subtitulo-ficha-asociado {
+    color: #6e5348;
+    font-size: 0.96rem;
+}
+
+/* Botón discreto "Volver al Panel" en el extremo derecho */
+.btn-volver-panel {
+    background-color: #fffdfb;
+    color: #6e1b22;
+    border: 1px solid #d9bfb0;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-volver-panel:hover {
+    background-color: #f7ebe2;
+    color: #5c161c;
+    border-color: #a83c32;
+    transform: translateY(-1px);
+}
+
+/* Tarjeta principal de la Ficha del Asociado */
+.ficha-asociado-card {
+    background-color: #fffdfb;
+    border: 1px solid #e6d3c5;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(110, 27, 34, 0.1) !important;
+}
+
+/* Cabecera vino degradada de la ficha y del modal de edición */
+.ficha-asociado-header {
+    background: linear-gradient(90deg, #6e1b22 0%, #86252b 100%) !important;
+    color: #fff8f0 !important;
+    border-bottom: 2px solid #d49a6a;
+}
+
+/* Botón blanco marfil "Actualizar Mis Datos" dentro del encabezado vino */
+.btn-actualizar-datos {
+    flex: 0 0 auto;
+    background-color: #fff8f0;
+    color: #7c1f24;
+    border: 1px solid #f0d7c4;
+    border-radius: 8px;
+    padding: 7px 15px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-actualizar-datos:hover {
+    background-color: #f7e6d8;
+    color: #5c161c;
+    transform: translateY(-1px);
+}
+
+/* Etiquetas en mayúsculas tenues sobre cada valor de la ficha */
+.ficha-etiqueta {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    color: #8c6a5d;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+/* Valor destacado para el Documento de Identidad */
+.ficha-valor-destacado {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #3d241c;
+}
+
+/* Valores con énfasis para Nombres y Apellidos */
+.ficha-valor-fuerte {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #3d241c;
+}
+
+/* Valores generales de la ficha */
+.ficha-valor {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #4a3128;
+}
+
+/* Insignia del rol dentro de la ficha en tono terracota-vino */
+.badge-rol-asociado {
+    background: linear-gradient(90deg, #8f2933 0%, #b44b38 100%);
+    color: #fff8f0;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 8px;
+}
+
+/* Modal de edición de perfil con la paleta cálida */
+.modal-ficha-asociado {
+    background-color: #fffdfb;
+    border: 1px solid #e6d3c5;
+    border-radius: 14px;
+    overflow: hidden;
+    color: #3d241c;
+}
+
+.modal-ficha-asociado .form-label {
+    color: #5c1d22;
+    font-weight: 600;
+}
+
+.modal-ficha-asociado .form-control,
+.modal-ficha-asociado .form-select {
+    background-color: #ffffff;
+    border: 1px solid #dec7b8;
+    color: #3d241c;
+}
+
+.modal-ficha-asociado .form-control:focus,
+.modal-ficha-asociado .form-select:focus {
+    border-color: #a83c32;
+    box-shadow: 0 0 0 0.2rem rgba(168, 60, 50, 0.18);
+}
+
+.btn-guardar-perfil {
+    flex: 0 0 auto;
+    background: linear-gradient(90deg, #6e1b22 0%, #8f2933 100%) !important;
+    color: #fff8f0 !important;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 20px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.btn-guardar-perfil:hover {
+    filter: brightness(1.08);
+}
+
+/* ==========================================================================
+   VISTA DE PRÉSTAMOS EN 2 COLUMNAS PARA ROL ASOCIADO
+   Mantiene la paleta vino, terracota, dorado suave y marfil
+   ========================================================================== */
+
+/* Etiquetas y campos del formulario Solicitar / Registrar Préstamo */
+.form-prestamo-asociado .form-label {
+    color: #5c1d22;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.form-prestamo-asociado .form-control,
+.form-prestamo-asociado .form-select {
+    background-color: #ffffff;
+    border: 1px solid #dec7b8;
+    color: #3d241c;
+    border-radius: 8px;
+}
+
+.form-prestamo-asociado .form-select:disabled {
+    background-color: #f9f1eb;
+    color: #4a2c22;
+    opacity: 1;
+}
+
+.form-prestamo-asociado .form-control:focus,
+.form-prestamo-asociado .form-select:focus {
+    border-color: #a83c32;
+    box-shadow: 0 0 0 0.2rem rgba(168, 60, 50, 0.18);
+}
+
+/* Mensaje de confirmación debajo del botón Guardar Préstamo */
+.form-prestamo-asociado p[role="status"] {
+    color: #7c1f24;
+}
+
+/* Cabecera oscura cálida para la tarjeta "Historial de Créditos" */
+.prestamos-historial-header {
+    background: linear-gradient(90deg, #4b151a 0%, #661d24 100%) !important;
+    color: #fff8f0 !important;
+    border-bottom: 2px solid #d49a6a;
+}
+
+/* Insignia contadora dentro del Historial de Créditos */
+.prestamos-historial-header .badge {
+    background-color: rgba(245, 208, 138, 0.26) !important;
+    color: #fff8f0;
+}
+
+/* Fila de encabezados de columnas de la tabla Historial de Créditos */
+.prestamos-asociado-thead th {
+    background-color: #f5e6dc;
+    color: #5c1d22;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border-bottom: 2px solid #e2c8b8;
+    padding: 0.8rem 0.9rem;
+}
+
+/* Botón discreto de eliminar crédito en la columna Acciones */
+.btn-eliminar-credito {
+    flex: 0 0 auto;
+    padding: 4px 9px;
+    background-color: #fff8f5;
+    color: #a83232;
+    border: 1px solid #e4b5b0;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-eliminar-credito:hover {
+    background-color: #a83232;
+    color: #ffffff;
+    border-color: #a83232;
+}
+
+/* ==========================================================================
+   VISTA "MIS PAGOS E HISTORIAL DE CUOTAS" PARA ROL ASOCIADO
+   Tarjetas de saldo pendiente, progreso y tabla de comprobantes en paleta cálida
+   ========================================================================== */
+
+/* Título de la subsección "Saldo Pendiente de Cada Uno de Tus Préstamos" */
+.titulo-seccion-saldos {
+    color: #5c1d22;
+    font-weight: 700;
+    font-size: 1.15rem;
+}
+
+.titulo-seccion-saldos i {
+    color: #a83c32;
+}
+
+/* Tarjeta individual de saldo por crédito */
+.tarjeta-saldo-credito {
+    background-color: #fffdfb;
+    border: 1px solid #e6d3c5;
+    border-top: 4px solid #a83c32;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(110, 27, 34, 0.08);
+}
+
+/* Insignia "Crédito #ID" en tono vino-terracota */
+.badge-credito-id {
+    background: linear-gradient(90deg, #6e1b22 0%, #98342f 100%);
+    color: #fff8f0;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 6px 11px;
+    border-radius: 7px;
+}
+
+/* Insignia "Saldo Pendiente" en rojo carmesí cálido */
+.badge-saldo-pendiente {
+    background-color: #c0392b;
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 11px;
+    border-radius: 7px;
+}
+
+/* Insignia "Pagado" en verde esmeralda */
+.badge-credito-pagado {
+    background-color: #198754;
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 11px;
+    border-radius: 7px;
+}
+
+/* Líneas de detalle dentro de la tarjeta de saldo */
+.saldo-linea {
+    font-size: 0.92rem;
+    color: #6e5348;
+}
+
+/* Color verde legible para montos abonados */
+.texto-abonado {
+    color: #198754 !important;
+}
+
+/* Saldo pendiente principal destacado */
+.saldo-monto-pendiente {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #a82832;
+}
+
+/* Saldo en cero (crédito saldado) */
+.saldo-monto-pagado {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #198754;
+}
+
+/* Barra de progreso del porcentaje pagado */
+.progress-saldo {
+    height: 8px;
+    background-color: #efe0d6;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+/* Insignia verde "Comprobante Aplicado" en la tabla de comprobantes */
+.badge-comprobante-aplicado {
+    background-color: #198754;
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 7px;
+}
+
+/* ==========================================================================
+   VISTA DE REPORTES FINANCIEROS Y SALDOS PARA ROL ADMIN
+   Mantiene la paleta morado oscuro (#660556), violeta y blanco del Admin
+   ========================================================================== */
+
+/* Título y subtítulo de la vista de reportes */
+.titulo-reportes-admin {
+    color: var(--purple-primary);
+    font-size: 1.85rem;
+    font-weight: 700;
+    text-align: left;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 4px;
+    letter-spacing: 0.2px;
+}
+
+.subtitulo-reportes-admin {
+    color: #6b546c;
+    font-size: 0.95rem;
+}
+
+/* Botón blanco "Imprimir Reporte" */
+.btn-imprimir-reporte {
+    flex: 0 0 auto;
+    background-color: #ffffff;
+    color: var(--purple-primary);
+    border: 1px solid #d5c4dc;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-imprimir-reporte:hover {
+    background-color: #f6edf9;
+    border-color: var(--purple-primary);
+    color: var(--purple-primary);
+}
+
+/* Botón morado "Volver al Panel" para rol Admin */
+.btn-volver-admin {
+    flex: 0 0 auto;
+    background-color: var(--purple-primary);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-volver-admin:hover {
+    background-color: var(--purple-hover);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+/* Tarjetas KPI superiores con ícono alineado a la derecha */
+.kpi-card {
+    border-radius: 12px;
+    padding: 1.25rem 1.4rem;
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 6px 18px rgba(102, 5, 86, 0.14);
+    height: 100%;
+}
+
+.kpi-etiqueta {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    opacity: 0.9;
+    margin-bottom: 4px;
+}
+
+.kpi-valor {
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.kpi-icono {
+    font-size: 2rem;
+    opacity: 0.85;
+}
+
+/* Colores de las 4 tarjetas KPI armonizados con la paleta morada Admin */
+.kpi-prestado {
+    background: linear-gradient(135deg, rgb(102, 5, 86) 0%, #8e157a 100%);
+}
+
+.kpi-pagado {
+    background: linear-gradient(135deg, #157347 0%, #198754 100%);
+}
+
+.kpi-cartera {
+    background: linear-gradient(135deg, #b02a37 0%, #dc3545 100%);
+}
+
+.kpi-actividades {
+    background: linear-gradient(135deg, #3c1053 0%, #641b8a 100%);
+}
+
+/* Tarjetas de tablas de reportes */
+.reporte-card {
+    background-color: #ffffff;
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.reporte-card-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #ede2f1;
+}
+
+.titulo-bloque-reporte {
+    color: var(--purple-primary);
+    font-size: 1.08rem;
+}
+
+.titulo-bloque-reporte i {
+    color: var(--purple-accent);
+}
+
+/* Campo buscador integrado en el encabezado de la cartera */
+.buscador-cartera {
+    position: relative;
+    min-width: 240px;
+}
+
+.buscador-cartera i {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #8c7a93;
+    font-size: 0.85rem;
+}
+
+.buscador-cartera input {
+    padding-left: 32px;
+    border-radius: 8px;
+}
+
+/* Cabecera clara morada suave para la tabla de balance de actividades */
+.thead-actividades-reporte th {
+    background-color: #f4ebf7;
+    color: #4a1540;
+    font-weight: 700;
+    border-bottom: 2px solid #e1cce8;
+}
+
+/* Insignias de estado de cartera y participantes */
+.badge-cartera-pendiente {
+    background-color: #dc3545;
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 11px;
+    border-radius: 8px;
+}
+
+.badge-cartera-aldia {
+    background-color: #198754;
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 11px;
+    border-radius: 8px;
+}
+
+.badge-sin-creditos {
+    background-color: #6c757d;
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 11px;
+    border-radius: 8px;
+}
+
+.badge-participantes {
+    background-color: var(--purple-primary);
+    color: #ffffff;
+    font-size: 0.84rem;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 6px;
+}
+
+.texto-club-mitad {
+    color: #7c0e6b;
+}
+
+/* ==========================================================================
+   VISTA DE PRÉSTAMOS EN 2 COLUMNAS PARA ROL ADMIN
+   Mantiene la paleta morado oscuro (#660556), violeta y blanco del Admin
+   ========================================================================== */
+
+/* Tarjetas refinadas del módulo Préstamos para Admin */
+.admin-prestamo-card {
+    background-color: #ffffff;
+    border: 1px solid #e3d6e8;
+    border-radius: 14px !important;
+    overflow: hidden;
+    box-shadow: 0 6px 22px rgba(102, 5, 86, 0.09) !important;
+}
+
+/* Cabecera morada con degradado para la tarjeta izquierda (Solicitud de Préstamo) */
+.admin-prestamo-header {
+    background: linear-gradient(90deg, rgb(102, 5, 86) 0%, #8a0c76 100%) !important;
+    color: #ffffff !important;
+    border-bottom: none;
+}
+
+.admin-prestamo-header h5 {
+    color: #ffffff !important;
+    font-size: 1.05rem;
+}
+
+/* Cabecera morada profunda para la tarjeta derecha (Solicitudes de Préstamo) */
+.admin-tabla-header {
+    background: linear-gradient(90deg, #4b0440 0%, rgb(102, 5, 86) 100%) !important;
+    color: #ffffff !important;
+    border-bottom: none;
+}
+
+.admin-tabla-header h5 {
+    color: #ffffff !important;
+    font-size: 1.05rem;
+}
+
+/* Contador tipo píldora en el encabezado de tabla Admin */
+.badge-admin-contador {
+    background-color: rgba(255, 255, 255, 0.22) !important;
+    color: #ffffff;
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border-radius: 999px;
+}
+
+/* Encabezado suave lavanda para las columnas de la tabla Admin */
+.thead-admin-suave th {
+    background-color: #f4ebf7;
+    color: #4a1540;
+    font-weight: 700;
+    font-size: 0.86rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border-bottom: 2px solid #e1cce8;
+    padding: 0.85rem 0.75rem;
+    white-space: nowrap;
+}
+
+/* Filas y celdas de la tabla de préstamos Admin */
+.tabla-admin-prestamos td {
+    padding: 0.85rem 0.75rem;
+    font-size: 0.92rem;
+    color: #2b1d2a;
+}
+
+.tabla-admin-prestamos tbody tr:hover > * {
+    background-color: #faf4fc;
+}
+
+/* Monto destacado en morado oscuro y píldora suave para el plazo */
+.texto-monto-admin {
+    color: var(--purple-primary);
+}
+
+.badge-plazo-admin {
+    background-color: #f3e5f8;
+    color: var(--purple-primary);
+    font-weight: 600;
+    font-size: 0.82rem;
+    padding: 5px 10px;
+    border-radius: 8px;
+}
+
+/* Mensaje de estado dentro del formulario lateral Admin */
+.form-admin-prestamo p[role="status"] {
+    color: var(--purple-primary);
+}
+
+/* Realce visual del formulario izquierdo cuando está en modo edición */
+.admin-prestamo-card.modo-edicion-card {
+    border-color: var(--purple-accent);
+    box-shadow: 0 0 0 3px rgba(153, 0, 255, 0.16), 0 8px 24px rgba(102, 5, 86, 0.14) !important;
+}
+
+/* Ajustes de impresión limpios cuando el administrador pulsa "Imprimir Reporte" */
+@page {
+    size: letter landscape;
+    margin: 10mm;
+}
+
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    html,
+    body,
+    .body-gestion {
+        width: 100% !important;
+        min-height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    .body-gestion .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Encabezado compacto en impresión */
+    .titulo-reportes-admin {
+        font-size: 18px !important;
+        margin-bottom: 2px !important;
+    }
+
+    .subtitulo-reportes-admin {
+        font-size: 11px !important;
+    }
+
+    /* 4 tarjetas KPI alineadas en una sola fila horizontal */
+    .kpi-row-print {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 10px !important;
+        margin: 0 0 14px 0 !important;
+    }
+
+    .kpi-row-print > * {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .kpi-card {
+        padding: 10px 12px !important;
+        border-radius: 8px !important;
+        box-shadow: none !important;
+    }
+
+    .kpi-etiqueta {
+        font-size: 9px !important;
+    }
+
+    .kpi-valor {
+        font-size: 15px !important;
+    }
+
+    .kpi-icono {
+        font-size: 20px !important;
+    }
+
+    /* Quita scrollbars y recortes horizontales para mostrar todas las columnas completas */
+    .reporte-card,
+    .body-gestion .card {
+        overflow: visible !important;
+        box-shadow: none !important;
+        border-radius: 8px !important;
+        margin-bottom: 14px !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .table-responsive {
+        overflow: visible !important;
+    }
+
+    .reporte-card-header {
+        padding: 8px 12px !important;
+    }
+
+    .titulo-bloque-reporte {
+        font-size: 13px !important;
+    }
+
+    .reporte-card table {
+        width: 100% !important;
+        table-layout: auto !important;
+        font-size: 11px !important;
+    }
+
+    .reporte-card thead {
+        display: table-header-group;
+    }
+
+    .reporte-card tr {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .reporte-card th,
+    .reporte-card td {
+        padding: 6px 7px !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+    }
+
+    .badge-cartera-pendiente,
+    .badge-cartera-aldia,
+    .badge-sin-creditos,
+    .badge-participantes {
+        font-size: 10px !important;
+        padding: 3px 7px !important;
+        white-space: normal !important;
+    }
+}
+
+/* ==========================================================================
+   ESTILO INTERMEDIO PARA LOGIN (.body-login)
+   Combina el morado del rol Admin con el vino/terracota del rol Asociado
+   ========================================================================== */
+
+/* Fondo degradado que une el morado Admin (#660556), vino intermedio (#7c1f35) y terracota Asociado (#b86b52) */
+body.body-login {
+    background: linear-gradient(135deg, #660556 0%, #7c1f35 52%, #b86b52 100%);
+    min-height: 100vh;
+    padding: 24px;
+}
+
+/* Tarjeta clara traslúcida centrada con barra superior degradada */
+.body-login .contenedor-registro {
+    position: relative;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 16px;
+    padding: 38px 34px 30px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 16px 40px rgba(45, 8, 36, 0.35);
+    animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+    transform: translateY(16px);
+}
+
+/* Barra superior decorativa con transición entre los dos temas */
+.body-login .contenedor-registro::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #660556 0%, #8f2440 55%, #d98a64 100%);
+}
+
+/* Título principal del formulario de inicio de sesión */
+.body-login .contenedor-registro h2 {
+    color: #5d0c46;
+    font-size: 25px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #efe2ea;
+    letter-spacing: 0.3px;
+}
+
+/* Subtítulo suave bajo el encabezado */
+.body-login .subtitulo-login {
+    text-align: center;
+    font-size: 13.5px;
+    color: #745569;
+    margin-bottom: 24px;
+}
+
+/* Etiquetas de campos en tono vino oscuro legible */
+.body-login .grupo-input label {
+    color: #4a1d3d;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+/* Campos de correo y contraseña claros con borde suave */
+.body-login .grupo-input input {
+    background: #fdfbfd;
+    border: 1px solid #d8c2d0;
+    border-radius: 8px;
+    padding: 11px 13px;
+    color: #241421;
+    font-size: 15px;
+}
+
+/* Color de texto placeholder en el Login */
+.body-login .grupo-input input::placeholder {
+    color: #9b8393;
+}
+
+/* Resaltado vino-morado cuando el usuario escribe en un campo */
+.body-login .grupo-input input:focus {
+    background: #ffffff;
+    border-color: #7c1f4e;
+    box-shadow: 0 0 0 3px rgba(124, 31, 78, 0.16);
+}
+
+/* Botón principal Ingresar con degradado morado-vino */
+.body-login button[type="submit"] {
+    background: linear-gradient(135deg, #660556 0%, #8f2440 100%);
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 11px 16px;
+    font-size: 15px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.body-login button[type="submit"]:hover {
+    filter: brightness(1.08);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(102, 5, 86, 0.32);
+}
+
+/* Botón secundario Cancelar en tono neutro cálido */
+.body-login .btn-secundario {
+    background-color: #f3eaf0;
+    color: #5d0c46;
+    border: 1px solid #decad6;
+    border-radius: 8px;
+    padding: 11px 16px;
+    font-size: 15px;
+    transition: background-color 0.2s ease;
+}
+
+.body-login .btn-secundario:hover {
+    background-color: #e9d9e3;
+}
+
+/* Texto y enlace inferior hacia Registro.html */
+.body-login .texto-link {
+    text-align: center;
+    font-size: 14px;
+    color: #5e4656;
+    margin-top: 6px;
+}
+
+.body-login .texto-link a {
+    color: #7c1f4e;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.body-login .texto-link a:hover {
+    text-decoration: underline;
+    color: #660556;
+}
+
+/* Mensaje de alerta cuando hay error de credenciales */
+.body-login #mensajeLogin {
+    text-align: center;
+    color: #b91c1c;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 14px;
 }
