@@ -3,13 +3,19 @@
 <!-- Idioma español -->
 <html lang="es">
 
-<!-- Cabecera con Bootstrap 5, íconos y hoja de estilos compartida -->
+<!-- Cabecera con metadatos, Bootstrap 5, íconos y hoja de estilos compartida -->
 <head>
+    <!-- Codificación UTF-8 para caracteres en español -->
     <meta charset="UTF-8">
+    <!-- Escala responsiva para dispositivos móviles y escritorio -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Título de la pestaña del navegador -->
     <title>Mi Billetera - Club Acerías</title>
+    <!-- Framework CSS Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Librería de íconos Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Hoja de estilos principal con las reglas visuales de Mi Billetera -->
     <link rel="stylesheet" href="../Assets/css/estilos.css?v=23">
 </head>
 
@@ -19,12 +25,15 @@
     <!-- Barra superior de respaldo (oculta automáticamente para Asociado por tema-asociado) -->
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
         <div class="container">
+            <!-- Marca principal con enlace al panel -->
             <a class="navbar-brand" style="color: var(--neon-green); font-weight: bold;" href="dashboard.html?v=6">
                 <i class="bi bi-layers-fill"></i> GESTIÓN
             </a>
+            <!-- Botón de menú móvil -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
             </button>
+            <!-- Enlaces de navegación de respaldo y cierre de sesión -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center">
                     <li class="nav-item"><a class="nav-link" href="dashboard.html?v=6"><i class="bi bi-grid"></i> Panel</a></li>
@@ -40,7 +49,7 @@
 
     <!-- Contenedor principal de Mi Billetera -->
     <div class="container">
-        <!-- Encabezado con título y botón Volver al Panel -->
+        <!-- Encabezado con título, subtítulo descriptivo y botón Volver al Panel -->
         <div class="row justify-content-center mb-3">
             <div class="col-lg-10 d-flex flex-wrap justify-content-between align-items-start gap-3">
                 <div>
@@ -51,28 +60,35 @@
                         Consulta tu monto total disponible, recarga saldo o retira dinero en cualquier momento
                     </p>
                 </div>
+                <!-- Enlace de regreso al panel principal -->
                 <a href="dashboard.html?v=6" class="btn btn-volver-panel">
                     <i class="bi bi-arrow-left me-1"></i>Volver al Panel
                 </a>
             </div>
         </div>
 
-        <!-- Tarjeta principal con el monto total actual de la billetera -->
+        <!-- ======================================================================
+             TARJETA HERO: SALDO DISPONIBLE Y RESUMEN ACUMULADO DE LA BILLETERA
+             ====================================================================== -->
         <div class="row justify-content-center mb-4">
             <div class="col-lg-10">
                 <section class="billetera-hero-card">
                     <div class="row align-items-center g-3">
+                        <!-- Columna izquierda: etiqueta superior, monto disponible y nombre del titular -->
                         <div class="col-md-7">
                             <span class="billetera-eyebrow">
                                 <i class="bi bi-shield-check me-1"></i>SALDO DISPONIBLE EN BILLETERA
                             </span>
+                            <!-- Valor principal actualizado dinámicamente por billetera.js -->
                             <div id="saldoTotalBilletera" class="billetera-saldo-valor">$ 0</div>
                             <p class="billetera-titular mb-0">
                                 Titular: <strong id="titularBilletera">Asociado</strong>
                             </p>
                         </div>
+                        <!-- Columna derecha: píldoras con totales históricos de recargas y retiros -->
                         <div class="col-md-5">
                             <div class="row g-2">
+                                <!-- Total acumulado recargado -->
                                 <div class="col-6">
                                     <div class="billetera-stat-pill">
                                         <span class="billetera-stat-label">
@@ -81,6 +97,7 @@
                                         <strong id="totalRecargadoBilletera">$ 0</strong>
                                     </div>
                                 </div>
+                                <!-- Total acumulado retirado -->
                                 <div class="col-6">
                                     <div class="billetera-stat-pill">
                                         <span class="billetera-stat-label">
@@ -96,11 +113,14 @@
             </div>
         </div>
 
-        <!-- Dos columnas: Añadir Dinero / Recargar (izquierda) y Retirar Dinero (derecha) -->
+        <!-- ======================================================================
+             ACCIONES PRINCIPALES EN 2 COLUMNAS: RECARGAR Y RETIRAR DINERO
+             ====================================================================== -->
         <div class="row justify-content-center g-4 mb-4">
-            <!-- Formulario para añadir dinero / recargar billetera -->
+            <!-- Columna izquierda: tarjeta y formulario para añadir dinero / recargar billetera -->
             <div class="col-lg-5">
                 <div class="billetera-accion-card billetera-card-recarga h-100">
+                    <!-- Encabezado de la tarjeta con ícono verde de recarga -->
                     <div class="billetera-accion-header">
                         <span class="billetera-accion-icono ico-recarga">
                             <i class="bi bi-plus-circle-fill"></i>
@@ -111,8 +131,9 @@
                         </div>
                     </div>
 
+                    <!-- Formulario de recarga manejado por Controladores/billetera.js -->
                     <form id="formRecargarBilletera" class="p-4">
-                        <!-- Botones de montos rápidos para facilitar la recarga -->
+                        <!-- Botones de montos rápidos para rellenar el campo de recarga con un clic -->
                         <div class="mb-3">
                             <label class="form-label small fw-semibold" style="color: #6e5348;">Montos rápidos</label>
                             <div class="d-flex flex-wrap gap-2">
@@ -123,11 +144,13 @@
                             </div>
                         </div>
 
+                        <!-- Campo numérico del monto a añadir en COP -->
                         <div class="mb-3">
                             <label for="montoRecarga" class="form-label fw-semibold" style="color: #5c1d22;">Monto a añadir (COP)</label>
                             <input type="number" id="montoRecarga" class="form-control" step="any" min="1" placeholder="Ej. 50000" required>
                         </div>
 
+                        <!-- Selector de entidad bancaria o billetera digital de origen -->
                         <div class="mb-4">
                             <label for="bancoRecarga" class="form-label fw-semibold" style="color: #5c1d22;">Entidad bancaria de origen</label>
                             <select id="bancoRecarga" class="form-select" required>
@@ -150,17 +173,20 @@
                             </select>
                         </div>
 
+                        <!-- Botón para iniciar la confirmación de recarga -->
                         <button type="submit" id="btnRecargarBilletera" class="btn-billetera-recarga w-100">
                             <i class="bi bi-plus-lg me-1"></i>Añadir dinero a la billetera
                         </button>
+                        <!-- Mensaje de estado o validación de la recarga -->
                         <p id="msgRecarga" class="small fw-semibold mt-3 mb-0" role="status"></p>
                     </form>
                 </div>
             </div>
 
-            <!-- Formulario para retirar dinero de la billetera -->
+            <!-- Columna derecha: tarjeta y formulario para retirar dinero de la billetera -->
             <div class="col-lg-5">
                 <div class="billetera-accion-card billetera-card-retiro h-100">
+                    <!-- Encabezado de la tarjeta con ícono vino de retiro -->
                     <div class="billetera-accion-header">
                         <span class="billetera-accion-icono ico-retiro">
                             <i class="bi bi-dash-circle-fill"></i>
@@ -171,8 +197,9 @@
                         </div>
                     </div>
 
+                    <!-- Formulario de retiro manejado por Controladores/billetera.js -->
                     <form id="formRetirarBilletera" class="p-4">
-                        <!-- Atajos de porcentaje sobre el saldo actual -->
+                        <!-- Atajos de porcentaje calculados sobre el saldo actual disponible -->
                         <div class="mb-3">
                             <label class="form-label small fw-semibold" style="color: #6e5348;">Atajos de retiro</label>
                             <div class="d-flex flex-wrap gap-2">
@@ -182,11 +209,13 @@
                             </div>
                         </div>
 
+                        <!-- Campo numérico del monto a retirar en COP -->
                         <div class="mb-3">
                             <label for="montoRetiro" class="form-label fw-semibold" style="color: #5c1d22;">Monto a retirar (COP)</label>
                             <input type="number" id="montoRetiro" class="form-control" step="any" min="1" placeholder="Ej. 20000" required>
                         </div>
 
+                        <!-- Selector de entidad bancaria o billetera digital de destino -->
                         <div class="mb-4">
                             <label for="bancoRetiro" class="form-label fw-semibold" style="color: #5c1d22;">Entidad bancaria de destino</label>
                             <select id="bancoRetiro" class="form-select" required>
@@ -209,19 +238,24 @@
                             </select>
                         </div>
 
+                        <!-- Botón para iniciar la confirmación de retiro -->
                         <button type="submit" id="btnRetirarBilletera" class="btn-billetera-retiro w-100">
                             <i class="bi bi-cash-stack me-1"></i>Retirar dinero
                         </button>
+                        <!-- Mensaje de estado o validación del retiro -->
                         <p id="msgRetiro" class="small fw-semibold mt-3 mb-0" role="status"></p>
                     </form>
                 </div>
             </div>
         </div>
 
-        <!-- Historial de movimientos de la billetera -->
+        <!-- ======================================================================
+             HISTORIAL DE MOVIMIENTOS DE LA BILLETERA (RECARGAS Y RETIROS)
+             ====================================================================== -->
         <div class="row justify-content-center mb-4">
             <div class="col-lg-10">
                 <section class="panel-reciente-asociado">
+                    <!-- Cabecera del panel con ícono, título y contador de movimientos -->
                     <div class="panel-reciente-header">
                         <div class="d-flex align-items-center gap-2">
                             <span class="icono-panel-pagos">
@@ -234,7 +268,9 @@
                         </div>
                         <span id="contadorMovimientosBilletera" class="badge-actividad-reciente">0 MOVIMIENTOS</span>
                     </div>
+                    <!-- Contenedor donde billetera.js renderiza la tabla o lista de movimientos -->
                     <div id="contenedorMovimientosBilletera" class="p-3 p-md-4">
+                        <!-- Estado temporal mientras se consultan los movimientos -->
                         <div class="estado-vacio-reciente">
                             <i class="bi bi-hourglass-split"></i>
                             <h6 class="fw-bold mb-1" style="color: #5c1d22;">Cargando movimientos...</h6>
@@ -246,10 +282,13 @@
         </div>
     </div>
 
-    <!-- Modal de alerta emergente para confirmar la solicitud de recarga o retiro -->
+    <!-- ======================================================================
+         MODAL EMERGENTE: CONFIRMACIÓN DE RECARGA O RETIRO EN BILLETERA
+         ====================================================================== -->
     <div class="modal fade modal-asociado-alerta" id="modalConfirmarBilletera" tabindex="-1" aria-labelledby="tituloModalConfirmBilletera" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
+                <!-- Encabezado vino del modal de confirmación -->
                 <div class="modal-header">
                     <h5 id="tituloModalConfirmBilletera" class="modal-title">
                         <i class="bi bi-shield-check me-2"></i>Confirmar Solicitud
@@ -257,6 +296,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body p-4">
+                    <!-- Aviso preventivo con pregunta dinámica según el tipo de operación -->
                     <div class="aviso-aprobacion-modal mb-3">
                         <div class="fw-bold mb-1">
                             <i class="bi bi-info-circle-fill me-1"></i>Verifica los datos antes de continuar
@@ -264,8 +304,10 @@
                         <span id="textoConfirmacionBilletera">¿Deseas confirmar esta operación en tu billetera?</span>
                     </div>
 
+                    <!-- Bloque de resumen (tipo de movimiento, entidad bancaria y monto) llenado por billetera.js -->
                     <div id="resumenConfirmacionBilletera" class="p-3 rounded-3 mb-4" style="background: #faf3ee; border: 1px solid #e6d3c5; color: #3d241c; font-size: 0.92rem;"></div>
 
+                    <!-- Botonera inferior para cancelar o ejecutar la transacción -->
                     <div class="d-flex justify-content-end gap-2">
                         <button type="button" class="btn btn-volver-panel" data-bs-dismiss="modal">Cancelar</button>
                         <button type="button" id="btnConfirmarMovimientoModal" class="btn btn-guardar-perfil">
@@ -277,7 +319,7 @@
         </div>
     </div>
 
-    <!-- Scripts de Bootstrap, sesión/barra lateral y controlador de billetera -->
+    <!-- Scripts de Bootstrap (modales), sesión/barra lateral y controlador de billetera -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../Controladores/sesion.js?v=8"></script>
     <script src="../Controladores/billetera.js?v=2"></script>

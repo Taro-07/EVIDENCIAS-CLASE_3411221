@@ -3,46 +3,55 @@
 <!-- Idioma español -->
 <html lang="es">
 
-<!-- Cabecera con Bootstrap, íconos y hoja de estilos -->
+<!-- Cabecera con metadatos, Bootstrap 5, íconos y hoja de estilos -->
 <head>
+    <!-- Codificación UTF-8 para caracteres del idioma español -->
     <meta charset="UTF-8">
+    <!-- Escala inicial responsiva en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Título de la pestaña del navegador -->
     <title>Registro de Actividades</title>
+    <!-- Framework CSS Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Librería de íconos Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Hoja de estilos personalizada del proyecto -->
     <link rel="stylesheet" href="../Assets/css/estilos.css?v=22">
 </head>
 
-<!-- Cuerpo de vista interna con tema dinámico según el rol -->
+<!-- Cuerpo de vista interna con tema dinámico y barra lateral según el rol -->
 <body class="body-gestion">
 
-    <!-- Barra de navegación superior fija -->
+    <!-- Barra de navegación superior fija (oculta cuando se usa barra lateral) -->
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
         <div class="container">
             <!-- Marca GESTIÓN que regresa al panel principal -->
             <a class="navbar-brand" style="color: var(--neon-green); font-weight: bold;" href="dashboard.html?v=3">
                 <i class="bi bi-layers-fill"></i> GESTIÓN
             </a>
-            <!-- Botón menú móvil -->
+            <!-- Botón menú hamburguesa para móviles -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
             </button>
             <!-- Enlaces de módulos y botón de cierre de sesión -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <!-- Enlace al módulo de Asociados -->
                     <li class="nav-item"><a class="nav-link" href="asociados.html?v=3"><i class="bi bi-people"></i>
                             Asociados</a></li>
                     <!-- Módulo activo actual: Actividades -->
                     <li class="nav-item"><a class="nav-link active" href="actividades.html?v=3"><i
                                 class="bi bi-calendar-event"></i> Actividades</a></li>
+                    <!-- Enlace al módulo de Pagos -->
                     <li class="nav-item"><a class="nav-link" href="pagos.html?v=3"><i class="bi bi-cash-coin"></i> Pagos</a>
                     </li>
+                    <!-- Enlace al módulo de Préstamos -->
                     <li class="nav-item"><a class="nav-link" href="prestamos.html?v=3"><i class="bi bi-bank"></i>
                             Préstamos</a></li>
                     <!-- Enlace Reportes visible únicamente para rol Admin -->
                     <li class="nav-item d-none" data-solo-admin><a class="nav-link" href="reportes.html?v=1"><i
                                 class="bi bi-graph-up-arrow"></i> Reportes</a></li>
-                    <!-- Botón para cerrar sesión -->
+                    <!-- Botón para cerrar la sesión actual -->
                     <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
                         <button type="button" class="btn btn-danger btn-sm btn-cerrar-sesion" onclick="cerrarSesion()">
                             <i class="bi bi-box-arrow-right"></i> Cerrar sesión
@@ -55,7 +64,7 @@
 
     <!-- Contenedor principal amplio -->
     <div class="container-xxl px-3 px-lg-4">
-        <!-- Encabezado con botón Volver al Panel (visible únicamente para rol Asociado) -->
+        <!-- Encabezado con título, subtítulo y botón Volver al Panel (visible únicamente para rol Asociado) -->
         <div data-solo-asociado class="row justify-content-center mb-3 d-none">
             <div class="col-12 d-flex flex-wrap justify-content-between align-items-start gap-3">
                 <div>
@@ -66,20 +75,23 @@
                         Consulta las actividades programadas y disponibles para los asociados
                     </p>
                 </div>
+                <!-- Enlace de retorno al panel principal -->
                 <a href="dashboard.html?v=7" class="btn btn-volver-panel">
                     <i class="bi bi-arrow-left me-1"></i>Volver al Panel
                 </a>
             </div>
         </div>
 
-        <!-- Burbuja única de Actividades Registradas (solo Asociado) -->
+        <!-- Tarjeta KPI única con el total de actividades registradas (solo rol Asociado) -->
         <div data-solo-asociado class="row mb-4 d-none">
             <div class="col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3">
                 <div class="burbuja-kpi burbuja-total">
+                    <!-- Ícono decorativo de calendario -->
                     <span class="burbuja-icono burbuja-ico-total">
                         <i class="bi bi-calendar-check"></i>
                     </span>
                     <div>
+                        <!-- Contador actualizado dinámicamente por actividades.js -->
                         <div id="actKpiActividades" class="burbuja-numero">0</div>
                         <div class="burbuja-etiqueta">Actividades Registradas</div>
                     </div>
@@ -87,24 +99,31 @@
             </div>
         </div>
 
-        <!-- Tabla expandida de actividades (se va rellenando a medida que se crean nuevas actividades) -->
+        <!-- ======================================================================
+             TABLA EXPANDIDA DE ACTIVIDADES (COMPARTIDA PARA ADMIN Y ASOCIADO)
+             ====================================================================== -->
         <div id="seccionTablaActividades" class="row justify-content-center mt-2">
             <div class="col-12">
-                <!-- Alerta de confirmación de acciones -->
+                <!-- Alerta de confirmación tras crear, editar, eliminar o abonar a una actividad -->
                 <div id="alertaAdminActividades" class="alert alert-success d-none mb-3" role="status"></div>
+                <!-- Tarjeta expandida de actividades con altura mínima dedicada -->
                 <div class="card shadow-sm card-actividades-expandida">
-                    <!-- Encabezado con botón crear (solo Admin) y contador total de actividades -->
+                    <!-- Encabezado con título, botón "+ Nueva" (solo Admin) y contador total -->
                     <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center gap-2">
                         <h5 class="mb-0"><i class="bi bi-calendar-event me-2"></i>Actividades Registradas</h5>
                         <div class="d-flex align-items-center gap-2">
+                            <!-- Botón para abrir el modal de nueva actividad (solo Admin) -->
                             <button type="button" id="btnNuevaActividadHeader" data-solo-admin class="btn-header-crear-admin d-none">
                                 <i class="bi bi-plus-lg"></i> Nueva
                             </button>
+                            <!-- Insignia con el número total de actividades registradas -->
                             <span id="totalActividades" class="badge bg-secondary">0</span>
                         </div>
                     </div>
+                    <!-- Contenedor responsivo para desplazamiento horizontal -->
                     <div class="table-responsive">
                         <table class="table table-striped table-hover align-middle mb-0">
+                            <!-- Encabezados de columnas de la tabla de actividades -->
                             <thead class="table-dark">
                                 <tr>
                                     <th scope="col">#</th>
@@ -119,8 +138,9 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <!-- Filas generadas dinámicamente por actividades.js -->
+                            <!-- Filas generadas dinámicamente por Controladores/actividades.js -->
                             <tbody id="listaActividades">
+                                <!-- Estado inicial mientras se cargan las actividades -->
                                 <tr>
                                     <td colspan="7" class="text-center py-4">
                                         Cargando actividades...
@@ -134,10 +154,13 @@
         </div>
     </div>
 
-    <!-- Modal para que el Asociado realice un abono a una actividad -->
+    <!-- ======================================================================
+         MODAL EMERGENTE: ABONAR A UNA ACTIVIDAD (EXCLUSIVO PARA ASOCIADO)
+         ====================================================================== -->
     <div class="modal fade modal-asociado-alerta" id="modalAbonarActividad" tabindex="-1" aria-labelledby="tituloModalAbonoAct" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
+                <!-- Encabezado del modal de abono -->
                 <div class="modal-header">
                     <h5 id="tituloModalAbonoAct" class="modal-title">
                         <i class="bi bi-cash-coin me-2"></i>Abonar a Actividad
@@ -145,14 +168,20 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body p-4">
+                    <!-- Resumen de la actividad seleccionada (nombre, meta, recaudado y saldo disponible) -->
                     <div id="detalleActividadAbono" class="p-3 rounded-3 mb-3" style="background: #faf3ee; border: 1px solid #e6d3c5; color: #3d241c; font-size: 0.9rem;"></div>
+                    <!-- Formulario para registrar el abono desde la billetera del asociado -->
                     <form id="formAbonarActividad" class="form-prestamo-asociado">
+                        <!-- Campo oculto con el ID de la actividad a abonar -->
                         <input type="hidden" id="abonoIdActividad">
+                        <!-- Monto a abonar en pesos colombianos -->
                         <div class="mb-3">
                             <label for="montoAbonoActividad" class="form-label">Monto a abonar ($ COP)</label>
                             <input type="number" id="montoAbonoActividad" class="form-control" step="any" min="1" placeholder="Ej: 50000" required>
                         </div>
+                        <!-- Mensaje de validación o error del abono -->
                         <p id="msgAbonoActividad" class="small fw-semibold mb-3" style="color: #b4232c;" role="status"></p>
+                        <!-- Botonera inferior: cancelar o confirmar abono -->
                         <div class="d-flex justify-content-end gap-2">
                             <button type="button" class="btn btn-volver-panel" data-bs-dismiss="modal">Cancelar</button>
                             <button type="submit" id="btnConfirmarAbonoActividad" class="btn btn-guardar-perfil">
@@ -165,10 +194,13 @@
         </div>
     </div>
 
-    <!-- Modal de creación y edición de Actividad (solo Admin) -->
+    <!-- ======================================================================
+         MODAL CRUD: CREAR Y EDITAR ACTIVIDAD (EXCLUSIVO PARA ADMINISTRADOR)
+         ====================================================================== -->
     <div class="modal fade modal-admin-crud" id="modalActividadAdmin" tabindex="-1" aria-labelledby="tituloFormActividad" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
+                <!-- Encabezado morado cuyo título alterna entre Nueva y Editar Actividad -->
                 <div class="modal-header">
                     <h5 id="tituloFormActividad" class="modal-title">
                         <i class="bi bi-calendar-plus me-2"></i>Nueva Actividad
@@ -176,33 +208,42 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
+                    <!-- Formulario CRUD gestionado por Controladores/actividades.js -->
                     <form id="formActividad">
+                        <!-- Campo oculto con el ID de la actividad cuando se está editando -->
                         <input type="hidden" id="idActividad" name="idActividad">
                         <div class="row g-3">
+                            <!-- Nombre descriptivo de la actividad -->
                             <div class="col-md-8">
                                 <label for="nombreActividad" class="form-label">Nombre de la Actividad</label>
                                 <input type="text" id="nombreActividad" name="nombreActividad" class="form-control" maxlength="50" required>
                             </div>
+                            <!-- Fecha programada del evento -->
                             <div class="col-md-4">
                                 <label for="fechaEvento" class="form-label">Fecha Programada</label>
                                 <input type="date" id="fechaEvento" name="fechaEvento" class="form-control" required>
                             </div>
+                            <!-- Municipio donde se realiza la actividad -->
                             <div class="col-md-6">
                                 <label for="municipio" class="form-label">Municipio</label>
                                 <input type="text" id="municipio" name="municipio" class="form-control" maxlength="50" required>
                             </div>
+                            <!-- Tope o meta de recaudo en COP -->
                             <div class="col-md-6">
                                 <label for="metaRecaudo" class="form-label">Tope / Meta de Monto (COP)</label>
                                 <input type="number" id="metaRecaudo" name="metaRecaudo" class="form-control" step="any" min="1" placeholder="Ej. 5000000" required>
                             </div>
+                            <!-- Campo de total recaudado (mostrado únicamente en modo edición) -->
                             <div id="campoTotalRecaudado" class="col-md-6 d-none">
                                 <label for="totalRecaudo" class="form-label">Total Recaudado (COP)</label>
                                 <input type="number" id="totalRecaudo" name="totalRecaudado" class="form-control" step="any" min="0">
                             </div>
+                            <!-- Botonera inferior para cancelar o guardar cambios -->
                             <div class="col-12 mt-3 text-end">
                                 <button type="button" id="cancelarEdicion" class="btn btn-secondary px-4 me-2" data-bs-dismiss="modal">Cancelar</button>
                                 <button type="submit" id="guardarActividad" class="btn btn-custom px-4">Crear Actividad</button>
                             </div>
+                            <!-- Área de mensajes de estado del formulario -->
                             <div class="col-12">
                                 <p id="mensajeActividad" class="mb-0 small fw-semibold" role="status"></p>
                             </div>
@@ -213,7 +254,7 @@
         </div>
     </div>
 
-    <!-- Scripts de Bootstrap, sesión/tema y CRUD de actividades -->
+    <!-- Scripts de Bootstrap (modales), control de sesión/tema y CRUD de actividades -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../Controladores/sesion.js?v=8"></script>
     <script src="../Controladores/actividades.js?v=9"></script>

@@ -3,45 +3,55 @@
 <!-- Idioma español -->
 <html lang="es">
 
-<!-- Cabecera con Bootstrap, íconos y estilos -->
+<!-- Cabecera con metadatos, Bootstrap 5, íconos y hoja de estilos del proyecto -->
 <head>
+    <!-- Codificación UTF-8 para soportar tildes y caracteres en español -->
     <meta charset="UTF-8">
+    <!-- Ajuste responsivo para visualización correcta en móviles y escritorio -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Título de la pestaña del navegador -->
     <title>Registro de Pagos</title>
+    <!-- Framework CSS Bootstrap 5 para cuadrícula, tarjetas, tablas y modales -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Librería de íconos Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="../Assets/css/estilos.css?v=20">
+    <!-- Hoja de estilos personalizada con temas diferenciados para Admin y Asociado -->
+    <link rel="stylesheet" href="../Assets/css/estilos.css?v=23">
 </head>
 
-<!-- Cuerpo de módulo interno -->
+<!-- Cuerpo de módulo interno con tema visual dinámico aplicado por sesion.js -->
 <body class="body-gestion">
 
-    <!-- Barra de navegación superior fija -->
+    <!-- Barra de navegación superior fija (oculta en escritorio cuando aplica barra lateral) -->
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
         <div class="container">
             <!-- Marca GESTIÓN con redirección al panel principal -->
             <a class="navbar-brand" style="color: var(--neon-green); font-weight: bold;" href="dashboard.html?v=3">
                 <i class="bi bi-layers-fill"></i> GESTIÓN
             </a>
-            <!-- Botón de menú para dispositivos móviles -->
+            <!-- Botón de menú hamburguesa para dispositivos móviles -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
             </button>
-            <!-- Enlaces de navegación y botón de cierre de sesión -->
+            <!-- Enlaces de navegación entre módulos y botón de cierre de sesión -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <!-- Enlace al módulo de Asociados -->
                     <li class="nav-item"><a class="nav-link" href="asociados.html?v=3"><i class="bi bi-people"></i>
                             Asociados</a></li>
+                    <!-- Enlace al módulo de Actividades -->
                     <li class="nav-item"><a class="nav-link" href="actividades.html?v=3"><i
                                 class="bi bi-calendar-event"></i> Actividades</a></li>
                     <!-- Módulo activo actual: Pagos -->
                     <li class="nav-item"><a class="nav-link active" href="pagos.html?v=3"><i class="bi bi-cash-coin"></i>
                             Pagos</a></li>
+                    <!-- Enlace al módulo de Préstamos -->
                     <li class="nav-item"><a class="nav-link" href="prestamos.html?v=3"><i class="bi bi-bank"></i>
                             Préstamos</a></li>
                     <!-- Enlace Reportes visible únicamente para rol Admin -->
                     <li class="nav-item d-none" data-solo-admin><a class="nav-link" href="reportes.html?v=1"><i
                                 class="bi bi-graph-up-arrow"></i> Reportes</a></li>
+                    <!-- Botón para cerrar la sesión activa del usuario -->
                     <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
                         <button type="button" class="btn btn-danger btn-sm btn-cerrar-sesion" onclick="cerrarSesion()">
                             <i class="bi bi-box-arrow-right"></i> Cerrar sesión
@@ -52,18 +62,28 @@
         </div>
     </nav>
 
-    <!-- Contenedor principal -->
+    <!-- Contenedor principal del módulo de Pagos -->
     <div class="container">
-        <!-- Lista de pagos de cuotas registrados (solo visualización para rol Admin) -->
+        <!-- ======================================================================
+             VISTA ADMINISTRADOR: TABLA DE PAGOS Y VERIFICACIÓN DE COMPROBANTES
+             ====================================================================== -->
         <div id="seccionTablaPagosAdmin" data-solo-admin class="row justify-content-center d-none">
             <div class="col-12">
+                <!-- Alerta de confirmación o estado al aprobar comprobantes de pago -->
+                <div id="alertaAdminPagos" class="alert alert-success d-none mb-3" role="status"></div>
+                <!-- Tarjeta contenedora de la tabla administrativa de pagos -->
                 <div class="card shadow-sm">
+                    <!-- Encabezado con título de la tabla y contador dinámico de registros -->
                     <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center gap-2">
                         <h5 class="mb-0"><i class="bi bi-cash-stack me-2"></i>Pagos de Cuotas Registrados</h5>
+                        <!-- Insignia que muestra la cantidad total de pagos cargados -->
                         <span id="totalPagos" class="badge bg-secondary">0</span>
                     </div>
+                    <!-- Contenedor responsivo para desplazamiento horizontal en pantallas pequeñas -->
                     <div class="table-responsive">
+                        <!-- Tabla con el listado completo de pagos registrados por los asociados -->
                         <table class="table table-striped table-hover align-middle mb-0">
+                            <!-- Cabecera de columnas de la tabla administrativa -->
                             <thead class="table-dark">
                                 <tr>
                                     <th scope="col">#</th>
@@ -72,12 +92,16 @@
                                     <th scope="col">Asociado</th>
                                     <th scope="col">Valor Cuota</th>
                                     <th scope="col">Fecha de Pago</th>
+                                    <th scope="col" class="text-center">Comprobante</th>
+                                    <th scope="col" class="text-center">Estado</th>
+                                    <th scope="col" class="text-center">Verificación</th>
                                 </tr>
                             </thead>
-                            <!-- Filas insertadas dinámicamente por pagos.js -->
+                            <!-- Cuerpo llenado dinámicamente por Controladores/pagos.js -->
                             <tbody id="listaPagos">
+                                <!-- Estado inicial de carga mientras se consulta el servidor -->
                                 <tr>
-                                    <td colspan="6" class="text-center py-4">
+                                    <td colspan="9" class="text-center py-4">
                                         Cargando pagos...
                                     </td>
                                 </tr>
@@ -88,9 +112,11 @@
             </div>
         </div>
 
-        <!-- Vista de Mis Pagos e Historial de Cuotas (exclusiva para rol Asociado) -->
+        <!-- ======================================================================
+             VISTA ASOCIADO: SALDOS DE PRÉSTAMOS, REGISTRO DE PAGO E HISTORIAL
+             ====================================================================== -->
         <div id="seccionPagosAsociado" data-solo-asociado class="d-none">
-            <!-- Encabezado superior con título y botón Volver al Panel -->
+            <!-- Encabezado superior con título, descripción y botón Volver al Panel -->
             <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
                 <div>
                     <h2 class="titulo-ficha-asociado mb-1">
@@ -100,6 +126,7 @@
                         Consulta el saldo pendiente de tus préstamos y registra tus comprobantes de pago
                     </p>
                 </div>
+                <!-- Enlace para regresar al panel principal del asociado -->
                 <a href="dashboard.html?v=5" class="btn btn-volver-panel">
                     <i class="bi bi-arrow-left me-1"></i>Volver al Panel
                 </a>
@@ -110,7 +137,7 @@
                 <h5 class="titulo-seccion-saldos mb-3">
                     <i class="bi bi-pie-chart-fill me-2"></i>Saldo Pendiente de Cada Uno de Tus Préstamos
                 </h5>
-                <!-- Tarjetas generadas dinámicamente por pagos.js -->
+                <!-- Cuadrícula donde pagos.js inserta dinámicamente una tarjeta por cada crédito -->
                 <div id="tarjetasSaldosPrestamos" class="row g-3">
                     <div class="col-12">
                         <div class="card ficha-asociado-card p-4 text-center text-muted">
@@ -120,70 +147,90 @@
                 </div>
             </div>
 
-            <!-- Bloque inferior en 2 columnas: Registrar Pago de Cuota + Comprobantes Mensuales -->
+            <!-- Bloque inferior en 2 columnas: Formulario de pago (izquierda) e Historial (derecha) -->
             <div class="row g-4 align-items-start">
-                <!-- Columna izquierda: tarjeta Registrar Pago de Cuota -->
+                <!-- Columna izquierda: tarjeta y formulario para registrar el pago de una cuota -->
                 <div class="col-lg-4">
                     <div class="card ficha-asociado-card shadow-sm">
+                        <!-- Cabecera vino de la tarjeta de registro de pago -->
                         <div class="card-header ficha-asociado-header py-3 px-4">
                             <h6 class="mb-0 fw-semibold">
                                 <i class="bi bi-credit-card me-2"></i>Registrar Pago de Cuota
                             </h6>
                         </div>
                         <div class="card-body p-4">
+                            <!-- Formulario enviado por pagos.js mediante FormData con imagen adjunta -->
                             <form id="formPagoAsociado" class="form-prestamo-asociado">
-                                <!-- Selector de créditos propios del asociado -->
+                                <!-- Selector de préstamos aprobados/activos del asociado -->
                                 <div class="mb-3">
                                     <label for="asocSelectPrestamoPago" class="form-label">Selecciona el Préstamo</label>
                                     <select id="asocSelectPrestamoPago" class="form-select" required>
                                         <option value="" selected disabled>-- Selecciona el Crédito a Abonar --</option>
                                     </select>
                                 </div>
-                                <!-- Monto abonado en COP -->
+                                <!-- Campo numérico para el monto abonado en pesos colombianos -->
                                 <div class="mb-3">
                                     <label for="asocValorCuota" class="form-label">Valor Abonado ($ COP)</label>
-                                    <input type="number" id="asocValorCuota" class="form-control" step="0.01" min="0.01" placeholder="Ej: 150000" required>
+                                    <input type="number" id="asocValorCuota" class="form-control" step="any" min="0.01" placeholder="Ej: 150000" required>
                                 </div>
-                                <!-- Fecha del pago -->
-                                <div class="mb-4">
+                                <!-- Selector de fecha en la que se efectuó el pago -->
+                                <div class="mb-3">
                                     <label for="asocFechaPago" class="form-label">Fecha del Pago</label>
                                     <input type="date" id="asocFechaPago" class="form-control" required>
                                 </div>
-                                <!-- Botón Guardar Comprobante -->
+                                <!-- Carga de imagen del comprobante de pago (obligatoria para verificación del Admin) -->
+                                <div class="mb-4">
+                                    <label for="asocComprobantePago" class="form-label">Foto del Comprobante</label>
+                                    <input type="file" id="asocComprobantePago" class="form-control" accept="image/jpeg,image/png,image/webp,image/gif" required>
+                                    <!-- Nota informativa sobre formatos permitidos y estado inicial Pendiente -->
+                                    <small class="d-block mt-1" style="font-size: 0.76rem; color: #7c5c50;">
+                                        Adjunta una foto (JPG, PNG, WEBP o GIF, máx. 4 MB). El pago quedará en estado <strong>Pendiente</strong> hasta que el administrador lo verifique.
+                                    </small>
+                                    <!-- Contenedor de vista previa instantánea de la imagen seleccionada -->
+                                    <div id="previewComprobanteWrap" class="mt-2 d-none text-center p-2 rounded-3" style="background: #faf3ee; border: 1px dashed #d8b5a0;">
+                                        <img id="previewComprobanteImg" src="" alt="Vista previa del comprobante" class="img-fluid rounded-2" style="max-height: 150px; object-fit: contain;">
+                                    </div>
+                                </div>
+                                <!-- Botón principal para enviar el comprobante al servidor -->
                                 <button type="submit" id="btnGuardarPagoAsociado" class="btn btn-guardar-perfil w-100">
-                                    <i class="bi bi-check-circle me-2"></i>Guardar Comprobante
+                                    <i class="bi bi-upload me-2"></i>Enviar Comprobante
                                 </button>
-                                <!-- Mensaje de estado -->
+                                <!-- Área de mensajes de validación, éxito o error del formulario -->
                                 <p id="mensajePagoAsociado" class="mb-0 mt-3 small fw-semibold" role="status"></p>
                             </form>
                         </div>
                     </div>
                 </div>
 
-                <!-- Columna derecha: tabla Comprobantes de Cuotas Pagadas Mensualmente -->
+                <!-- Columna derecha: tabla con el historial de comprobantes de cuotas pagadas -->
                 <div class="col-lg-8">
                     <div class="card ficha-asociado-card shadow-sm">
+                        <!-- Cabecera oscura cálida con contador de pagos del asociado -->
                         <div class="card-header prestamos-historial-header py-3 px-4 d-flex justify-content-between align-items-center">
                             <h6 class="mb-0 fw-semibold">
                                 <i class="bi bi-receipt-cutoff me-2"></i>Comprobantes de Cuotas Pagadas Mensualmente
                             </h6>
                             <span id="totalPagosAsociado" class="badge bg-secondary">0</span>
                         </div>
+                        <!-- Contenedor responsivo para la tabla de historial del asociado -->
                         <div class="table-responsive">
                             <table class="table table-hover align-middle mb-0">
+                                <!-- Encabezados de columnas del historial de cuotas -->
                                 <thead class="prestamos-asociado-thead">
                                     <tr>
                                         <th scope="col">N° Pago</th>
                                         <th scope="col">Crédito</th>
                                         <th scope="col">Valor Abonado</th>
                                         <th scope="col">Fecha de Pago</th>
-                                        <th scope="col">Estado</th>
+                                        <th scope="col" class="text-center">Comprobante</th>
+                                        <th scope="col" class="text-center">Estado</th>
                                     </tr>
                                 </thead>
-                                <!-- Comprobantes generados dinámicamente por pagos.js -->
+                                <!-- Filas de comprobantes generadas dinámicamente por pagos.js -->
                                 <tbody id="listaPagosAsociado">
+                                    <!-- Fila de espera mientras se consultan los pagos del asociado -->
                                     <tr>
-                                        <td colspan="5" class="text-center py-4 text-muted">
+                                        <td colspan="6" class="text-center py-4 text-muted">
                                             Cargando comprobantes de pago...
                                         </td>
                                     </tr>
@@ -196,10 +243,43 @@
         </div>
     </div>
 
-    <!-- Scripts de Bootstrap, control de sesión/tema y controlador de Pagos -->
+    <!-- ======================================================================
+         MODAL EMERGENTE: VISUALIZACIÓN Y APROBACIÓN DE COMPROBANTE DE PAGO
+         ====================================================================== -->
+    <div class="modal fade modal-admin-crud" id="modalVerComprobante" tabindex="-1" aria-labelledby="tituloModalComprobante" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <!-- Encabezado del modal con título y botón de cierre -->
+                <div class="modal-header">
+                    <h5 id="tituloModalComprobante" class="modal-title">
+                        <i class="bi bi-image me-2"></i>Comprobante de Pago
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <!-- Cuerpo del modal: detalles del pago, foto del comprobante y botones de acción -->
+                <div class="modal-body text-center">
+                    <!-- Resumen textual del pago seleccionado (asociado, crédito, monto y fecha) -->
+                    <div id="infoModalComprobante" class="mb-3 small text-muted"></div>
+                    <!-- Marco donde se muestra la fotografía del comprobante a tamaño ampliado -->
+                    <div class="p-2 rounded-3 mb-3" style="background: #f8f5f9; border: 1px solid #e6dce9;">
+                        <img id="imgModalComprobante" src="" alt="Foto del comprobante de pago" class="img-fluid rounded-2" style="max-height: 460px; object-fit: contain;">
+                    </div>
+                    <!-- Botonera inferior: cerrar modal y botón de aprobación directa (visible solo para Admin en pagos pendientes) -->
+                    <div class="d-flex flex-wrap justify-content-end gap-2">
+                        <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" id="btnAprobarDesdeModal" class="btn-aceptar-admin px-4 d-none">
+                            <i class="bi bi-check2-circle"></i> Aprobar comprobante
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts de Bootstrap (modales/colapsables), control de sesión/tema y lógica de Pagos -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../Controladores/sesion.js?v=8"></script>
-    <script src="../Controladores/pagos.js?v=7"></script>
+    <script src="../Controladores/pagos.js?v=8"></script>
 </body>
 
 </html>
