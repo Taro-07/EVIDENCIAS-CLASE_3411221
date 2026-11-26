@@ -10,7 +10,7 @@
     <title>Registro de Pagos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="../Assets/css/estilos.css?v=8">
+    <link rel="stylesheet" href="../Assets/css/estilos.css?v=20">
 </head>
 
 <!-- Cuerpo de módulo interno -->
@@ -54,56 +54,11 @@
 
     <!-- Contenedor principal -->
     <div class="container">
-        <!-- Formulario superior para registrar/editar cuotas (solo visible para Admin) -->
-        <div id="seccionFormPago" data-solo-admin class="row justify-content-center d-none">
-            <div class="col-lg-8 col-md-10">
-                <div class="glass-card">
-                    <!-- Título dinámico: "Registro de Pago" o "Editar Pago" -->
-                    <h3 id="tituloFormPago" class="mb-4 text-center" style="color: var(--neon-green);">
-                        <i class="bi bi-wallet2"></i> Registro de Pago
-                    </h3>
-                    <!-- Formulario mapeado a la tabla pagos_cuotas (idPrestamo, ValorCuota, FechaPago) -->
-                    <form id="formPago">
-                        <!-- Campo oculto que almacena idPago cuando se edita un pago -->
-                        <input type="hidden" id="idPago" name="idPago">
-                        <div class="row g-3">
-                            <!-- Selector del préstamo al cual pertenece la cuota (clave foránea idPrestamo) -->
-                            <div class="col-12">
-                                <label for="idPrestamo" class="form-label">Préstamo (ID Préstamo)</label>
-                                <select id="idPrestamo" name="idPrestamo" class="form-select" required>
-                                    <option value="" selected disabled>Cargando préstamos...</option>
-                                </select>
-                            </div>
-                            <!-- Monto de la cuota pagada en COP (columna ValorCuota) -->
-                            <div class="col-md-6">
-                                <label for="ValorCuota" class="form-label">Valor Cuota (COP)</label>
-                                <input type="number" id="ValorCuota" name="ValorCuota" class="form-control" step="0.01" min="0.01" placeholder="$ 0.00" required>
-                            </div>
-                            <!-- Fecha en que se realizó el pago (columna FechaPago) -->
-                            <div class="col-md-6">
-                                <label for="FechaPago" class="form-label">Fecha de Pago</label>
-                                <input type="date" id="FechaPago" name="FechaPago" class="form-control" required>
-                            </div>
-                            <!-- Botones para cancelar edición o registrar/actualizar pago -->
-                            <div class="col-12 mt-4 text-end">
-                                <button type="button" id="cancelarEdicionPago" class="btn btn-secondary px-4 me-2 d-none">Cancelar</button>
-                                <button type="submit" id="btnGuardarPago" class="btn btn-custom px-4">Registrar Pago</button>
-                            </div>
-                            <!-- Párrafo de confirmación o error -->
-                            <div class="col-12">
-                                <p id="mensajePago" class="mb-0 text-white fw-semibold" role="status"></p>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Lista de pagos de cuotas registrados (vista completa exclusiva para rol Admin) -->
-        <div id="seccionTablaPagosAdmin" data-solo-admin class="row justify-content-center mt-4 d-none">
+        <!-- Lista de pagos de cuotas registrados (solo visualización para rol Admin) -->
+        <div id="seccionTablaPagosAdmin" data-solo-admin class="row justify-content-center d-none">
             <div class="col-12">
                 <div class="card shadow-sm">
-                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center gap-2">
                         <h5 class="mb-0"><i class="bi bi-cash-stack me-2"></i>Pagos de Cuotas Registrados</h5>
                         <span id="totalPagos" class="badge bg-secondary">0</span>
                     </div>
@@ -117,14 +72,12 @@
                                     <th scope="col">Asociado</th>
                                     <th scope="col">Valor Cuota</th>
                                     <th scope="col">Fecha de Pago</th>
-                                    <!-- Columna de botones Editar/Eliminar exclusiva para Admin -->
-                                    <th id="encabezadoAccionesPago" data-solo-admin class="d-none" scope="col">Acciones</th>
                                 </tr>
                             </thead>
                             <!-- Filas insertadas dinámicamente por pagos.js -->
                             <tbody id="listaPagos">
                                 <tr>
-                                    <td colspan="7" class="text-center py-4">
+                                    <td colspan="6" class="text-center py-4">
                                         Cargando pagos...
                                     </td>
                                 </tr>
@@ -147,7 +100,7 @@
                         Consulta el saldo pendiente de tus préstamos y registra tus comprobantes de pago
                     </p>
                 </div>
-                <a href="dashboard.html?v=4" class="btn btn-volver-panel">
+                <a href="dashboard.html?v=5" class="btn btn-volver-panel">
                     <i class="bi bi-arrow-left me-1"></i>Volver al Panel
                 </a>
             </div>
@@ -245,8 +198,8 @@
 
     <!-- Scripts de Bootstrap, control de sesión/tema y controlador de Pagos -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../Controladores/sesion.js?v=5"></script>
-    <script src="../Controladores/pagos.js?v=4"></script>
+    <script src="../Controladores/sesion.js?v=8"></script>
+    <script src="../Controladores/pagos.js?v=7"></script>
 </body>
 
 </html>

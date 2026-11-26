@@ -1,281 +1,1377 @@
 <!-- Declara documento HTML5 -->
 <!DOCTYPE html>
 <!-- Elemento raíz de la vista del panel principal -->
-<html lang="en">
+<html lang="es">
 
-<!-- Cabecera con librerías Bootstrap, íconos y estilos propios del panel -->
+<!-- Cabecera con Bootstrap 5, íconos y estilos diferenciados para Admin y Asociado -->
 <head>
-    <!-- Codificación UTF-8 -->
     <meta charset="UTF-8">
-    <!-- Escala adaptable a móviles y escritorio -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Hoja de estilos de Bootstrap 5 desde CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
     <!-- Librería de íconos Bootstrap Icons desde CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <!-- Título de la pestaña -->
-    <title>Proyecto ADSO</title>
-    <!-- Estilos internos para los temas visuales del rol Admin y del rol Asociado -->
+    <title>Proyecto ADSO - Panel Principal</title>
     <style>
-        /* Encabezado superior por defecto (rol Admin: morado oscuro con texto blanco) */
-        .header-mr{
-            background-color:rgb(102, 5, 86);
-            color:white;
-            padding: 20px 30px;
-        }
-        /* Estilo base de cada tarjeta de módulo con borde superior azul y animación suave */
-        .modulo-card{
-            border-top:4px solid #0d6efd;
-            border-radius: 10px;
-            transition: 0.2s;
-            cursor:pointer;
-            height:100%;
-        }
-        /* Efecto de elevación al pasar el puntero sobre una tarjeta */
-        .modulo-card:hover {
-            transform: translateY(-4px);
+        /* ==============================================================
+           ESTILOS DEL PANEL PRINCIPAL PARA ROL ADMIN (MORADO Y CLARO)
+           Misma estructura moderna con barra lateral, barra superior,
+           burbujas KPI y panel inferior, manteniendo su paleta morada
+           ============================================================== */
+        body.tema-admin {
+            background: linear-gradient(160deg, #f7f3fa 0%, #efe6f5 55%, #e8d9f0 100%) !important;
+            min-height: 100vh;
+            color: #2c172b;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Colores y tamaño de los íconos de cada módulo en el tema Admin */
-        .icono-asociados {
-            font-size: 45px;
-            color: rgb(183, 0, 255);
+        .sidebar-admin {
+            background: #ffffff;
+            border-right: 1px solid #e1d0e8;
+            box-shadow: 4px 0 18px rgba(102, 5, 86, 0.06);
         }
 
-        .icono-pagos {
-            font-size: 45px;
-            color: rgb(186, 20, 192);
-        }
-
-        .icono-actividades {
-            font-size: 45px;
-            color: rgb(153, 0, 255);
-        }
-
-        .icono-prestamos {
-            font-size: 45px;
-            color: rgb(170, 17, 157);
-        }
-
-        .icono-reportes {
-            font-size: 45px;
+        .sidebar-admin .sidebar-brand {
             color: rgb(102, 5, 86);
         }
 
-        /* Tema visual cálido y ameno aplicado por dashboard.js cuando el usuario tiene rol Asociado */
+        .sidebar-admin .sidebar-brand i {
+            color: rgb(153, 0, 255);
+        }
+
+        .sidebar-admin .sidebar-link {
+            color: #4a2d49;
+        }
+
+        .sidebar-admin .sidebar-link i {
+            color: #8c4d96;
+        }
+
+        .sidebar-admin .sidebar-link:hover {
+            background-color: #f6edf9;
+            color: rgb(102, 5, 86);
+        }
+
+        .sidebar-admin .sidebar-link:hover i {
+            color: rgb(102, 5, 86);
+        }
+
+        .sidebar-admin .sidebar-link.active {
+            background: linear-gradient(90deg, #f2e2f8 0%, #faf3fc 100%);
+            color: rgb(102, 5, 86);
+            border-left: 4px solid rgb(102, 5, 86);
+        }
+
+        .sidebar-admin .sidebar-link.active i {
+            color: rgb(102, 5, 86);
+        }
+
+        .sidebar-admin .sidebar-footer {
+            border-top-color: #eadcf0;
+        }
+
+        .topbar-admin {
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid #e1d0e8;
+        }
+
+        .topbar-admin .topbar-titulo {
+            color: rgb(102, 5, 86);
+        }
+
+        .topbar-admin .topbar-subtitulo {
+            color: #6b546c;
+        }
+
+        .pill-admin-cartera {
+            background: linear-gradient(90deg, rgb(102, 5, 86) 0%, #8a0c76 100%);
+            box-shadow: 0 4px 12px rgba(102, 5, 86, 0.24);
+        }
+
+        /* Campana de notificaciones de nuevas solicitudes para el rol Admin */
+        .notif-admin-wrap {
+            position: relative;
+        }
+
+        .btn-notificaciones-admin {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 1px solid #ddc6e6;
+            color: rgb(102, 5, 86);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.18rem;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(102, 5, 86, 0.08);
+            transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
+        }
+
+        .btn-notificaciones-admin:hover {
+            border-color: rgb(153, 0, 255);
+            background: #faf3fc;
+            transform: translateY(-1px);
+        }
+
+        .badge-notif-admin {
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 5px;
+            border-radius: 999px;
+            background: #dc2626;
+            color: #ffffff;
+            font-size: 0.7rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #ffffff;
+            box-shadow: 0 2px 6px rgba(220, 38, 38, 0.4);
+        }
+
+        .popover-notificaciones-admin {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 340px;
+            max-width: calc(100vw - 32px);
+            background: #ffffff;
+            border: 1px solid #e1d0e8;
+            border-top: 4px solid rgb(102, 5, 86);
+            border-radius: 15px;
+            box-shadow: 0 16px 36px rgba(75, 4, 64, 0.22);
+            z-index: 1060;
+            overflow: hidden;
+            animation: aparecerMiniBilletera 0.16s ease-out;
+        }
+
+        .popover-notif-header {
+            padding: 13px 16px;
+            border-bottom: 1px solid #eee2f3;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fcf8fe;
+        }
+
+        .popover-notif-lista {
+            max-height: 310px;
+            overflow-y: auto;
+        }
+
+        .notif-item-admin {
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: #2c172b;
+            border-bottom: 1px solid #f3eaf6;
+            transition: background-color 0.15s ease;
+        }
+
+        .notif-item-admin:hover {
+            background-color: #f9f2fc;
+            color: #2c172b;
+        }
+
+        .notif-item-icono {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.98rem;
+            flex-shrink: 0;
+        }
+
+        .notif-ico-crear { background: #fff4e0; color: #9c5b00; }
+        .notif-ico-editar { background: #eef1ff; color: #2f45a8; }
+        .notif-ico-eliminar { background: #fdecee; color: #b02a37; }
+
+        .popover-notif-footer {
+            padding: 10px 16px;
+            border-top: 1px solid #eee2f3;
+            text-align: center;
+            background: #fcf8fe;
+        }
+
+        .popover-notif-footer a {
+            color: rgb(102, 5, 86);
+            font-weight: 700;
+            font-size: 0.84rem;
+            text-decoration: none;
+        }
+
+        .popover-notif-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .perfil-pill-admin {
+            border-color: #ddc6e6;
+            color: #2c172b;
+            box-shadow: 0 3px 10px rgba(102, 5, 86, 0.08);
+        }
+
+        .perfil-pill-admin:hover {
+            border-color: rgb(153, 0, 255);
+            box-shadow: 0 5px 14px rgba(102, 5, 86, 0.16);
+        }
+
+        .avatar-tono-morado { background: linear-gradient(135deg, rgb(102, 5, 86) 0%, #9900ff 100%); }
+
+        .layout-admin .eyebrow-actividad {
+            color: #7c5480;
+        }
+
+        .layout-admin .saludo-asociado {
+            color: #2c172b;
+        }
+
+        .layout-admin .saludo-asociado span {
+            color: rgb(102, 5, 86);
+        }
+
+        .btn-accion-suave-admin {
+            background-color: #ffffff;
+            color: rgb(102, 5, 86);
+            border: 1px solid #d9c0e3;
+            border-radius: 10px;
+            padding: 8px 15px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .btn-accion-suave-admin:hover {
+            background-color: #f6edf9;
+            border-color: rgb(102, 5, 86);
+            color: rgb(102, 5, 86);
+        }
+
+        .btn-accion-primaria-admin {
+            background: linear-gradient(90deg, rgb(102, 5, 86) 0%, #8a0c76 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(102, 5, 86, 0.24);
+            transition: filter 0.2s ease, transform 0.2s ease;
+        }
+
+        .btn-accion-primaria-admin:hover {
+            color: #ffffff;
+            filter: brightness(1.08);
+            transform: translateY(-1px);
+        }
+
+        .layout-admin .burbuja-kpi {
+            background: #ffffff;
+            border-color: #e3d3ea;
+            box-shadow: 0 5px 16px rgba(102, 5, 86, 0.07);
+        }
+
+        .layout-admin .burbuja-numero {
+            color: #2c172b;
+        }
+
+        .layout-admin .burbuja-etiqueta {
+            color: #6b546c;
+        }
+
+        .burbuja-admin-asociados { border-top-color: rgb(102, 5, 86); }
+        .burbuja-admin-creditos { border-top-color: #8a0c76; }
+        .burbuja-admin-actividades { border-top-color: rgb(153, 0, 255); }
+        .burbuja-admin-pendientes { border-top-color: #c0284c; }
+
+        .burbuja-ico-admin-asociados { background: #f5e6f8; color: rgb(102, 5, 86); }
+        .burbuja-ico-admin-creditos { background: #f2e4fa; color: #8a0c76; }
+        .burbuja-ico-admin-actividades { background: #f3e6ff; color: rgb(153, 0, 255); }
+        .burbuja-ico-admin-pendientes { background: #fde8ee; color: #c0284c; }
+
+        .panel-reciente-admin {
+            background: #ffffff;
+            border: 1px solid #e3d3ea;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(102, 5, 86, 0.08);
+            overflow: hidden;
+        }
+
+        .panel-reciente-admin .panel-reciente-header {
+            border-bottom-color: #eee2f3;
+        }
+
+        .badge-admin-panel {
+            background-color: #f3e5f8;
+            color: rgb(102, 5, 86);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            padding: 6px 12px;
+            border-radius: 999px;
+        }
+
+        /* Tema morado para el modal de foto cuando el usuario es Admin */
+        body.tema-admin #modalFotoPerfil .modal-content {
+            border-color: #e1d0e8 !important;
+            background: #ffffff !important;
+        }
+
+        body.tema-admin #modalFotoPerfil .modal-header {
+            background: linear-gradient(90deg, rgb(102, 5, 86) 0%, #8a0c76 100%) !important;
+            border-bottom-color: #d6b6e0 !important;
+        }
+
+        body.tema-admin #modalFotoPerfil #btnGuardarFoto {
+            background: linear-gradient(90deg, rgb(102, 5, 86) 0%, #8a0c76 100%) !important;
+        }
+
+        /* ==============================================================
+           ESTRUCTURA MODERNA CON BARRA LATERAL PARA ROL ASOCIADO
+           Paleta cálida: vino (#6e1b22 / #7c1f24), terracota (#a83c32) y marfil
+           ============================================================== */
         body.tema-asociado {
             background: linear-gradient(160deg, #faf3ee 0%, #f3e2d6 55%, #ead0be 100%) !important;
             min-height: 100vh;
             color: #3d241c;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Encabezado superior vino profundo con degradado sutil */
-        body.tema-asociado .header-mr {
-            background: linear-gradient(90deg, #6e1b22 0%, #86252b 100%);
-            border-bottom: 3px solid #d49a6a;
-            box-shadow: 0 4px 16px rgba(110, 27, 34, 0.22);
+        /* Contenedor flexible con barra lateral izquierda y área principal derecha */
+        .layout-asociado {
+            display: flex;
+            min-height: 100vh;
         }
 
-        /* Título del encabezado en marfil cálido muy legible */
-        body.tema-asociado .header-mr h3 {
-            color: #fff8f0;
-            font-weight: 700;
+        /* Barra lateral fija en tono marfil cálido con borde suave */
+        .sidebar-asociado {
+            width: 250px;
+            flex-shrink: 0;
+            background: #fffdfb;
+            border-right: 1px solid #e6d3c5;
+            display: flex;
+            flex-direction: column;
+            padding: 22px 16px;
+            box-shadow: 4px 0 18px rgba(110, 27, 34, 0.05);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            z-index: 1020;
+            transition: transform 0.25s ease;
+        }
+
+        /* Marca del club en la parte superior de la barra lateral */
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #7c1f24;
+            padding: 6px 10px 22px;
+            text-decoration: none;
             letter-spacing: 0.3px;
         }
 
-        /* Nombre de usuario en tono crema suave */
-        body.tema-asociado #nombreUsuario {
-            color: #f7dfd0;
-            font-weight: 500;
-            margin-right: 8px;
+        .sidebar-brand i {
+            color: #a83c32;
+            font-size: 1.4rem;
         }
 
-        /* Subtítulo de la sección en vino oscuro */
-        body.tema-asociado h5 {
+        /* Enlaces de navegación lateral */
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 14px;
+            border-radius: 10px;
+            color: #5c3c31;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.94rem;
+            transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+        }
+
+        .sidebar-link i {
+            font-size: 1.1rem;
+            color: #9c5b48;
+            transition: color 0.2s ease;
+        }
+
+        .sidebar-link:hover {
+            background-color: #f9ede4;
+            color: #7c1f24;
+        }
+
+        .sidebar-link:hover i {
+            color: #7c1f24;
+        }
+
+        .sidebar-link.active {
+            background: linear-gradient(90deg, #f7e4d8 0%, #fcf1ea 100%);
+            color: #7c1f24;
+            border-left: 4px solid #8f2933;
+        }
+
+        .sidebar-link.active i {
+            color: #7c1f24;
+        }
+
+        /* Botón Cerrar sesión fijado en la parte inferior de la barra lateral */
+        .sidebar-footer {
+            border-top: 1px solid #eedfd4;
+            padding-top: 14px;
+            margin-top: 14px;
+        }
+
+        .btn-sidebar-logout {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 10px;
+            background: transparent;
+            color: #b4232c;
+            font-weight: 600;
+            font-size: 0.94rem;
+            text-align: left;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-sidebar-logout:hover {
+            background-color: #fdecee;
+            color: #8f1820;
+        }
+
+        /* Área principal derecha */
+        .contenido-asociado {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Barra superior dentro del área principal */
+        .topbar-asociado {
+            background: rgba(255, 253, 251, 0.88);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e6d3c5;
+            padding: 16px 28px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            position: sticky;
+            top: 0;
+            z-index: 1010;
+        }
+
+        .topbar-titulo {
             color: #5c1d22;
-            letter-spacing: 0.2px;
+            font-size: 1.45rem;
+            font-weight: 800;
+            margin: 0;
+            line-height: 1.2;
         }
 
-        /* Tarjetas claras cálidas con borde superior terracota-vino y sombra suave */
-        body.tema-asociado .modulo-card {
+        .topbar-subtitulo {
+            color: #7c5c50;
+            font-size: 0.88rem;
+            margin: 2px 0 0;
+        }
+
+        /* Píldora de saldo pendiente de créditos en el encabezado */
+        .pill-saldo-top {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(90deg, #6e1b22 0%, #8f2933 100%);
+            color: #fff8f0;
+            padding: 7px 15px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(110, 27, 34, 0.2);
+            transition: filter 0.2s ease, transform 0.2s ease;
+        }
+
+        .pill-saldo-top:hover {
+            color: #fff8f0;
+            filter: brightness(1.08);
+            transform: translateY(-1px);
+        }
+
+        /* Píldora de perfil superior (avatar modificable + nombre del asociado) */
+        .perfil-pill-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #ffffff;
+            border: 1px solid #e3cdc0;
+            border-radius: 999px;
+            padding: 5px 14px 5px 6px;
+            color: #3d241c;
+            font-weight: 600;
+            font-size: 0.92rem;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(110, 27, 34, 0.08);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+        }
+
+        .perfil-pill-btn:hover {
+            border-color: #a83c32;
+            box-shadow: 0 5px 14px rgba(110, 27, 34, 0.15);
+            transform: translateY(-1px);
+        }
+
+        /* Contenedor circular del avatar (soporta imagen subida o inicial generada) */
+        .avatar-circulo {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.98rem;
+            color: #fff8f0;
+            overflow: hidden;
+            position: relative;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #6e1b22 0%, #a83c32 100%);
+            border: 2px solid #f0d7c4;
+        }
+
+        .avatar-circulo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-grande {
+            width: 96px;
+            height: 96px;
+            font-size: 2.3rem;
+            border: 3px solid #d49a6a;
+            box-shadow: 0 6px 18px rgba(110, 27, 34, 0.18);
+        }
+
+        /* Paletas opcionales para el avatar con inicial */
+        .avatar-tono-vino { background: linear-gradient(135deg, #6e1b22 0%, #98342f 100%); }
+        .avatar-tono-terracota { background: linear-gradient(135deg, #a83c32 0%, #d06b42 100%); }
+        .avatar-tono-cobre { background: linear-gradient(135deg, #8f5023 0%, #c88346 100%); }
+        .avatar-tono-ciruela { background: linear-gradient(135deg, #5d1838 0%, #8e2c54 100%); }
+
+        /* Cuerpo interior con saludo, tarjetas de módulos e historial reciente */
+        .cuerpo-asociado {
+            padding: 26px 28px 36px;
+            max-width: 1280px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .eyebrow-actividad {
+            font-size: 0.74rem;
+            font-weight: 700;
+            letter-spacing: 0.9px;
+            color: #8c6354;
+            text-transform: uppercase;
+        }
+
+        .saludo-asociado {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #3d241c;
+            margin: 2px 0 0;
+        }
+
+        .saludo-asociado span {
+            color: #7c1f24;
+        }
+
+        /* Botones de acción rápida en la fila de bienvenida */
+        .btn-accion-suave {
+            background-color: #fffdfb;
+            color: #6e1b22;
+            border: 1px solid #dec7b8;
+            border-radius: 10px;
+            padding: 8px 15px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .btn-accion-suave:hover {
+            background-color: #f7ebe2;
+            border-color: #a83c32;
+            color: #5c161c;
+        }
+
+        .btn-accion-primaria {
+            background: linear-gradient(90deg, #6e1b22 0%, #8f2933 100%);
+            color: #fff8f0;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(110, 27, 34, 0.2);
+            transition: filter 0.2s ease, transform 0.2s ease;
+        }
+
+        .btn-accion-primaria:hover {
+            color: #fff8f0;
+            filter: brightness(1.08);
+            transform: translateY(-1px);
+        }
+
+        /* Tarjetas de los 4 módulos del Asociado (estilo limpio con barra superior de acento) */
+        .asoc-modulo-card {
             background: #fffdfb;
             border: 1px solid #e6d3c5;
             border-top: 4px solid #a83c32;
             border-radius: 14px;
-            color: #3d241c;
-            box-shadow: 0 6px 20px rgba(110, 27, 34, 0.08) !important;
-            transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+            padding: 20px;
+            height: 100%;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(110, 27, 34, 0.07);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
         }
 
-        /* Elevación suave y realce cálido al pasar el cursor */
-        body.tema-asociado .modulo-card:hover {
-            transform: translateY(-5px);
-            border-top-color: #7c1f24;
-            box-shadow: 0 12px 26px rgba(110, 27, 34, 0.16) !important;
+        .asoc-modulo-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 26px rgba(110, 27, 34, 0.14);
         }
 
-        /* Títulos de tarjetas en vino elegante */
-        body.tema-asociado .modulo-card h4 {
-            color: #7c1f24 !important;
+        .asoc-card-datos { border-top-color: #a63a2f; }
+        .asoc-card-actividades { border-top-color: #c25b38; }
+        .asoc-card-pagos { border-top-color: #8f2933; }
+        .asoc-card-prestamos { border-top-color: #b86a35; }
+
+        .asoc-icono-caja {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 14px;
+        }
+
+        .caja-datos { background: #fbeae7; color: #a63a2f; }
+        .caja-actividades { background: #fdf0e6; color: #c25b38; }
+        .caja-pagos { background: #f9e6e8; color: #8f2933; }
+        .caja-prestamos { background: #fbf1e4; color: #b86a35; }
+
+        .asoc-modulo-card h5 {
+            color: #7c1f24;
             font-weight: 700;
-            margin-top: 8px;
+            font-size: 1.12rem;
+            margin-bottom: 4px;
         }
 
-        /* Subtítulo en marrón expreso */
-        body.tema-asociado .modulo-card strong {
+        .asoc-modulo-card .subtitulo-card {
+            font-size: 0.86rem;
+            font-weight: 700;
             color: #4a2c22;
+            display: block;
+            margin-bottom: 6px;
         }
 
-        /* Íconos en tonos terracota y cobre armónicos con el fondo */
-        body.tema-asociado .modulo-card .icono-asociados {
-            color: #a63a2f;
+        .asoc-modulo-card p {
+            font-size: 0.84rem;
+            color: #6e5348;
+            margin: 0;
         }
 
-        body.tema-asociado .modulo-card .icono-actividades {
-            color: #c25b38;
+        /* Burbujas KPI compactas de cuotas pendientes (estilo moderno con barra superior de color) */
+        .burbuja-kpi {
+            background: #fffdfb;
+            border: 1px solid #e6d3c5;
+            border-top: 3px solid #a83c32;
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 5px 16px rgba(110, 27, 34, 0.06);
+            height: 100%;
         }
 
-        body.tema-asociado .modulo-card .icono-pagos {
-            color: #8f2933;
+        .burbuja-pendientes { border-top-color: #c25b38; }
+        .burbuja-pagadas { border-top-color: #198754; }
+        .burbuja-activos { border-top-color: #8f2933; }
+        .burbuja-total { border-top-color: #b86a35; }
+
+        .burbuja-icono {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
         }
 
-        body.tema-asociado .modulo-card .icono-prestamos {
-            color: #b86a35;
+        .burbuja-ico-pendientes { background: #fdf0e6; color: #c25b38; }
+        .burbuja-ico-pagadas { background: #e6f5ec; color: #198754; }
+        .burbuja-ico-activos { background: #f9e6e8; color: #8f2933; }
+        .burbuja-ico-total { background: #fbf1e4; color: #b86a35; }
+
+        .burbuja-numero {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: #3d241c;
+            line-height: 1.1;
         }
 
-        /* Texto descriptivo en marrón suave de excelente contraste */
-        body.tema-asociado .modulo-card p {
-            color: #6e5348 !important;
+        .burbuja-etiqueta {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #7c5c50;
+            margin-top: 2px;
+        }
+
+        /* Vista pequeña flotante (popover) de Mi Billetera al hacer clic en el botón Saldo */
+        .billetera-popover-wrap {
+            position: relative;
+        }
+
+        .pill-saldo-top {
+            cursor: pointer;
+        }
+
+        .popover-mini-billetera {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 285px;
+            background: #fffdfb;
+            border: 1px solid #e6d3c5;
+            border-top: 4px solid #8f2933;
+            border-radius: 15px;
+            padding: 16px 18px;
+            box-shadow: 0 14px 32px rgba(75, 18, 24, 0.2);
+            z-index: 1050;
+            animation: aparecerMiniBilletera 0.16s ease-out;
+        }
+
+        @keyframes aparecerMiniBilletera {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .mini-billetera-eyebrow {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.7px;
+            text-transform: uppercase;
+            color: #8c6354;
+        }
+
+        .mini-billetera-monto {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: #5c1d22;
+            line-height: 1.15;
+            margin: 4px 0 6px;
+        }
+
+        .btn-cerrar-mini-billetera {
+            border: none;
+            background: transparent;
+            color: #8c6354;
+            font-size: 1rem;
+            padding: 2px 6px;
+            border-radius: 6px;
+            line-height: 1;
+        }
+
+        .btn-cerrar-mini-billetera:hover {
+            background: #f7ebe2;
+            color: #5c1d22;
+        }
+
+        .btn-recargar-mini {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(90deg, #6e1b22 0%, #982b34 100%);
+            color: #fff8f0;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 5px 14px rgba(110, 27, 34, 0.22);
+            transition: filter 0.2s ease, transform 0.15s ease;
+        }
+
+        .btn-recargar-mini:hover {
+            color: #fff8f0;
+            filter: brightness(1.08);
+            transform: translateY(-1px);
+        }
+
+        /* Tarjeta inferior de Actividad Reciente (estilo panel principal de la referencia) */
+        .panel-reciente-asociado {
+            background: #fffdfb;
+            border: 1px solid #e6d3c5;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(110, 27, 34, 0.07);
+            overflow: hidden;
+        }
+
+        .panel-reciente-header {
+            padding: 18px 22px;
+            border-bottom: 1px solid #f0e2d8;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge-actividad-reciente {
+            background-color: #f7e7dd;
+            color: #7c1f24;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            padding: 6px 12px;
+            border-radius: 999px;
+        }
+
+        .estado-vacio-reciente {
+            padding: 46px 20px;
+            text-align: center;
+        }
+
+        .estado-vacio-reciente i {
+            font-size: 2.6rem;
+            color: #c5a394;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        /* Selector de colores para el avatar con inicial */
+        .btn-tono-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 0 2px #d9bfb0;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .btn-tono-avatar.activo {
+            box-shadow: 0 0 0 3px #7c1f24;
+        }
+
+        /* Adaptación móvil para la barra lateral */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(45, 16, 18, 0.45);
+            z-index: 1015;
+        }
+
+        @media (max-width: 991.98px) {
+            .sidebar-asociado {
+                position: fixed;
+                left: 0;
+                top: 0;
+                transform: translateX(-100%);
+            }
+            .sidebar-asociado.abierta {
+                transform: translateX(0);
+            }
+            .sidebar-overlay.activo {
+                display: block;
+            }
+            .topbar-asociado,
+            .cuerpo-asociado {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
         }
     </style>
 </head>
 
-<!-- Cuerpo principal con fondo claro por defecto -->
 <body class="bg-light">
-    <!-- Banner superior con el título del club, nombre del usuario y botón de cierre de sesión -->
-    <div class="header-mr d-flex justify-content-between align-items-center">
-        <h3>CLUB ACERIAS - Panel principal</h3>
-        <div class="text-end">
-            <!-- dashboard.js reemplaza este texto con el nombre del usuario autenticado -->
-            <small id="nombreUsuario">Abby Gelvez</small>
-            <!-- Botón que invoca la función cerrarSesion() definida en dashboard.js -->
-            <button class="btn btn-danger btn-sm mt-1" onclick="cerrarSesion()">
-                <i class="bi bi-person-heart"></i> Cerrar sesión
-            </button>
+
+    <!-- ======================================================================
+         VISTA DE PANEL PRINCIPAL PARA ROL ADMIN (MISMA ESTRUCTURA, PALETA MORADA)
+         ====================================================================== -->
+    <div id="vistaAdminDashboard" class="layout-asociado layout-admin d-none">
+        <!-- Capa oscura para cerrar la barra lateral en móviles -->
+        <div id="sidebarOverlayAdmin" class="sidebar-overlay"></div>
+
+        <!-- Barra lateral izquierda del Administrador -->
+        <aside id="sidebarAdmin" class="sidebar-asociado sidebar-admin">
+            <a href="dashboard.html?v=7" class="sidebar-brand">
+                <i class="bi bi-layers-fill"></i>
+                <span>CLUB ACERÍAS</span>
+            </a>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html?v=7" class="sidebar-link active">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                    <span>Panel Principal</span>
+                </a>
+                <a href="asociados.html?v=4" class="sidebar-link">
+                    <i class="bi bi-people"></i>
+                    <span>Asociados</span>
+                </a>
+                <a href="actividades.html?v=4" class="sidebar-link">
+                    <i class="bi bi-calendar-event"></i>
+                    <span>Actividades</span>
+                </a>
+                <a href="pagos.html?v=4" class="sidebar-link">
+                    <i class="bi bi-cash-coin"></i>
+                    <span>Pagos</span>
+                </a>
+                <a href="prestamos.html?v=6" class="sidebar-link">
+                    <i class="bi bi-bank"></i>
+                    <span>Préstamos</span>
+                </a>
+                <a href="reportes.html?v=1" class="sidebar-link">
+                    <i class="bi bi-graph-up-arrow"></i>
+                    <span>Reportes</span>
+                </a>
+            </nav>
+
+            <!-- Botón Cerrar sesión al pie de la barra lateral -->
+            <div class="sidebar-footer">
+                <button type="button" class="btn-sidebar-logout" onclick="cerrarSesion()">
+                    <i class="bi bi-box-arrow-left"></i>
+                    <span>Cerrar sesión</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Contenido principal derecho del Administrador -->
+        <main class="contenido-asociado">
+            <!-- Barra superior con título, cartera pendiente y perfil editable del administrador -->
+            <header class="topbar-asociado topbar-admin">
+                <div class="d-flex align-items-center gap-3">
+                    <button type="button" id="btnAbrirSidebarAdmin" class="btn btn-accion-suave-admin d-lg-none" aria-label="Abrir menú">
+                        <i class="bi bi-list fs-5"></i>
+                    </button>
+                    <div>
+                        <h1 class="topbar-titulo">Panel de Administración</h1>
+                        <p class="topbar-subtitulo">Administra asociados, actividades, pagos, préstamos y reportes del club.</p>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-wrap align-items-center gap-2 gap-md-3">
+                    <!-- Campana de notificaciones para nuevas solicitudes de préstamo, edición o eliminación -->
+                    <div class="notif-admin-wrap">
+                        <button type="button" id="btnNotificacionesAdmin" class="btn-notificaciones-admin" title="Notificaciones de solicitudes" aria-expanded="false" aria-controls="popoverNotificacionesAdmin">
+                            <i class="bi bi-bell-fill"></i>
+                            <span id="contadorNotificacionesAdmin" class="badge-notif-admin d-none">0</span>
+                        </button>
+
+                        <!-- Menú desplegable con las solicitudes pendientes -->
+                        <div id="popoverNotificacionesAdmin" class="popover-notificaciones-admin d-none" role="dialog" aria-label="Notificaciones de solicitudes">
+                            <div class="popover-notif-header">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-bell-fill" style="color: rgb(102, 5, 86);"></i>
+                                    <strong style="color: rgb(102, 5, 86); font-size: 0.92rem;">Notificaciones</strong>
+                                    <span id="resumenNotifHeader" class="badge-admin-panel" style="padding: 3px 9px; font-size: 0.7rem;">0 pendientes</span>
+                                </div>
+                                <button type="button" id="btnCerrarNotifAdmin" class="btn-cerrar-mini-billetera" aria-label="Cerrar">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </div>
+                            <div id="listaNotificacionesAdmin" class="popover-notif-lista">
+                                <div class="p-4 text-center small text-muted">Cargando notificaciones...</div>
+                            </div>
+                            <div class="popover-notif-footer">
+                                <a href="prestamos.html?v=9">Revisar solicitudes de préstamo <i class="bi bi-arrow-right ms-1"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Perfil superior editable (foto o inicial + nombre del administrador) -->
+                    <button type="button" id="btnEditarFotoPerfilAdmin" class="perfil-pill-btn perfil-pill-admin" title="Cambiar foto de perfil">
+                        <span id="avatarTopAdmin" class="avatar-circulo avatar-tono-morado">A</span>
+                        <span id="nombreUsuarioAdmin">Administrador</span>
+                        <i class="bi bi-camera-fill small" style="color: rgb(102, 5, 86);"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Cuerpo principal del panel Admin -->
+            <div class="cuerpo-asociado">
+                <!-- Fila de bienvenida y accesos rápidos -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+                    <div>
+                        <div class="eyebrow-actividad">RESUMEN ADMINISTRATIVO</div>
+                        <p class="saludo-asociado">Bienvenido(a), <span id="saludoNombreAdmin">Administrador</span></p>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="reportes.html?v=1" class="btn-accion-suave-admin">
+                            <i class="bi bi-graph-up-arrow me-1"></i>Ver Reportes
+                        </a>
+                        <a href="prestamos.html?v=9" class="btn-accion-primaria-admin">
+                            <i class="bi bi-check2-circle me-1"></i>Aprobar Préstamos
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 4 Burbujas KPI del Administrador -->
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-xl-3">
+                        <div class="burbuja-kpi burbuja-admin-asociados">
+                            <span class="burbuja-icono burbuja-ico-admin-asociados">
+                                <i class="bi bi-people-fill"></i>
+                            </span>
+                            <div>
+                                <div id="adminKpiAsociados" class="burbuja-numero">0</div>
+                                <div class="burbuja-etiqueta">Asociados</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-xl-3">
+                        <div class="burbuja-kpi burbuja-admin-creditos">
+                            <span class="burbuja-icono burbuja-ico-admin-creditos">
+                                <i class="bi bi-bank"></i>
+                            </span>
+                            <div>
+                                <div id="adminKpiCreditos" class="burbuja-numero">0</div>
+                                <div class="burbuja-etiqueta">Préstamos Totales</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-xl-3">
+                        <div class="burbuja-kpi burbuja-admin-actividades">
+                            <span class="burbuja-icono burbuja-ico-admin-actividades">
+                                <i class="bi bi-calendar-event"></i>
+                            </span>
+                            <div>
+                                <div id="adminKpiActividades" class="burbuja-numero">0</div>
+                                <div class="burbuja-etiqueta">Actividades</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-xl-3">
+                        <div class="burbuja-kpi burbuja-admin-pendientes">
+                            <span class="burbuja-icono burbuja-ico-admin-pendientes">
+                                <i class="bi bi-clock-history"></i>
+                            </span>
+                            <div>
+                                <div id="adminKpiPendientes" class="burbuja-numero">0</div>
+                                <div class="burbuja-etiqueta">Con Saldo Pendiente</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel inferior: Cartera y Estados de Cuenta por Asociado -->
+                <section class="panel-reciente-admin">
+                    <div class="panel-reciente-header">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="burbuja-icono burbuja-ico-admin-asociados" style="width: 38px; height: 38px; font-size: 1.1rem;">
+                                <i class="bi bi-people"></i>
+                            </span>
+                            <div>
+                                <h6 class="mb-0 fw-bold" style="color: rgb(102, 5, 86);">Cartera y pagos de asociados</h6>
+                                <small style="color: #6b546c;">Consulta el estado de cuenta global y saldos pendientes de los asociados</small>
+                            </div>
+                        </div>
+                        <span class="badge-admin-panel">CARTERA GLOBAL</span>
+                    </div>
+                    <div id="contenedorCarteraAdmin" class="p-3 p-md-4">
+                        <div class="estado-vacio-reciente">
+                            <i class="bi bi-hourglass-split" style="color: #b78cc2;"></i>
+                            <h6 class="fw-bold mb-1" style="color: rgb(102, 5, 86);">Cargando resumen de cartera...</h6>
+                            <p class="small text-muted mb-0">Un momento por favor.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- ======================================================================
+         VISTA DE PANEL PRINCIPAL CON BARRA LATERAL Y PERFIL PARA ROL ASOCIADO
+         ====================================================================== -->
+    <div id="vistaAsociadoDashboard" class="layout-asociado d-none">
+        <!-- Capa oscura para cerrar la barra lateral en móviles -->
+        <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+        <!-- Barra lateral izquierda -->
+        <aside id="sidebarAsociado" class="sidebar-asociado">
+            <a href="dashboard.html?v=5" class="sidebar-brand">
+                <i class="bi bi-layers-fill"></i>
+                <span>CLUB ACERÍAS</span>
+            </a>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html?v=6" class="sidebar-link active">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                    <span>Panel Principal</span>
+                </a>
+                <a href="billetera.html?v=1" class="sidebar-link">
+                    <i class="bi bi-wallet2"></i>
+                    <span>Mi Billetera</span>
+                </a>
+                <a href="asociados.html?v=4" class="sidebar-link">
+                    <i class="bi bi-person-vcard"></i>
+                    <span>Mis Datos Personales</span>
+                </a>
+                <a href="actividades.html?v=4" class="sidebar-link">
+                    <i class="bi bi-calendar-event"></i>
+                    <span>Actividades</span>
+                </a>
+                <a href="pagos.html?v=4" class="sidebar-link">
+                    <i class="bi bi-cash-coin"></i>
+                    <span>Mis Pagos</span>
+                </a>
+                <a href="prestamos.html?v=5" class="sidebar-link">
+                    <i class="bi bi-bank"></i>
+                    <span>Préstamos</span>
+                </a>
+            </nav>
+
+            <!-- Botón Cerrar sesión al pie de la barra lateral -->
+            <div class="sidebar-footer">
+                <button type="button" class="btn-sidebar-logout" onclick="cerrarSesion()">
+                    <i class="bi bi-box-arrow-left"></i>
+                    <span>Cerrar sesión</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Contenido principal derecho -->
+        <main class="contenido-asociado">
+            <!-- Barra superior con título, saldo de créditos y perfil del usuario (foto modificable + nombre) -->
+            <header class="topbar-asociado">
+                <div class="d-flex align-items-center gap-3">
+                    <button type="button" id="btnAbrirSidebar" class="btn btn-accion-suave d-lg-none" aria-label="Abrir menú">
+                        <i class="bi bi-list fs-5"></i>
+                    </button>
+                    <div>
+                        <h1 class="topbar-titulo">Módulos del Club</h1>
+                        <p class="topbar-subtitulo">Consulta tu perfil, actividades, pagos y solicitudes de crédito.</p>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-wrap align-items-center gap-2 gap-md-3">
+                    <!-- Botón de saldo en el panel principal: solo muestra el valor y despliega la vista pequeña de billetera al hacer clic -->
+                    <div class="billetera-popover-wrap">
+                        <button type="button" id="btnToggleMiniBilletera" class="pill-saldo-top border-0" title="Ver billetera" aria-expanded="false" aria-controls="popoverMiniBilletera">
+                            <i class="bi bi-wallet2"></i>
+                            <span>Saldo: <strong id="saldoTopAsociado">$ 0</strong></span>
+                        </button>
+
+                        <!-- Vista pequeña flotante para añadir dinero / recargar billetera -->
+                        <div id="popoverMiniBilletera" class="popover-mini-billetera d-none" role="dialog" aria-label="Mi Billetera">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="mini-billetera-eyebrow">
+                                    <i class="bi bi-wallet2 me-1"></i>Mi Billetera
+                                </span>
+                                <button type="button" id="btnCerrarMiniBilletera" class="btn-cerrar-mini-billetera" aria-label="Cerrar">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </div>
+                            <div id="saldoBilleteraMini" class="mini-billetera-monto">$ 0</div>
+                            <p class="small mb-3" style="color: #7c5c50;">
+                                Añade dinero a tu billetera o gestiona tus retiros.
+                            </p>
+                            <a href="billetera.html?v=1" class="btn-recargar-mini w-100">
+                                <i class="bi bi-plus-circle-fill"></i>
+                                <span>Añadir dinero / Recargar</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Botón de perfil superior con foto o inicial + nombre del usuario (abre editor de foto) -->
+                    <button type="button" id="btnEditarFotoPerfil" class="perfil-pill-btn" title="Cambiar foto de perfil">
+                        <span id="avatarTopAsociado" class="avatar-circulo avatar-tono-vino">A</span>
+                        <span id="nombreUsuario">Asociado</span>
+                        <i class="bi bi-camera-fill small" style="color: #9c5b48;"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Cuerpo principal del dashboard -->
+            <div class="cuerpo-asociado">
+                <!-- Fila de bienvenida y accesos rápidos -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+                    <div>
+                        <div class="eyebrow-actividad">TU ACTIVIDAD</div>
+                        <p class="saludo-asociado">Bienvenido(a), <span id="saludoNombreAsociado">Asociado</span></p>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="pagos.html?v=4" class="btn-accion-suave">
+                            <i class="bi bi-wallet2 me-1"></i>Mis Pagos
+                        </a>
+                        <a href="prestamos.html?v=5" class="btn-accion-primaria">
+                            <i class="bi bi-plus-lg me-1"></i>Solicitar Préstamo
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Burbujas KPI de cuotas pendientes, pagadas, créditos activos y total de cuotas -->
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-xl-3">
+                        <div class="burbuja-kpi burbuja-pendientes">
+                            <span class="burbuja-icono burbuja-ico-pendientes">
+                                <i class="bi bi-clock-history"></i>
+                            </span>
+                            <div>
+                                <div id="kpiCuotasPendientes" class="burbuja-numero">0</div>
+                                <div class="burbuja-etiqueta">Cuotas Pendientes</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-xl-3">
+                        <div class="burbuja-kpi burbuja-pagadas">
+                            <span class="burbuja-icono burbuja-ico-pagadas">
+                                <i class="bi bi-check2-square"></i>
+                            </span>
+                            <div>
+                                <div id="kpiCuotasPagadas" class="burbuja-numero">0</div>
+                                <div class="burbuja-etiqueta">Cuotas Pagadas</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-xl-3">
+                        <div class="burbuja-kpi burbuja-activos">
+                            <span class="burbuja-icono burbuja-ico-activos">
+                                <i class="bi bi-bank"></i>
+                            </span>
+                            <div>
+                                <div id="kpiCreditosActivos" class="burbuja-numero">0</div>
+                                <div class="burbuja-etiqueta">Créditos Activos</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-xl-3">
+                        <div class="burbuja-kpi burbuja-total">
+                            <span class="burbuja-icono burbuja-ico-total">
+                                <i class="bi bi-file-earmark-text"></i>
+                            </span>
+                            <div>
+                                <div id="kpiTotalCuotas" class="burbuja-numero">0</div>
+                                <div class="burbuja-etiqueta">Total Cuotas</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel inferior: Historial de Pagos Pendientes -->
+                <section class="panel-reciente-asociado">
+                    <div class="panel-reciente-header">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="asoc-icono-caja caja-pagos mb-0" style="width: 38px; height: 38px; font-size: 1.1rem;">
+                                <i class="bi bi-clock-history"></i>
+                            </span>
+                            <div>
+                                <h6 class="mb-0 fw-bold" style="color: #5c1d22;">Historial de pagos pendientes</h6>
+                                <small style="color: #7c5c50;">Revisa tus cuotas pendientes por crédito y realiza tus abonos</small>
+                            </div>
+                        </div>
+                        <span class="badge-actividad-reciente">PAGOS PENDIENTES</span>
+                    </div>
+                    <div id="contenedorActividadReciente" class="p-3 p-md-4">
+                        <div class="estado-vacio-reciente">
+                            <i class="bi bi-hourglass-split"></i>
+                            <h6 class="fw-bold mb-1" style="color: #5c1d22;">Cargando tus pagos pendientes...</h6>
+                            <p class="small text-muted mb-0">Un momento por favor.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para personalizar la foto de perfil (subir imagen o usar inicial del nombre) -->
+    <div class="modal fade" id="modalFotoPerfil" tabindex="-1" aria-labelledby="tituloModalFoto" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 16px; overflow: hidden; border: 1px solid #e6d3c5; background: #fffdfb;">
+                <div class="modal-header" style="background: linear-gradient(90deg, #6e1b22 0%, #86252b 100%); color: #fff8f0; border-bottom: 2px solid #d49a6a;">
+                    <h5 class="modal-title fw-semibold" id="tituloModalFoto">
+                        <i class="bi bi-person-circle me-2"></i>Foto de Perfil
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body p-4 text-center">
+                    <!-- Vista previa de la foto actual (o la inicial por defecto si no hay foto subida) -->
+                    <div class="d-flex justify-content-center mb-3">
+                        <span id="avatarPreviewModal" class="avatar-circulo avatar-grande avatar-tono-vino">A</span>
+                    </div>
+                    <h6 id="nombreModalFoto" class="fw-bold mb-1" style="color: #5c1d22;">Asociado</h6>
+                    <p class="small text-muted mb-3">Sube una imagen desde tu equipo. Si no agregas una foto, se mostrará la inicial de tu nombre.</p>
+
+                    <!-- Formulario para subir imagen de perfil -->
+                    <form id="formSubirFoto">
+                        <input type="file" id="inputFotoPerfil" name="foto" accept="image/jpeg,image/png,image/webp,image/gif" class="form-control mb-3">
+                        <div class="d-flex flex-wrap justify-content-center gap-2">
+                            <button type="submit" id="btnGuardarFoto" class="btn-accion-primaria">
+                                <i class="bi bi-upload me-1"></i>Subir foto
+                            </button>
+                            <!-- Visible únicamente cuando el usuario ya tiene una foto subida y desea quitarla -->
+                            <button type="button" id="btnUsarInicial" class="btn-accion-suave d-none">
+                                <i class="bi bi-trash me-1"></i>Quitar foto
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Selector de color para el avatar con inicial (cuando no hay foto subida) -->
+                    <div id="selectorColorAvatar" class="border-top pt-3 mt-3">
+                        <small class="d-block text-muted mb-2 fw-semibold">Color del avatar con inicial:</small>
+                        <div class="d-flex justify-content-center gap-3">
+                            <button type="button" class="btn-tono-avatar avatar-tono-morado" data-tono="avatar-tono-morado" title="Morado"></button>
+                            <button type="button" class="btn-tono-avatar avatar-tono-vino" data-tono="avatar-tono-vino" title="Vino"></button>
+                            <button type="button" class="btn-tono-avatar avatar-tono-terracota" data-tono="avatar-tono-terracota" title="Terracota"></button>
+                            <button type="button" class="btn-tono-avatar avatar-tono-cobre" data-tono="avatar-tono-cobre" title="Cobre"></button>
+                            <button type="button" class="btn-tono-avatar avatar-tono-ciruela" data-tono="avatar-tono-ciruela" title="Ciruela"></button>
+                        </div>
+                    </div>
+
+                    <p id="mensajeFotoPerfil" class="small fw-semibold mt-3 mb-0" style="color: #7c1f24;" role="status"></p>
+                </div>
+            </div>
         </div>
     </div>
-    <!-- Contenedor principal con los módulos disponibles -->
-    <div class="container py-4">
-        <h5 class="mb-4 fw-bold">Módulos del club de asociados</h5>
-        <!-- Bloque de 5 tarjetas visibles únicamente cuando el rol es Admin -->
-        <div id="tarjetasAdministrador" class="row row-cols-1 row-cols-sm-2 row-cols-lg-5 g-4">
-            <!-- Tarjeta que redirige al módulo de Asociados -->
-            <div class="col">
-                <div class="card modulo-card shadow-sm p-3" onclick="window.location.href='asociados.html?v=4'">
-                    <i class="bi bi-people icono-asociados"></i>
-                    <h4 class="text-primary">Asociados</h4>
-                    <strong>Gestión de asociados</strong>
-                    <p class="small text-muted mt-2">
-                        Administra la información de los asociados, incluyendo sus datos
-                        personales, historial de membresía y estado de cuenta.
-                    </p>
-                </div>
-            </div>
-            <!-- Tarjeta que redirige al módulo de Actividades -->
-            <div class="col">
-                <div class="card modulo-card shadow-sm p-3" onclick="window.location.href='actividades.html?v=3'">
-                    <i class="bi bi-bar-chart-fill icono-actividades"></i>
-                    <h4 class="text-primary">Actividades</h4>
-                    <strong>Gestión de actividades</strong>
-                    <p class="small text-muted mt-2">
-                        Crea, edita y administra las actividades programadas del club.
-                    </p>
-                </div>
-            </div>
-            <!-- Tarjeta que redirige al módulo de Pagos -->
-            <div class="col">
-                <div class="card modulo-card shadow-sm p-3" onclick="window.location.href='pagos.html?v=4'">
-                    <i class="bi bi-coin icono-pagos"></i>
-                    <h4 class="text-primary">Pagos</h4>
-                    <strong>Gestión de pagos</strong>
-                    <p class="small text-muted mt-2">
-                        Registra y controla los pagos, aportes y estados de cuenta.
-                    </p>
-                </div>
-            </div>
-            <!-- Tarjeta que redirige al módulo de Préstamos -->
-            <div class="col">
-                <div class="card modulo-card shadow-sm p-3" onclick="window.location.href='prestamos.html?v=3'">
-                    <i class="bi bi-bank icono-prestamos"></i>
-                    <h4 class="text-primary">Préstamos</h4>
-                    <strong>Gestión de préstamos</strong>
-                    <p class="small text-muted mt-2">
-                        Administra las solicitudes, aprobaciones y seguimiento de préstamos.
-                    </p>
-                </div>
-            </div>
-            <!-- Tarjeta que redirige al módulo de Reportes financieros y saldos -->
-            <div class="col">
-                <div class="card modulo-card shadow-sm p-3" onclick="window.location.href='reportes.html?v=1'">
-                    <i class="bi bi-graph-up-arrow icono-reportes"></i>
-                    <h4 class="text-primary">Reportes</h4>
-                    <strong>Consultas y saldos</strong>
-                    <p class="small text-muted mt-2">
-                        Consulta el balance financiero global, cartera de préstamos y recaudos del club.
-                    </p>
-                </div>
-            </div>
-        </div>
-        <!-- Bloque de 4 tarjetas visibles únicamente cuando el rol es Asociado -->
-        <div id="tarjetasAsociados" class="row g-4 d-none">
-            <!-- Acceso a la ficha personal del asociado autenticado -->
-            <div class="col-md-3">
-                <div class="card modulo-card shadow-sm p-3" onclick="window.location.href='asociados.html?v=4'">
-                    <i class="bi bi-person-vcard icono-asociados"></i>
-                    <h4 class="text-primary">Mis Datos Personales</h4>
-                    <strong>Ficha del asociado</strong>
-                    <p class="small text-muted mt-2">
-                        Consulta y actualiza tu información registrada en la plataforma.
-                    </p>
-                </div>
-            </div>
-            <!-- Acceso a la lista de actividades en modo lectura -->
-            <div class="col-md-3">
-                <div class="card modulo-card shadow-sm p-3" onclick="window.location.href='actividades.html?v=3'">
-                    <i class="bi bi-bar-chart-fill icono-actividades"></i>
-                    <h4 class="text-primary">Actividades</h4>
-                    <strong>Mis actividades</strong>
-                    <p class="small text-muted mt-2">
-                        Consulta e inscríbete en las actividades disponibles del club.
-                    </p>
-                </div>
-            </div>
-            <!-- Acceso a Mis Pagos e Historial de Cuotas -->
-            <div class="col-md-3">
-                <div class="card modulo-card shadow-sm p-3" onclick="window.location.href='pagos.html?v=4'">
-                    <i class="bi bi-coin icono-pagos"></i>
-                    <h4 class="text-primary">Mis Pagos</h4>
-                    <strong>Historial de cuotas y saldos</strong>
-                    <p class="small text-muted mt-2">
-                        Consulta el saldo pendiente de tus préstamos y registra tus comprobantes de pago.
-                    </p>
-                </div>
-            </div>
-            <!-- Acceso a la lista de préstamos en modo lectura -->
-            <div class="col-md-3">
-                <div class="card modulo-card shadow-sm p-3" onclick="window.location.href='prestamos.html?v=3'">
-                    <i class="bi bi-bank icono-prestamos"></i>
-                    <h4 class="text-primary">Préstamos</h4>
-                    <strong>Mis préstamos</strong>
-                    <p class="small text-muted mt-2">
-                        Consulta tus solicitudes y estado de préstamos.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Controlador JS que verifica la sesión, aplica el tema por rol y maneja cerrarSesion() -->
-    <script src="../Controladores/dashboard.js?v=3"></script>
+
+    <!-- JavaScript de Bootstrap (para el modal de foto de perfil) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Controlador JS del dashboard para Admin y Asociado -->
+    <script src="../Controladores/dashboard.js?v=13"></script>
 </body>
 
 </html>

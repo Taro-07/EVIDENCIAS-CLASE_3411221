@@ -17,15 +17,14 @@ function leerDatos()
     return $datos;
 }
 
-// Función que valida nombre, fecha y municipio de una actividad
+// Función que valida nombre, fecha, municipio y tope de monto (metaRecaudo) de una actividad
 function validarActividad($datos)
 {
-    // Extrae cada campo o asigna null si no fue enviado
     $nombre = $datos['nombreActividad'] ?? null;
     $fecha = $datos['fechaEvento'] ?? null;
     $municipio = $datos['municipio'] ?? null;
+    $metaRecaudo = $datos['metaRecaudo'] ?? null;
 
-    // Valida tipo texto, que no estén vacíos y que respeten el límite de caracteres de la tabla (50)
     if (
         !is_string($nombre) || trim($nombre) === "" || strlen(trim($nombre)) > 50 ||
         !is_string($fecha) || trim($fecha) === "" ||
@@ -35,11 +34,20 @@ function validarActividad($datos)
         throw new Exception("Ingresa un nombre, fecha y municipio válidos");
     }
 
-    // Devuelve los datos ya limpios de espacios sobrantes
+    if ($metaRecaudo === "" || $metaRecaudo === null) {
+        $metaValida = null;
+    } elseif (!is_numeric($metaRecaudo) || (float)$metaRecaudo <= 0) {
+        http_response_code(400);
+        throw new Exception("El tope de monto debe ser un valor numérico mayor a 0");
+    } else {
+        $metaValida = round((float)$metaRecaudo, 2);
+    }
+
     return [
         "nombreActividad" => trim($nombre),
         "fechaEvento" => trim($fecha),
-        "municipio" => trim($municipio)
+        "municipio" => trim($municipio),
+        "metaRecaudo" => $metaValida
     ];
 }
 
@@ -70,8 +78,8 @@ try {
         throw new Exception("Método HTTP no permitido");
     }
 
-    // Solo los administradores pueden crear, editar o eliminar actividades (asociado es solo lectura)
-    if ($metodo !== "GET" && $rol !== "admin") {
+    // Solo los administradores pueden crear, editar o eliminar actividades; el asociado puede consultar (GET) y abonar (POST accion='abonar')
+    if ($metodo !== "GET" && $metodo !== "POST" && $rol !== "admin") {
         http_response_code(403);
         throw new Exception("No tienes permisos para realizar esta acción");
     }
@@ -91,9 +99,44 @@ try {
             ];
             http_response_code(200);
             break;
-        // POST: valida los datos e inserta una nueva actividad
+        // POST: Admin crea nueva actividad; Asociado registra un abono a una actividad existente
         case "POST":
-            $datos = validarActividad(leerDatos());
+            $datosEntrada = leerDatos();
+            $accion = strtolower(trim((string)($datosEntrada["accion"] ?? "")));
+
+            if ($accion === "abonar") {
+                $idActividad = validarId($datosEntrada["idActividad"] ?? null);
+                $monto = $datosEntrada["monto"] ?? null;
+                if ($monto === null || $monto === "" || !is_numeric($monto) || (float)$monto <= 0) {
+                    http_response_code(400);
+                    throw new Exception("Ingresa un monto de abono válido mayor a 0");
+                }
+
+                $respAbono = $actividad->abonarActividad(
+                    $idActividad,
+                    (string)$_SESSION["documento"],
+                    round((float)$monto, 2)
+                );
+                if (!$respAbono["ok"]) {
+                    http_response_code($respAbono["codigo"] ?? 400);
+                    throw new Exception($respAbono["mensaje"] ?? "No se pudo registrar el abono");
+                }
+
+                $resultado = [
+                    "success" => true,
+                    "mensaje" => "Abono registrado correctamente en la actividad.",
+                    "totalRecaudado" => $respAbono["totalRecaudado"]
+                ];
+                http_response_code(200);
+                break;
+            }
+
+            if ($rol !== "admin") {
+                http_response_code(403);
+                throw new Exception("No tienes permisos para crear actividades");
+            }
+
+            $datos = validarActividad($datosEntrada);
             $actividad->guardar($datos);
             $resultado = [
                 "success" => true,

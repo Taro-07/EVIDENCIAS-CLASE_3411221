@@ -445,17 +445,233 @@ button[type="submit"]{
    TEMA CÁLIDO Y AMENO PARA ROL ASOCIADO EN LOS APARTADOS (.body-gestion.tema-asociado)
    ========================================================================== */
 
-/* Fondo crema-terracota suave y descansado a la vista */
+/* Fondo crema-terracota suave y descansado a la vista (sin barra superior en rol Asociado) */
 .body-gestion.tema-asociado {
     background: linear-gradient(160deg, #faf3ee 0%, #f3e2d6 55%, #ead0be 100%);
     color: #3d241c;
+    padding-top: 32px;
 }
 
-/* Barra superior vino elegante con acento dorado cálido */
-.body-gestion.tema-asociado .navbar-custom {
-    background: linear-gradient(90deg, #6e1b22 0%, #86252b 100%);
-    border-bottom: 3px solid #d49a6a;
-    box-shadow: 0 4px 16px rgba(110, 27, 34, 0.22);
+/* Deja espacio permanente para la barra lateral izquierda en escritorio para el rol Asociado */
+.body-gestion.tema-asociado.con-sidebar-asociado {
+    padding-left: 266px;
+    padding-right: 18px;
+}
+
+/* Barra lateral fija compartida para todos los apartados del Asociado */
+.sidebar-asociado-global {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    background: #fffdfb;
+    border-right: 1px solid #e6d3c5;
+    box-shadow: 4px 0 18px rgba(110, 27, 34, 0.06);
+    display: flex;
+    flex-direction: column;
+    padding: 22px 16px;
+    z-index: 1030;
+    transition: transform 0.25s ease;
+}
+
+.sidebar-global-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #7c1f24;
+    padding: 6px 10px 22px;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+}
+
+.sidebar-global-brand i {
+    color: #a83c32;
+    font-size: 1.4rem;
+}
+
+.sidebar-global-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.sidebar-global-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    color: #5c3c31;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.94rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sidebar-global-link i {
+    font-size: 1.1rem;
+    color: #9c5b48;
+}
+
+.sidebar-global-link:hover {
+    background-color: #f9ede4;
+    color: #7c1f24;
+}
+
+.sidebar-global-link:hover i,
+.sidebar-global-link.active i {
+    color: #7c1f24;
+}
+
+.sidebar-global-link.active {
+    background: linear-gradient(90deg, #f7e4d8 0%, #fcf1ea 100%);
+    color: #7c1f24;
+    border-left: 4px solid #8f2933;
+}
+
+.sidebar-global-footer {
+    border-top: 1px solid #eedfd4;
+    padding-top: 14px;
+    margin-top: 14px;
+}
+
+.btn-sidebar-global-logout {
+    flex: 0 0 auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: #b4232c;
+    font-weight: 600;
+    font-size: 0.94rem;
+    text-align: left;
+}
+
+.btn-sidebar-global-logout:hover {
+    background-color: #fdecee;
+    color: #8f1820;
+}
+
+.sidebar-global-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(45, 16, 18, 0.45);
+    z-index: 1025;
+}
+
+.btn-movil-sidebar-global {
+    flex: 0 0 auto;
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 1020;
+    background: #fffdfb;
+    color: #7c1f24;
+    border: 1px solid #dec7b8;
+    border-radius: 10px;
+    padding: 7px 14px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(110, 27, 34, 0.14);
+}
+
+@media (max-width: 991.98px) {
+    .body-gestion.tema-asociado.con-sidebar-asociado {
+        padding-left: 12px;
+        padding-right: 12px;
+        padding-top: 64px;
+    }
+    .sidebar-asociado-global {
+        transform: translateX(-100%);
+    }
+    .sidebar-asociado-global.abierta {
+        transform: translateX(0);
+    }
+    .sidebar-global-overlay.activo {
+        display: block;
+    }
+}
+
+/* Oculta la barra de navegación superior fija en los apartados para Admin y Asociado */
+.body-gestion.tema-asociado .navbar-custom,
+.body-gestion.tema-admin .navbar-custom {
+    display: none !important;
+}
+
+/* Espaciado y barra lateral persistente con paleta morada para rol Admin */
+.body-gestion.tema-admin {
+    padding-top: 32px;
+}
+
+.body-gestion.tema-admin.con-sidebar-admin {
+    padding-left: 266px;
+    padding-right: 18px;
+}
+
+.sidebar-asociado-global.sidebar-admin-global {
+    background: #ffffff;
+    border-right: 1px solid #e1d0e8;
+    box-shadow: 4px 0 18px rgba(102, 5, 86, 0.06);
+}
+
+.sidebar-admin-global .sidebar-global-brand {
+    color: rgb(102, 5, 86);
+}
+
+.sidebar-admin-global .sidebar-global-brand i {
+    color: rgb(153, 0, 255);
+}
+
+.sidebar-admin-global .sidebar-global-link {
+    color: #4a2d49;
+}
+
+.sidebar-admin-global .sidebar-global-link i {
+    color: #8c4d96;
+}
+
+.sidebar-admin-global .sidebar-global-link:hover {
+    background-color: #f6edf9;
+    color: rgb(102, 5, 86);
+}
+
+.sidebar-admin-global .sidebar-global-link:hover i,
+.sidebar-admin-global .sidebar-global-link.active i {
+    color: rgb(102, 5, 86);
+}
+
+.sidebar-admin-global .sidebar-global-link.active {
+    background: linear-gradient(90deg, #f2e2f8 0%, #faf3fc 100%);
+    color: rgb(102, 5, 86);
+    border-left: 4px solid rgb(102, 5, 86);
+}
+
+.sidebar-admin-global .sidebar-global-footer {
+    border-top-color: #eadcf0;
+}
+
+.btn-movil-sidebar-global.btn-movil-admin {
+    background: #ffffff;
+    color: rgb(102, 5, 86);
+    border-color: #d9c0e3;
+    box-shadow: 0 4px 12px rgba(102, 5, 86, 0.14);
+}
+
+@media (max-width: 991.98px) {
+    .body-gestion.tema-admin.con-sidebar-admin {
+        padding-left: 12px;
+        padding-right: 12px;
+        padding-top: 64px;
+    }
 }
 
 /* Marca GESTIÓN en marfil cálido con ícono en dorado champán */
@@ -672,6 +888,78 @@ button[type="submit"]{
 
 .btn-guardar-perfil:hover {
     filter: brightness(1.08);
+}
+
+/* Bloque de foto de perfil y formulario directo dentro de la Ficha del Asociado */
+.badge-rol-header {
+    background-color: rgba(245, 208, 138, 0.25);
+    color: #fff8f0;
+    border: 1px solid rgba(245, 208, 138, 0.45);
+    font-size: 0.84rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 999px;
+}
+
+.perfil-foto-bloque {
+    border-bottom: 1px solid #efe0d6;
+}
+
+.ficha-avatar-circulo {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.35rem;
+    font-weight: 800;
+    color: #fff8f0;
+    overflow: hidden;
+    border: 3px solid #d49a6a;
+    box-shadow: 0 6px 18px rgba(110, 27, 34, 0.18);
+    flex-shrink: 0;
+}
+
+.ficha-avatar-circulo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-tono-vino { background: linear-gradient(135deg, #6e1b22 0%, #98342f 100%); }
+.avatar-tono-terracota { background: linear-gradient(135deg, #a83c32 0%, #d06b42 100%); }
+.avatar-tono-cobre { background: linear-gradient(135deg, #8f5023 0%, #c88346 100%); }
+.avatar-tono-ciruela { background: linear-gradient(135deg, #5d1838 0%, #8e2c54 100%); }
+
+.btn-tono-ficha {
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 0 2px #d9bfb0;
+    padding: 0;
+    cursor: pointer;
+}
+
+.btn-tono-ficha.activo {
+    box-shadow: 0 0 0 3px #7c1f24;
+}
+
+.form-ficha-inline .form-control,
+.form-ficha-inline .form-select {
+    background-color: #ffffff;
+    border: 1px solid #dec7b8;
+    border-radius: 9px;
+    color: #3d241c;
+    font-weight: 500;
+}
+
+.form-ficha-inline .form-control:focus,
+.form-ficha-inline .form-select:focus {
+    border-color: #a83c32;
+    box-shadow: 0 0 0 0.2rem rgba(168, 60, 50, 0.16);
 }
 
 /* ==========================================================================
@@ -1167,8 +1455,16 @@ button[type="submit"]{
         background: #ffffff !important;
     }
 
-    .no-print {
+    .no-print,
+    .sidebar-asociado-global,
+    .btn-movil-sidebar-global,
+    .sidebar-global-overlay {
         display: none !important;
+    }
+
+    .body-gestion.tema-admin.con-sidebar-admin,
+    .body-gestion.tema-asociado.con-sidebar-asociado {
+        padding: 0 !important;
     }
 
     .body-gestion .container {
@@ -1423,4 +1719,623 @@ body.body-login {
     font-size: 14px;
     font-weight: 600;
     margin-top: 14px;
+}
+
+/* ==========================================================================
+   BURBUJAS KPI E HISTORIAL DE PAGOS PENDIENTES PARA VISTAS DEL ASOCIADO
+   Comparten la misma estética cálida (vino, terracota y marfil) del Dashboard
+   ========================================================================== */
+
+/* Tarjeta compacta tipo burbuja KPI con borde superior de acento */
+.burbuja-kpi {
+    background: #fffdfb;
+    border: 1px solid #e6d3c5;
+    border-top: 3px solid #a83c32;
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 5px 16px rgba(110, 27, 34, 0.06);
+    height: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.burbuja-kpi:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(110, 27, 34, 0.11);
+}
+
+.burbuja-pendientes { border-top-color: #c25b38; }
+.burbuja-pagadas { border-top-color: #198754; }
+.burbuja-activos { border-top-color: #8f2933; }
+.burbuja-total { border-top-color: #b86a35; }
+
+/* Caja redondeada para el ícono de cada burbuja */
+.burbuja-icono {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.burbuja-ico-pendientes { background: #fdf0e6; color: #c25b38; }
+.burbuja-ico-pagadas { background: #e6f5ec; color: #198754; }
+.burbuja-ico-activos { background: #f9e6e8; color: #8f2933; }
+.burbuja-ico-total { background: #fbf1e4; color: #b86a35; }
+
+.burbuja-numero {
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: #3d241c;
+    line-height: 1.1;
+}
+
+.burbuja-etiqueta {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #7c5c50;
+    margin-top: 2px;
+}
+
+/* Panel inferior de historial de pagos pendientes en paleta marfil-vino */
+.panel-reciente-asociado {
+    background: #fffdfb;
+    border: 1px solid #e6d3c5;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(110, 27, 34, 0.07);
+    overflow: hidden;
+}
+
+.panel-reciente-header {
+    padding: 18px 22px;
+    border-bottom: 1px solid #f0e2d8;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.icono-panel-pagos {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #f9e6e8;
+    color: #8f2933;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+
+.badge-actividad-reciente {
+    background-color: #f7e7dd;
+    color: #7c1f24;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+}
+
+.estado-vacio-reciente {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.estado-vacio-reciente i {
+    font-size: 2.4rem;
+    color: #c5a394;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+.btn-accion-primaria-asoc {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(90deg, #6e1b22 0%, #8f2933 100%);
+    color: #fff8f0;
+    border: none;
+    border-radius: 10px;
+    padding: 6px 14px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(110, 27, 34, 0.18);
+    transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.btn-accion-primaria-asoc:hover {
+    color: #fff8f0;
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   VISTA INDEPENDIENTE "MI BILLETERA" PARA ROL ASOCIADO
+   Mantiene la paleta cálida vino (#6e1b22), terracota (#a83c32), dorado y marfil
+   ========================================================================== */
+
+/* Tarjeta destacada con el monto total de la billetera */
+.billetera-hero-card {
+    background: linear-gradient(135deg, #5d151c 0%, #86252b 58%, #b34936 100%);
+    color: #fff8f0;
+    border-radius: 18px;
+    padding: 26px 28px;
+    border-bottom: 3px solid #d49a6a;
+    box-shadow: 0 12px 28px rgba(110, 27, 34, 0.22);
+}
+
+.billetera-eyebrow {
+    display: inline-block;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.9px;
+    color: #f6dec8;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.billetera-saldo-valor {
+    font-size: 2.55rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    color: #ffffff;
+    margin-bottom: 6px;
+}
+
+.billetera-titular {
+    font-size: 0.9rem;
+    color: #f3dfd0;
+}
+
+.billetera-stat-pill {
+    background: rgba(255, 248, 240, 0.14);
+    border: 1px solid rgba(246, 222, 200, 0.28);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.billetera-stat-label {
+    font-size: 0.78rem;
+    color: #f6dec8;
+    font-weight: 600;
+}
+
+.billetera-stat-pill strong {
+    font-size: 1.05rem;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+/* Tarjetas de acciones (Añadir Dinero / Retirar Dinero) */
+.billetera-accion-card {
+    background: #fffdfb;
+    border: 1px solid #e6d3c5;
+    border-top: 4px solid #a83c32;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(110, 27, 34, 0.08);
+    overflow: hidden;
+}
+
+.billetera-card-recarga { border-top-color: #198754; }
+.billetera-card-retiro { border-top-color: #8f2933; }
+
+.billetera-accion-header {
+    padding: 18px 22px;
+    border-bottom: 1px solid #f0e2d8;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.billetera-accion-icono {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    flex-shrink: 0;
+}
+
+.ico-recarga { background: #e6f5ec; color: #198754; }
+.ico-retiro { background: #f9e6e8; color: #8f2933; }
+
+.billetera-accion-card .form-control,
+.billetera-accion-card .form-select {
+    background-color: #ffffff;
+    border: 1px solid #dec7b8;
+    border-radius: 10px;
+    color: #3d241c;
+    font-weight: 500;
+    padding: 10px 13px;
+}
+
+.billetera-accion-card .form-control:focus,
+.billetera-accion-card .form-select:focus {
+    border-color: #a83c32;
+    box-shadow: 0 0 0 0.2rem rgba(168, 60, 50, 0.16);
+}
+
+/* Botones chip para montos rápidos y porcentajes */
+.chip-monto-rapido {
+    flex: 0 0 auto;
+    background: #faf1ea;
+    color: #6e1b22;
+    border: 1px solid #e2c8b8;
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.chip-monto-rapido:hover {
+    background: #f2ded0;
+    border-color: #a83c32;
+    color: #5c161c;
+}
+
+/* Botones de envío de recarga y retiro */
+.btn-billetera-recarga {
+    flex: 0 0 auto;
+    background: linear-gradient(90deg, #157347 0%, #198754 100%) !important;
+    color: #ffffff !important;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 18px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(25, 135, 84, 0.22);
+    transition: filter 0.2s ease, transform 0.15s ease;
+}
+
+.btn-billetera-recarga:hover {
+    filter: brightness(1.07);
+    transform: translateY(-1px);
+}
+
+.btn-billetera-retiro {
+    flex: 0 0 auto;
+    background: linear-gradient(90deg, #6e1b22 0%, #982b34 100%) !important;
+    color: #fff8f0 !important;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 18px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(110, 27, 34, 0.22);
+    transition: filter 0.2s ease, transform 0.15s ease;
+}
+
+.btn-billetera-retiro:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+}
+
+/* Insignias de tipo de movimiento en el historial de billetera */
+.badge-mov-recarga {
+    display: inline-flex;
+    align-items: center;
+    background: #e6f5ec;
+    color: #157347;
+    border: 1px solid #b9e4cb;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+}
+
+.badge-mov-retiro {
+    display: inline-flex;
+    align-items: center;
+    background: #f9e6e8;
+    color: #8f2933;
+    border: 1px solid #e7bcc1;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+}
+
+/* ==========================================================================
+   RESUMEN AUTOMÁTICO DE TASA E INTERÉS ADICIONAL EN PRÉSTAMOS
+   ========================================================================== */
+
+/* Campo de tasa calculada automáticamente en el formulario del Asociado */
+.form-prestamo-asociado .input-tasa-auto {
+    background-color: #f9efe7 !important;
+    color: #7c1f24 !important;
+    font-weight: 700;
+    border-color: #debda8;
+    cursor: default;
+}
+
+/* Caja de desglose de cuota base + interés adicional (paleta cálida Asociado) */
+.resumen-cuota-prestamo {
+    background: linear-gradient(180deg, #fffaf6 0%, #f9ede4 100%);
+    border: 1px solid #e4c7b5;
+    border-left: 4px solid #8f2933;
+    border-radius: 12px;
+    padding: 13px 15px;
+    font-size: 0.85rem;
+    color: #4a2c22;
+}
+
+.resumen-cuota-titulo {
+    font-size: 0.76rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #7c1f24;
+    margin-bottom: 8px;
+}
+
+.resumen-cuota-fila {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 0;
+}
+
+.resumen-cuota-adicional {
+    color: #b4232c;
+    font-weight: 700;
+}
+
+.resumen-cuota-total {
+    margin-top: 6px;
+    padding-top: 7px;
+    border-top: 1px dashed #d8b5a0;
+    font-size: 0.92rem;
+    font-weight: 800;
+    color: #5c1d22;
+}
+
+.resumen-cuota-nota {
+    margin-top: 6px;
+    font-size: 0.77rem;
+    color: #7c5c50;
+}
+
+/* Variante morada suave del desglose para el formulario Admin */
+.resumen-cuota-admin {
+    background: linear-gradient(180deg, #fcf9fd 0%, #f5ebf8 100%);
+    border: 1px solid #dec6e6;
+    border-left: 4px solid var(--purple-primary);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 0.84rem;
+    color: #361a33;
+}
+
+.resumen-cuota-admin .resumen-cuota-titulo,
+.resumen-cuota-admin .resumen-cuota-total {
+    color: var(--purple-primary);
+}
+
+.resumen-cuota-admin .resumen-cuota-total {
+    border-top-color: #d6b6e0;
+}
+
+/* ==========================================================================
+   MODALES CRUD Y BOTÓN CREAR PARA LISTAS DE ADMINISTRACIÓN
+   ========================================================================== */
+
+.modal-admin-crud .modal-content {
+    border: 1px solid #e1d0e8;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 18px 40px rgba(75, 4, 64, 0.24);
+}
+
+.modal-admin-crud .modal-header {
+    background: linear-gradient(90deg, rgb(102, 5, 86) 0%, #8a0c76 100%);
+    color: #ffffff;
+    border-bottom: none;
+    padding: 16px 22px;
+}
+
+.modal-admin-crud .modal-title {
+    color: #ffffff;
+    font-size: 1.08rem;
+    font-weight: 700;
+}
+
+.modal-admin-crud .modal-body {
+    background: #ffffff;
+    padding: 22px 24px;
+}
+
+.modal-admin-crud .form-label {
+    color: #3d1d3a;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.modal-admin-crud p[role="status"] {
+    color: var(--purple-primary) !important;
+}
+
+/* Botón compacto "+ Nuevo" en el encabezado de cada tabla Admin */
+.btn-header-crear-admin {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.42);
+    border-radius: 8px;
+    padding: 4px 11px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-header-crear-admin:hover {
+    background: rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   FLUJO DE APROBACIÓN DE PRÉSTAMOS (ADMIN ACEPTA / ASOCIADO SOLICITA)
+   ========================================================================== */
+
+/* Botón independiente de Editar crédito para Asociado (paleta cálida) */
+.btn-editar-credito {
+    flex: 0 0 auto;
+    padding: 4px 9px;
+    background-color: #fffaf5;
+    color: #8f4722;
+    border: 1px solid #e2c1a8;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-editar-credito:hover {
+    background-color: #98342f;
+    color: #ffffff;
+    border-color: #98342f;
+}
+
+/* Botón Aceptar solicitud en la tabla de Préstamos del Administrador */
+.btn-aceptar-admin {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: linear-gradient(90deg, #157347 0%, #198754 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 5px 12px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(25, 135, 84, 0.22);
+    transition: filter 0.2s ease, transform 0.15s ease;
+}
+
+.btn-aceptar-admin:hover {
+    filter: brightness(1.07);
+    transform: translateY(-1px);
+    color: #ffffff;
+}
+
+/* Insignias de estado de aprobación */
+.badge-estado-aprobado {
+    background-color: #e6f5ec;
+    color: #157347;
+    border: 1px solid #b9e4cb;
+    font-weight: 700;
+    font-size: 0.77rem;
+    padding: 5px 10px;
+    border-radius: 999px;
+}
+
+.badge-estado-pendiente {
+    background-color: #fff4e0;
+    color: #9c5b00;
+    border: 1px solid #f0d096;
+    font-weight: 700;
+    font-size: 0.77rem;
+    padding: 5px 10px;
+    border-radius: 999px;
+}
+
+.badge-estado-edicion {
+    background-color: #eef1ff;
+    color: #2f45a8;
+    border: 1px solid #c3cef5;
+    font-weight: 700;
+    font-size: 0.77rem;
+    padding: 5px 10px;
+    border-radius: 999px;
+}
+
+.badge-estado-eliminacion {
+    background-color: #fdecee;
+    color: #b02a37;
+    border: 1px solid #f2bcc2;
+    font-weight: 700;
+    font-size: 0.77rem;
+    padding: 5px 10px;
+    border-radius: 999px;
+}
+
+/* Modales emergentes de alerta para Asociado (Editar y Eliminar independientes) */
+.modal-asociado-alerta .modal-content {
+    border: 1px solid #e6d3c5;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fffdfb;
+    box-shadow: 0 18px 40px rgba(75, 18, 24, 0.24);
+}
+
+.modal-asociado-alerta .modal-header {
+    background: linear-gradient(90deg, #6e1b22 0%, #8f2933 100%);
+    color: #fff8f0;
+    border-bottom: 2px solid #d49a6a;
+    padding: 16px 22px;
+}
+
+.modal-asociado-alerta .modal-title {
+    color: #fff8f0;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.aviso-aprobacion-modal {
+    background: #fdf3e7;
+    border: 1px solid #ecc9a0;
+    border-left: 4px solid #c25b38;
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: #5c2a16;
+    font-size: 0.88rem;
+}
+
+.detalle-cambio-admin {
+    font-size: 0.78rem;
+    color: #4a1540;
+    background: #f6edf9;
+    border-radius: 8px;
+    padding: 4px 8px;
+    margin-top: 5px;
+    display: inline-block;
+}
+
+/* Tarjeta expandida de Actividades Registradas que se va rellenando al crear nuevas actividades */
+.card-actividades-expandida {
+    min-height: 480px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-actividades-expandida .table-responsive {
+    flex: 1;
+}
+
+.card-actividades-expandida th,
+.card-actividades-expandida td {
+    padding: 14px 16px;
+    font-size: 0.95rem;
 }

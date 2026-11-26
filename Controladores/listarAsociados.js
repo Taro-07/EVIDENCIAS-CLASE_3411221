@@ -12,14 +12,19 @@ const campoRolAsociado = document.getElementById("campoRolAsociado");
 let esAdministrador = (localStorage.getItem("rol") || "").toLowerCase() === "admin";
 let asociadosLista = [];
 let perfilActual = null;
+let fotoPerfilActual = localStorage.getItem("fotoPerfil") || null;
+let tonoAvatarActual = localStorage.getItem("avatarTono") || "avatar-tono-vino";
 
-// Referencias a los elementos de la Ficha del Asociado y su modal de actualización
-const btnAbrirEditarPerfil = document.getElementById("btnAbrirEditarPerfil");
+// Referencias a los elementos de la Ficha del Asociado unificada (foto + edición directa)
 const formEditarPerfil = document.getElementById("formEditarPerfil");
 const btnGuardarPerfil = document.getElementById("btnGuardarPerfil");
 const alertaPerfil = document.getElementById("alertaPerfil");
-const modalPerfilEl = document.getElementById("modalEditarPerfil");
-const modalEditarPerfil = modalPerfilEl && window.bootstrap ? new bootstrap.Modal(modalPerfilEl) : null;
+const fichaAvatarPerfil = document.getElementById("fichaAvatarPerfil");
+const fichaNombreCompleto = document.getElementById("fichaNombreCompleto");
+const fichaInputFoto = document.getElementById("fichaInputFoto");
+const btnFichaSubirFoto = document.getElementById("btnFichaSubirFoto");
+const btnFichaQuitarFoto = document.getElementById("btnFichaQuitarFoto");
+const fichaSelectorColor = document.getElementById("fichaSelectorColor");
 
 // Función centralizada para realizar peticiones GET, POST, PUT y DELETE a gestionarAsociados.php
 async function solicitarApiAsociados(metodo, datos) {
@@ -122,15 +127,15 @@ function mostrarAsociados() {
             celdaRol
         );
 
-        // Solo si el usuario autenticado es administrador agrega los botones de Editar y Eliminar
+        // Solo si el usuario autenticado es administrador agrega los botones Editar y Eliminar
         if (esAdministrador) {
             const acciones = document.createElement("td");
             acciones.className = "text-nowrap";
 
-            // Botón azul para cargar los datos de este asociado en el formulario superior
+            // Botón azul para cargar los datos de este asociado en el modal de edición
             const botonEditar = document.createElement("button");
             botonEditar.type = "button";
-            botonEditar.className = "btn btn-sm btn-outline-primary me-2";
+            botonEditar.className = "btn btn-sm btn-outline-primary me-1";
             botonEditar.style.flex = "0 0 auto";
             botonEditar.style.padding = "4px 8px";
             botonEditar.innerHTML = '<i class="bi bi-pencil"></i>';
@@ -156,55 +161,83 @@ function mostrarAsociados() {
     });
 }
 
-// Rellena todos los campos visibles de la tarjeta "Ficha del Asociado" con el perfil autenticado
+// Obtiene la inicial en mayúscula del nombre para mostrarla por defecto cuando no hay foto
+function obtenerInicialPerfil(nombre) {
+    const limpio = String(nombre || "").trim();
+    return limpio.length > 0 ? limpio.charAt(0).toUpperCase() : "A";
+}
+
+// Renderiza la foto de perfil o la inicial del nombre con el tono seleccionado
+function renderizarAvatarFicha(nombreCompleto) {
+    if (!fichaAvatarPerfil) return;
+    fichaAvatarPerfil.classList.remove("avatar-tono-vino", "avatar-tono-terracota", "avatar-tono-cobre", "avatar-tono-ciruela");
+    fichaAvatarPerfil.classList.add(tonoAvatarActual || "avatar-tono-vino");
+    fichaAvatarPerfil.replaceChildren();
+
+    if (fotoPerfilActual) {
+        const img = document.createElement("img");
+        img.src = `${fotoPerfilActual}?t=${Date.now()}`;
+        img.alt = `Foto de perfil de ${nombreCompleto}`;
+        img.onerror = () => {
+            fichaAvatarPerfil.textContent = obtenerInicialPerfil(nombreCompleto);
+        };
+        fichaAvatarPerfil.append(img);
+    } else {
+        fichaAvatarPerfil.textContent = obtenerInicialPerfil(nombreCompleto);
+    }
+
+    // Muestra "Quitar foto" solo si hay foto subida y el selector de color solo si se usa inicial
+    if (btnFichaQuitarFoto) {
+        btnFichaQuitarFoto.classList.toggle("d-none", !fotoPerfilActual);
+    }
+    if (fichaSelectorColor) {
+        fichaSelectorColor.classList.toggle("d-none", Boolean(fotoPerfilActual));
+    }
+    document.querySelectorAll(".btn-tono-ficha").forEach((btn) => {
+        btn.classList.toggle("activo", btn.dataset.tono === tonoAvatarActual);
+    });
+}
+
+// Rellena directamente el encabezado, avatar y todos los campos editables de "Mis Datos Personales"
 function mostrarFichaPersonal(perfil) {
     perfilActual = perfil;
-    const ponerTexto = (id, valor) => {
+    const nombreCompleto = `${perfil?.nombres ?? ""} ${perfil?.apellidos ?? ""}`.trim() || "Asociado";
+
+    if (fichaNombreCompleto) fichaNombreCompleto.textContent = nombreCompleto;
+    const docEl = document.getElementById("fichaDocumento");
+    if (docEl) docEl.textContent = perfil?.documento ?? "-";
+    const rolEl = document.getElementById("fichaRol");
+    if (rolEl) rolEl.textContent = perfil?.rol || "Asociado";
+
+    // Sincroniza la foto de perfil con el valor real almacenado en la base de datos
+    fotoPerfilActual = perfil?.fotoPerfil || null;
+    if (fotoPerfilActual) {
+        localStorage.setItem("fotoPerfil", fotoPerfilActual);
+    } else {
+        localStorage.removeItem("fotoPerfil");
+    }
+    renderizarAvatarFicha(nombreCompleto);
+
+    // Carga los valores directamente en los campos editables del formulario único
+    const setVal = (id, valor) => {
         const el = document.getElementById(id);
-        if (el) {
-            el.textContent = valor !== null && valor !== undefined && String(valor).trim() !== "" ? String(valor) : "-";
-        }
+        if (el) el.value = valor ?? "";
     };
-
-    ponerTexto("fichaDocumento", perfil?.documento);
-    ponerTexto("fichaRol", perfil?.rol || "Asociado");
-    ponerTexto("fichaNombres", perfil?.nombres);
-    ponerTexto("fichaApellidos", perfil?.apellidos);
-    ponerTexto("fichaFechaNacimiento", perfil?.FechaNacimiento);
-    ponerTexto("fichaGenero", perfil?.genero);
-    ponerTexto("fichaCiudad", perfil?.ciudad);
-    ponerTexto("fichaDireccion", perfil?.DireccionResidencia);
-    ponerTexto("fichaTelefono", perfil?.telefono);
-    ponerTexto("fichaEmail", perfil?.email);
-}
-
-// Muestra un aviso temporal en la sección Mis Datos Personales
-function mostrarAlertaPerfil(texto, tipo = "success") {
-    if (!alertaPerfil) return;
-    alertaPerfil.className = `alert alert-${tipo} mb-3`;
-    alertaPerfil.textContent = texto;
-}
-
-// Abre el modal de actualización de perfil cargado con los datos actuales del asociado
-function abrirModalEditarPerfil() {
-    if (!perfilActual || !formEditarPerfil) return;
-    formEditarPerfil.reset();
-
-    document.getElementById("perfilNombres").value = perfilActual.nombres ?? "";
-    document.getElementById("perfilApellidos").value = perfilActual.apellidos ?? "";
-    document.getElementById("perfilFechaNacimiento").value = perfilActual.FechaNacimiento ?? "";
-    document.getElementById("perfilDireccion").value = perfilActual.DireccionResidencia ?? "";
-    document.getElementById("perfilTelefono").value = perfilActual.telefono ?? "";
-    document.getElementById("perfilEmail").value = perfilActual.email ?? "";
+    setVal("perfilNombres", perfil?.nombres);
+    setVal("perfilApellidos", perfil?.apellidos);
+    setVal("perfilFechaNacimiento", perfil?.FechaNacimiento);
+    setVal("perfilDireccion", perfil?.DireccionResidencia);
+    setVal("perfilTelefono", perfil?.telefono);
+    setVal("perfilEmail", perfil?.email);
 
     const selectGenero = document.getElementById("perfilGenero");
     if (selectGenero) {
-        selectGenero.value = perfilActual.genero || "Otro";
+        selectGenero.value = perfil?.genero || "Otro";
     }
 
     const selectCiudad = document.getElementById("perfilCiudad");
     if (selectCiudad) {
-        const ciudadValor = perfilActual.ciudad || "";
+        const ciudadValor = perfil?.ciudad || "";
         const existe = Array.from(selectCiudad.options).some((opt) => opt.value === ciudadValor);
         if (ciudadValor && !existe) {
             const nuevaOpcion = document.createElement("option");
@@ -214,20 +247,21 @@ function abrirModalEditarPerfil() {
         }
         selectCiudad.value = ciudadValor;
     }
-
-    if (modalEditarPerfil) {
-        modalEditarPerfil.show();
-    }
 }
 
-// Consulta la API por GET, sincroniza la vista según el rol (Admin = tabla, Asociado = ficha personal)
+// Muestra un aviso temporal en la sección Mis Datos Personales
+function mostrarAlertaPerfil(texto, tipo = "success") {
+    if (!alertaPerfil) return;
+    alertaPerfil.className = `alert alert-${tipo} mb-3`;
+    alertaPerfil.textContent = texto;
+}
+
+// Consulta la API por GET, sincroniza la vista según el rol (Admin = tabla, Asociado = ficha personal editable)
 async function cargarAsociados() {
     try {
         const resultado = await solicitarApiAsociados("GET");
-        // Confirma el rol real devuelto por la sesión PHP del servidor
         esAdministrador = (resultado.rol || "").toLowerCase() === "admin";
 
-        // Muestra u oculta los bloques según si es administrador o asociado
         const encabezadoAcciones = document.getElementById("encabezadoAccionesAsociado");
         if (encabezadoAcciones) {
             encabezadoAcciones.classList.toggle("d-none", !esAdministrador);
@@ -240,11 +274,9 @@ async function cargarAsociados() {
         });
 
         if (esAdministrador) {
-            // Almacena los asociados recibidos y actualiza la tabla de administración
             asociadosLista = Array.isArray(resultado.asociados) ? resultado.asociados : [];
             mostrarAsociados();
         } else if (resultado.perfil) {
-            // Muestra únicamente la ficha personal del asociado autenticado
             mostrarFichaPersonal(resultado.perfil);
         }
     } catch (error) {
@@ -257,12 +289,84 @@ async function cargarAsociados() {
     }
 }
 
-// Conecta el botón "Actualizar Mis Datos" con la apertura del modal de perfil
-if (btnAbrirEditarPerfil) {
-    btnAbrirEditarPerfil.addEventListener("click", abrirModalEditarPerfil);
+// Dispara el selector de archivo al pulsar "Subir foto de perfil"
+if (btnFichaSubirFoto && fichaInputFoto) {
+    btnFichaSubirFoto.addEventListener("click", () => {
+        fichaInputFoto.value = "";
+        fichaInputFoto.click();
+    });
+
+    // Sube la imagen seleccionada automáticamente a ../Modelo/perfilFoto.php
+    fichaInputFoto.addEventListener("change", async () => {
+        const archivo = fichaInputFoto.files?.[0];
+        if (!archivo) return;
+
+        const formData = new FormData();
+        formData.append("foto", archivo);
+
+        btnFichaSubirFoto.disabled = true;
+        try {
+            const respuesta = await fetch("../Modelo/perfilFoto.php", {
+                method: "POST",
+                credentials: "include",
+                body: formData
+            });
+            const resultado = await respuesta.json();
+            if (!respuesta.ok || !resultado.success) {
+                throw new Error(resultado.mensaje || "No se pudo subir la foto de perfil");
+            }
+
+            fotoPerfilActual = resultado.fotoPerfil;
+            localStorage.setItem("fotoPerfil", fotoPerfilActual);
+            const nombreActual = fichaNombreCompleto ? fichaNombreCompleto.textContent : "Asociado";
+            renderizarAvatarFicha(nombreActual);
+            mostrarAlertaPerfil(resultado.mensaje || "Foto de perfil actualizada correctamente.", "success");
+        } catch (error) {
+            mostrarAlertaPerfil(error.message, "danger");
+        } finally {
+            btnFichaSubirFoto.disabled = false;
+        }
+    });
 }
 
-// Envía la actualización de los datos propios del asociado autenticado mediante PUT
+// Elimina la foto subida y vuelve automáticamente a la inicial del nombre
+if (btnFichaQuitarFoto) {
+    btnFichaQuitarFoto.addEventListener("click", async () => {
+        btnFichaQuitarFoto.disabled = true;
+        try {
+            const respuesta = await fetch("../Modelo/perfilFoto.php", {
+                method: "DELETE",
+                credentials: "include"
+            });
+            const resultado = await respuesta.json();
+            if (!respuesta.ok || !resultado.success) {
+                throw new Error(resultado.mensaje || "No se pudo quitar la foto");
+            }
+
+            fotoPerfilActual = null;
+            localStorage.removeItem("fotoPerfil");
+            const nombreActual = fichaNombreCompleto ? fichaNombreCompleto.textContent : "Asociado";
+            renderizarAvatarFicha(nombreActual);
+            mostrarAlertaPerfil("Foto eliminada. Se muestra la inicial de tu nombre.", "success");
+        } catch (error) {
+            mostrarAlertaPerfil(error.message, "danger");
+        } finally {
+            btnFichaQuitarFoto.disabled = false;
+        }
+    });
+}
+
+// Cambia el tono de fondo de la inicial y lo sincroniza con el dashboard
+document.querySelectorAll(".btn-tono-ficha").forEach((boton) => {
+    boton.addEventListener("click", () => {
+        tonoAvatarActual = boton.dataset.tono || "avatar-tono-vino";
+        localStorage.setItem("avatarTono", tonoAvatarActual);
+        const nombreActual = fichaNombreCompleto ? fichaNombreCompleto.textContent : "Asociado";
+        renderizarAvatarFicha(nombreActual);
+    });
+});
+
+// Guarda los cambios editados directamente en la Ficha del Asociado mediante PUT
 if (formEditarPerfil) {
     formEditarPerfil.addEventListener("submit", async (evento) => {
         evento.preventDefault();
@@ -290,9 +394,6 @@ if (formEditarPerfil) {
             } else {
                 await cargarAsociados();
             }
-            if (modalEditarPerfil) {
-                modalEditarPerfil.hide();
-            }
             mostrarAlertaPerfil(resultado.mensaje || "Tus datos personales se actualizaron correctamente.", "success");
         } catch (error) {
             mostrarAlertaPerfil(error.message, "danger");
@@ -302,22 +403,49 @@ if (formEditarPerfil) {
     });
 }
 
-// Restaura el formulario superior a su modo inicial de creación de asociado
+// Obtiene o crea la instancia del modal Bootstrap para crear/editar asociados (Admin)
+let modalAsociadoInstancia = null;
+function obtenerModalAsociado() {
+    if (!modalAsociadoInstancia) {
+        const el = document.getElementById("modalAsociadoAdmin");
+        if (el && window.bootstrap) {
+            modalAsociadoInstancia = new bootstrap.Modal(el);
+        }
+    }
+    return modalAsociadoInstancia;
+}
+
+// Muestra una alerta breve encima de la tabla de asociados en la vista Admin
+function mostrarAlertaAdminAsociados(texto, tipo = "success") {
+    const alerta = document.getElementById("alertaAdminAsociados");
+    if (!alerta) return;
+    alerta.className = `alert alert-${tipo} mb-3`;
+    alerta.textContent = texto;
+}
+
+// Restaura el formulario modal a su modo inicial de creación de asociado
 function resetearFormularioAsociado() {
     if (!formAsociado) return;
     formAsociado.reset();
     document.getElementById("idAsociado").value = "";
     if (campoRolAsociado) campoRolAsociado.classList.add("d-none");
-    if (btnCancelarEdicion) btnCancelarEdicion.classList.add("d-none");
     if (tituloFormAsociado) {
-        tituloFormAsociado.innerHTML = '<i class="bi bi-person-plus"></i> Registro de Asociado';
+        tituloFormAsociado.innerHTML = '<i class="bi bi-person-plus me-2"></i>Registro de Asociado';
     }
     if (btnGuardarAsociado) {
         btnGuardarAsociado.textContent = "Guardar Asociado";
     }
 }
 
-// Llena todos los campos del formulario superior con los datos del asociado seleccionado para editar
+// Abre el modal limpio en modo creación de un nuevo asociado
+function abrirCreacionAsociado() {
+    resetearFormularioAsociado();
+    if (mensajeAsociado) mensajeAsociado.textContent = "";
+    const modal = obtenerModalAsociado();
+    if (modal) modal.show();
+}
+
+// Llena todos los campos del modal con los datos del asociado seleccionado para editar
 function abrirEdicionAsociado(asociado) {
     if (!formAsociado) return;
     formAsociado.reset();
@@ -358,19 +486,18 @@ function abrirEdicionAsociado(asociado) {
         selectRol.value = (asociado.rol || "").toLowerCase() === "admin" ? "Admin" : "Asociado";
     }
 
-    // Muestra el selector de rol, el botón Cancelar y cambia el título/botón a modo edición
+    // Muestra el selector de rol y cambia el título/botón a modo edición
     if (campoRolAsociado) campoRolAsociado.classList.remove("d-none");
-    if (btnCancelarEdicion) btnCancelarEdicion.classList.remove("d-none");
     if (tituloFormAsociado) {
-        tituloFormAsociado.innerHTML = '<i class="bi bi-pencil-square"></i> Editar Asociado';
+        tituloFormAsociado.innerHTML = '<i class="bi bi-pencil-square me-2"></i>Editar Asociado';
     }
     if (btnGuardarAsociado) {
         btnGuardarAsociado.textContent = "Guardar cambios";
     }
     if (mensajeAsociado) mensajeAsociado.textContent = "";
 
-    // Desplaza suavemente la pantalla hacia arriba para visualizar el formulario de edición
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const modal = obtenerModalAsociado();
+    if (modal) modal.show();
 }
 
 // Pide confirmación y envía la petición DELETE para eliminar un asociado
@@ -381,21 +508,23 @@ async function eliminarAsociado(asociado) {
 
     try {
         const resultado = await solicitarApiAsociados("DELETE", { idAsociado: asociado.idAsociado });
-        // Si el usuario estaba editando justo ese registro, limpia el formulario
         if (document.getElementById("idAsociado").value === String(asociado.idAsociado)) {
             resetearFormularioAsociado();
         }
-        if (mensajeAsociado) {
-            mensajeAsociado.textContent = resultado.mensaje || "Asociado eliminado correctamente.";
-        }
-        // Recarga la lista actualizada desde la base de datos
+        mostrarAlertaAdminAsociados(resultado.mensaje || "Asociado eliminado correctamente.", "success");
         await cargarAsociados();
     } catch (error) {
         alert(error.message);
     }
 }
 
-// Configura el botón Cancelar para salir del modo edición y limpiar el formulario
+// Botón "+ Nuevo" del encabezado de la tabla de asociados
+const btnNuevoAsociadoHeader = document.getElementById("btnNuevoAsociadoHeader");
+if (btnNuevoAsociadoHeader) {
+    btnNuevoAsociadoHeader.addEventListener("click", () => abrirCreacionAsociado());
+}
+
+// Configura el botón Cancelar para limpiar el formulario
 if (btnCancelarEdicion) {
     btnCancelarEdicion.addEventListener("click", () => {
         resetearFormularioAsociado();
@@ -408,7 +537,6 @@ if (formAsociado) {
     formAsociado.addEventListener("submit", async (evento) => {
         evento.preventDefault();
 
-        // Si existe un idAsociado oculto, se trata de una edición (PUT); si no, de una creación (POST)
         const idAsociado = document.getElementById("idAsociado").value;
         const datos = {
             documento: document.getElementById("documento").value.trim(),
@@ -422,26 +550,24 @@ if (formAsociado) {
             ciudad: document.getElementById("ciudad").value
         };
 
-        // En edición, incluye también el ID del registro y el rol seleccionado
         if (idAsociado) {
             datos.idAsociado = Number(idAsociado);
             datos.rol = document.getElementById("rol").value;
         }
 
-        // Desactiva el botón durante el envío y limpia mensajes anteriores
         if (btnGuardarAsociado) btnGuardarAsociado.disabled = true;
         if (mensajeAsociado) mensajeAsociado.textContent = "";
 
         try {
-            // Envía PUT o POST según corresponda
             const resultado = await solicitarApiAsociados(idAsociado ? "PUT" : "POST", datos);
             resetearFormularioAsociado();
-            if (mensajeAsociado) {
-                mensajeAsociado.textContent =
-                    resultado.mensaje ||
-                    (idAsociado ? "Asociado actualizado correctamente." : "Asociado registrado con éxito.");
-            }
-            // Refresca la tabla con los cambios guardados
+            const modal = obtenerModalAsociado();
+            if (modal) modal.hide();
+            mostrarAlertaAdminAsociados(
+                resultado.mensaje ||
+                    (idAsociado ? "Asociado actualizado correctamente." : "Asociado registrado con éxito."),
+                "success"
+            );
             await cargarAsociados();
         } catch (error) {
             if (mensajeAsociado) {

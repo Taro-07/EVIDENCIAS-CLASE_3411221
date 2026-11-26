@@ -62,22 +62,107 @@ function crearCelda(texto) {
     return celda;
 }
 
+// Formatea montos monetarios en pesos colombianos (COP) sin decimales sobrantes
+function formatearMonedaActividad(valor) {
+    const numero = Number(valor || 0);
+    const esEntero = Number.isInteger(numero);
+    return numero.toLocaleString("es-CO", {
+        style: "currency",
+        currency: "COP",
+        minimumFractionDigits: esEntero ? 0 : 2,
+        maximumFractionDigits: 2
+    });
+}
+
+// Consulta el resumen de cuotas pendientes para las burbujas KPI del Asociado desde perfilFoto.php
+async function cargarResumenPagosAsociado() {
+    try {
+        const respuesta = await fetch("../Modelo/perfilFoto.php", {
+            method: "GET",
+            headers: { "Accept": "application/json" },
+            credentials: "include"
+        });
+        const resultado = await respuesta.json();
+
+        if (!respuesta.ok || !resultado.success) {
+            throw new Error(resultado.mensaje || "No se pudo consultar el resumen de cuotas");
+        }
+
+        if (resultado.resumen) {
+            const elPend = document.getElementById("actKpiCuotasPendientes");
+            const elPag = document.getElementById("actKpiCuotasPagadas");
+            const elAct = document.getElementById("actKpiCreditosActivos");
+            if (elPend) elPend.textContent = String(resultado.resumen.cuotasPendientes ?? 0);
+            if (elPag) elPag.textContent = String(resultado.resumen.cuotasPagadas ?? 0);
+            if (elAct) elAct.textContent = String(resultado.resumen.creditosActivos ?? 0);
+        }
+    } catch (error) {
+        console.error("Error al cargar resumen de cuotas del asociado:", error);
+    }
+}
+
+// Instancia del modal para que el Asociado realice un abono a una actividad
+let modalAbonoActividadInstancia = null;
+function obtenerModalAbonoActividad() {
+    if (!modalAbonoActividadInstancia) {
+        const el = document.getElementById("modalAbonarActividad");
+        if (el && window.bootstrap) {
+            modalAbonoActividadInstancia = new bootstrap.Modal(el);
+        }
+    }
+    return modalAbonoActividadInstancia;
+}
+
+// Abre el modal de abono precargando la actividad elegida por el Asociado
+function abrirModalAbonoActividad(actividad) {
+    document.getElementById("abonoIdActividad").value = actividad.idActividad;
+    const inputMonto = document.getElementById("montoAbonoActividad");
+    if (inputMonto) inputMonto.value = "";
+    const msg = document.getElementById("msgAbonoActividad");
+    if (msg) msg.textContent = "";
+
+    const detalle = document.getElementById("detalleActividadAbono");
+    if (detalle) {
+        const recaudadoNum = Number(actividad.totalRecaudado || 0);
+        const recaudadoActual = formatearMonedaActividad(recaudadoNum);
+        const tieneMeta = actividad.metaRecaudo !== null && actividad.metaRecaudo !== undefined && Number(actividad.metaRecaudo) > 0;
+        const metaNum = tieneMeta ? Number(actividad.metaRecaudo) : 0;
+        const faltante = tieneMeta ? Math.max(0, metaNum - recaudadoNum) : null;
+
+        detalle.innerHTML = `
+            <div class="fw-bold" style="color: #5c1d22;">${actividad.nombreActividad ?? "Actividad"}</div>
+            <div>Fecha: <strong>${actividad.fechaEvento ?? "-"}</strong> · Municipio: <strong>${actividad.municipio ?? "-"}</strong></div>
+            <div>Recaudado actual: <strong>${recaudadoActual}</strong>${
+                tieneMeta
+                    ? ` · Tope: <strong>${formatearMonedaActividad(metaNum)}</strong> · Faltan: <strong style="color: #b4232c;">${formatearMonedaActividad(faltante)}</strong>`
+                    : ""
+            }</div>`;
+    }
+
+    const modal = obtenerModalAbonoActividad();
+    if (modal) modal.show();
+}
+
 // Renderiza la tabla de actividades con sus columnas y, si es admin, los botones de acción
 function mostrarActividades() {
     if (!listaActividades) return;
     // Borra las filas anteriores
     listaActividades.replaceChildren();
 
-    // Actualiza el contador del encabezado de la tabla
+    // Actualiza el contador del encabezado de la tabla y la burbuja KPI de actividades registradas
     if (totalActividades) {
         totalActividades.textContent = String(actividades.length);
+    }
+    const kpiActividades = document.getElementById("actKpiActividades");
+    if (kpiActividades) {
+        kpiActividades.textContent = String(actividades.length);
     }
 
     // Muestra un mensaje vacío si aún no existen actividades
     if (actividades.length === 0) {
         const fila = document.createElement("tr");
         const celda = document.createElement("td");
-        celda.colSpan = esAdministrador ? 6 : 5;
+        celda.colSpan = 7;
         celda.className = "text-center py-4 text-muted";
         celda.textContent = "No hay actividades registradas.";
         fila.append(celda);
@@ -88,40 +173,38 @@ function mostrarActividades() {
     // Recorre cada actividad y construye su fila en el DOM
     actividades.forEach((actividad, indice) => {
         const fila = document.createElement("tr");
-        // Formatea el total recaudado en pesos colombianos (COP) o muestra "Pendiente" si es null
+        const tieneMeta = actividad.metaRecaudo !== null && actividad.metaRecaudo !== undefined && Number(actividad.metaRecaudo) > 0;
+        const metaTexto = tieneMeta ? formatearMonedaActividad(actividad.metaRecaudo) : "Sin tope";
         const totalTexto =
             actividad.totalRecaudado === null || actividad.totalRecaudado === undefined
                 ? "Pendiente"
-                : Number(actividad.totalRecaudado).toLocaleString("es-CO", {
-                      style: "currency",
-                      currency: "COP"
-                  });
+                : formatearMonedaActividad(actividad.totalRecaudado);
+        const metaCumplida = tieneMeta && Number(actividad.totalRecaudado || 0) >= Number(actividad.metaRecaudo);
 
-        // Añade las 5 columnas principales
+        // Añade las 6 columnas principales (incluyendo Tope / Meta)
         fila.append(
             crearCelda(String(indice + 1)),
             crearCelda(actividad.nombreActividad ?? ""),
             crearCelda(actividad.fechaEvento ?? ""),
             crearCelda(actividad.municipio ?? ""),
+            crearCelda(metaTexto),
             crearCelda(totalTexto)
         );
 
-        // Si el usuario es administrador, añade los botones Editar y Eliminar
-        if (esAdministrador) {
-            const acciones = document.createElement("td");
-            acciones.className = "text-nowrap";
+        // Columna Acciones: Admin (Editar y Eliminar), Asociado (botón Abonar o insignia Meta cumplida)
+        const acciones = document.createElement("td");
+        acciones.className = "text-nowrap text-center";
 
-            // Botón Editar: carga la actividad en el formulario superior
+        if (esAdministrador) {
             const botonEditar = document.createElement("button");
             botonEditar.type = "button";
-            botonEditar.className = "btn btn-sm btn-outline-primary me-2";
+            botonEditar.className = "btn btn-sm btn-outline-primary me-1";
             botonEditar.style.flex = "0 0 auto";
             botonEditar.style.padding = "4px 8px";
             botonEditar.innerHTML = '<i class="bi bi-pencil"></i>';
             botonEditar.title = "Editar";
             botonEditar.addEventListener("click", () => abrirEdicion(actividad));
 
-            // Botón Eliminar: pide confirmación y borra la actividad
             const botonEliminar = document.createElement("button");
             botonEliminar.type = "button";
             botonEliminar.className = "btn btn-sm btn-outline-danger";
@@ -132,9 +215,24 @@ function mostrarActividades() {
             botonEliminar.addEventListener("click", () => eliminarActividad(actividad));
 
             acciones.append(botonEditar, botonEliminar);
-            fila.append(acciones);
+        } else if (metaCumplida) {
+            const badgeMeta = document.createElement("span");
+            badgeMeta.className = "badge badge-estado-aprobado";
+            badgeMeta.innerHTML = '<i class="bi bi-check-circle me-1"></i>Meta alcanzada';
+            acciones.append(badgeMeta);
+        } else {
+            const botonAbonar = document.createElement("button");
+            botonAbonar.type = "button";
+            botonAbonar.className = "btn-accion-primaria-asoc";
+            botonAbonar.style.flex = "0 0 auto";
+            botonAbonar.innerHTML = '<i class="bi bi-cash-coin me-1"></i>Abonar';
+            botonAbonar.title = "Abonar a esta actividad";
+            botonAbonar.addEventListener("click", () => abrirModalAbonoActividad(actividad));
+
+            acciones.append(botonAbonar);
         }
 
+        fila.append(acciones);
         listaActividades.append(fila);
     });
 }
@@ -145,15 +243,15 @@ async function cargarActividades() {
         const resultado = await solicitarApi("GET");
         esAdministrador = (resultado.rol || "").toLowerCase() === "admin";
 
-        // Muestra u oculta el encabezado Acciones y el formulario superior según si es admin
-        const encabezadoAcciones = document.getElementById("encabezadoAcciones");
-        if (encabezadoAcciones) encabezadoAcciones.classList.toggle("d-none", !esAdministrador);
-
+        // Muestra u oculta los bloques exclusivos de cada rol (la columna Acciones se mantiene visible para ambos)
         document.querySelectorAll("[data-solo-admin]").forEach((elemento) => {
             elemento.classList.toggle("d-none", !esAdministrador);
         });
+        document.querySelectorAll("[data-solo-asociado]").forEach((elemento) => {
+            elemento.classList.toggle("d-none", esAdministrador);
+        });
 
-        // Guarda el arreglo recibido y dibuja la tabla
+        // Guarda el arreglo recibido y dibuja la tabla y la burbuja de Actividades Registradas
         actividades = Array.isArray(resultado.actividades) ? resultado.actividades : [];
         mostrarActividades();
     } catch (error) {
@@ -164,22 +262,49 @@ async function cargarActividades() {
     }
 }
 
-// Restablece el formulario superior al modo de creación de nueva actividad
+// Instancia del modal Bootstrap para crear/editar actividades (Admin)
+let modalActividadInstancia = null;
+function obtenerModalActividad() {
+    if (!modalActividadInstancia) {
+        const el = document.getElementById("modalActividadAdmin");
+        if (el && window.bootstrap) {
+            modalActividadInstancia = new bootstrap.Modal(el);
+        }
+    }
+    return modalActividadInstancia;
+}
+
+// Muestra alerta de confirmación encima de la tabla de actividades
+function mostrarAlertaAdminActividades(texto, tipo = "success") {
+    const alerta = document.getElementById("alertaAdminActividades");
+    if (!alerta) return;
+    alerta.className = `alert alert-${tipo} mb-3`;
+    alerta.textContent = texto;
+}
+
+// Restablece el formulario modal al modo de creación de nueva actividad
 function resetearFormulario() {
     if (!formularioActividad) return;
     formularioActividad.reset();
     document.getElementById("idActividad").value = "";
     if (campoTotalRecaudado) campoTotalRecaudado.classList.add("d-none");
-    if (botonCancelarEdicion) botonCancelarEdicion.classList.add("d-none");
     if (tituloFormActividad) {
-        tituloFormActividad.innerHTML = '<i class="bi bi-calendar-plus"></i> Nueva Actividad';
+        tituloFormActividad.innerHTML = '<i class="bi bi-calendar-plus me-2"></i>Nueva Actividad';
     }
     if (botonGuardarActividad) {
         botonGuardarActividad.textContent = "Crear Actividad";
     }
 }
 
-// Carga los valores de la actividad seleccionada en el formulario superior para editarla
+// Abre el modal vacío en modo creación de actividad
+function abrirCreacionActividad() {
+    resetearFormulario();
+    if (mensajeActividad) mensajeActividad.textContent = "";
+    const modal = obtenerModalActividad();
+    if (modal) modal.show();
+}
+
+// Carga los valores de la actividad seleccionada en el modal para editarla (incluyendo tope metaRecaudo y totalRecaudado)
 function abrirEdicion(actividad) {
     if (!formularioActividad) return;
     formularioActividad.reset();
@@ -187,19 +312,21 @@ function abrirEdicion(actividad) {
     document.getElementById("nombreActividad").value = actividad.nombreActividad ?? "";
     document.getElementById("fechaEvento").value = actividad.fechaEvento ?? "";
     document.getElementById("municipio").value = actividad.municipio ?? "";
+    const inputMeta = document.getElementById("metaRecaudo");
+    if (inputMeta) inputMeta.value = actividad.metaRecaudo ?? "";
     document.getElementById("totalRecaudo").value = actividad.totalRecaudado ?? "";
 
-    // Muestra el campo Total Recaudado y el botón Cancelar solo en modo edición
     if (campoTotalRecaudado) campoTotalRecaudado.classList.remove("d-none");
-    if (botonCancelarEdicion) botonCancelarEdicion.classList.remove("d-none");
     if (tituloFormActividad) {
-        tituloFormActividad.innerHTML = '<i class="bi bi-pencil-square"></i> Editar Actividad';
+        tituloFormActividad.innerHTML = '<i class="bi bi-pencil-square me-2"></i>Editar Actividad';
     }
     if (botonGuardarActividad) {
         botonGuardarActividad.textContent = "Guardar cambios";
     }
-    // Sube la vista suavemente hacia el formulario
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (mensajeActividad) mensajeActividad.textContent = "";
+
+    const modal = obtenerModalActividad();
+    if (modal) modal.show();
 }
 
 // Elimina la actividad tras confirmación del administrador y actualiza la tabla
@@ -209,16 +336,20 @@ async function eliminarActividad(actividad) {
 
     try {
         await solicitarApi("DELETE", { idActividad: actividad.idActividad });
-        if (mensajeActividad) {
-            mensajeActividad.textContent = "Actividad eliminada correctamente.";
-        }
+        mostrarAlertaAdminActividades("Actividad eliminada correctamente.", "success");
         await cargarActividades();
     } catch (error) {
         alert(error.message);
     }
 }
 
-// Al pulsar Cancelar, limpia el formulario y vuelve al modo creación
+// Botón "+ Nueva" del encabezado de la tabla de actividades
+const btnNuevaActividadHeader = document.getElementById("btnNuevaActividadHeader");
+if (btnNuevaActividadHeader) {
+    btnNuevaActividadHeader.addEventListener("click", () => abrirCreacionActividad());
+}
+
+// Al pulsar Cancelar, limpia el formulario
 if (botonCancelarEdicion) {
     botonCancelarEdicion.addEventListener("click", () => {
         resetearFormulario();
@@ -231,15 +362,15 @@ if (formularioActividad) {
     formularioActividad.addEventListener("submit", async (evento) => {
         evento.preventDefault();
 
-        // Lee el ID oculto para decidir si se crea o se edita
         const idActividad = document.getElementById("idActividad").value;
+        const metaValor = document.getElementById("metaRecaudo")?.value ?? "";
         const datos = {
             nombreActividad: document.getElementById("nombreActividad").value.trim(),
             fechaEvento: document.getElementById("fechaEvento").value,
-            municipio: document.getElementById("municipio").value.trim()
+            municipio: document.getElementById("municipio").value.trim(),
+            metaRecaudo: metaValor === "" ? null : Number(metaValor)
         };
 
-        // Si está editando, agrega el ID y el total recaudado (o null si quedó vacío)
         if (idActividad) {
             datos.idActividad = Number(idActividad);
             const total = document.getElementById("totalRecaudo").value;
@@ -252,12 +383,13 @@ if (formularioActividad) {
         try {
             const resultado = await solicitarApi(idActividad ? "PUT" : "POST", datos);
             resetearFormulario();
-            if (mensajeActividad) {
-                mensajeActividad.textContent =
-                    resultado.mensaje ||
-                    (idActividad ? "Actividad actualizada correctamente." : "Actividad creada exitosamente.");
-            }
-            // Recarga el listado desde el servidor
+            const modal = obtenerModalActividad();
+            if (modal) modal.hide();
+            mostrarAlertaAdminActividades(
+                resultado.mensaje ||
+                    (idActividad ? "Actividad actualizada correctamente." : "Actividad creada exitosamente."),
+                "success"
+            );
             await cargarActividades();
         } catch (error) {
             if (mensajeActividad) {
@@ -267,6 +399,46 @@ if (formularioActividad) {
             }
         } finally {
             if (botonGuardarActividad) botonGuardarActividad.disabled = false;
+        }
+    });
+}
+
+// Procesa el abono enviado por el Asociado desde el modal #modalAbonarActividad
+const formAbonarActividad = document.getElementById("formAbonarActividad");
+if (formAbonarActividad) {
+    formAbonarActividad.addEventListener("submit", async (evento) => {
+        evento.preventDefault();
+        const idActividad = Number(document.getElementById("abonoIdActividad").value);
+        const monto = Number(document.getElementById("montoAbonoActividad").value);
+        const btnConfirmar = document.getElementById("btnConfirmarAbonoActividad");
+        const msg = document.getElementById("msgAbonoActividad");
+
+        if (!Number.isFinite(monto) || monto <= 0) {
+            if (msg) msg.textContent = "Ingresa un monto válido mayor a cero.";
+            return;
+        }
+
+        if (btnConfirmar) btnConfirmar.disabled = true;
+        if (msg) msg.textContent = "";
+
+        try {
+            const resultado = await solicitarApi("POST", {
+                accion: "abonar",
+                idActividad,
+                monto
+            });
+            formAbonarActividad.reset();
+            const modal = obtenerModalAbonoActividad();
+            if (modal) modal.hide();
+            mostrarAlertaAdminActividades(
+                resultado.mensaje || "Abono registrado correctamente en la actividad.",
+                "success"
+            );
+            await cargarActividades();
+        } catch (error) {
+            if (msg) msg.textContent = error.message;
+        } finally {
+            if (btnConfirmar) btnConfirmar.disabled = false;
         }
     });
 }

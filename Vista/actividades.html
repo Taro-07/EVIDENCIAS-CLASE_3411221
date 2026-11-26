@@ -10,7 +10,7 @@
     <title>Registro de Actividades</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="../Assets/css/estilos.css?v=5">
+    <link rel="stylesheet" href="../Assets/css/estilos.css?v=22">
 </head>
 
 <!-- Cuerpo de vista interna con tema dinámico según el rol -->
@@ -53,68 +53,55 @@
         </div>
     </nav>
 
-    <!-- Contenedor principal -->
-    <div class="container">
-        <!-- Sección de formulario visible únicamente para rol Admin -->
-        <div id="seccionFormActividad" data-solo-admin class="row justify-content-center d-none">
-            <div class="col-lg-8 col-md-10">
-                <div class="glass-card">
-                    <!-- Encabezado dinámico: "Nueva Actividad" o "Editar Actividad" -->
-                    <h3 id="tituloFormActividad" class="mb-4 text-center" style="color: var(--neon-green);">
-                        <i class="bi bi-calendar-plus"></i> Nueva Actividad
-                    </h3>
-                    <!-- Formulario controlado por actividades.js -->
-                    <form id="formActividad">
-                        <!-- Campo oculto con el idActividad cuando se edita un registro -->
-                        <input type="hidden" id="idActividad" name="idActividad">
-                        <div class="row g-3">
-                            <!-- Nombre de la actividad -->
-                            <div class="col-md-8">
-                                <label for="nombreActividad" class="form-label">Nombre de la Actividad</label>
-                                <input type="text" id="nombreActividad" name="nombreActividad" class="form-control" maxlength="50" required>
-                            </div>
-                            <!-- Fecha programada del evento -->
-                            <div class="col-md-4">
-                                <label for="fechaEvento" class="form-label">Fecha Programada</label>
-                                <input type="date" id="fechaEvento" name="fechaEvento" class="form-control" required>
-                            </div>
-                            <!-- Municipio donde se realiza la actividad -->
-                            <div class="col-md-6">
-                                <label for="municipio" class="form-label">Municipio</label>
-                                <input type="text" id="municipio" name="municipio" class="form-control" maxlength="50" required>
-                            </div>
-                            <!-- Campo informativo opcional de cupo máximo -->
-                            <div class="col-md-6">
-                                <label for="cupoMaximo" class="form-label">Cupo Máximo</label>
-                                <input type="number" id="cupoMaximo" name="cupoMaximo" class="form-control" min="1">
-                            </div>
-                            <!-- Campo Total Recaudado (se muestra solo al editar una actividad existente) -->
-                            <div id="campoTotalRecaudado" class="col-md-6 d-none">
-                                <label for="totalRecaudo" class="form-label">Total Recaudado (COP)</label>
-                                <input type="number" id="totalRecaudo" name="totalRecaudado" class="form-control" step="0.01" min="0">
-                            </div>
-                            <!-- Botones de acción del formulario -->
-                            <div class="col-12 mt-4 text-end">
-                                <button type="button" id="cancelarEdicion" class="btn btn-secondary px-4 me-2 d-none">Cancelar</button>
-                                <button type="submit" id="guardarActividad" class="btn btn-custom px-4">Crear Actividad</button>
-                            </div>
-                            <!-- Mensaje de confirmación o error -->
-                            <div class="col-12">
-                                <p id="mensajeActividad" class="mb-0 text-white fw-semibold" role="status"></p>
-                            </div>
-                        </div>
-                    </form>
+    <!-- Contenedor principal amplio -->
+    <div class="container-xxl px-3 px-lg-4">
+        <!-- Encabezado con botón Volver al Panel (visible únicamente para rol Asociado) -->
+        <div data-solo-asociado class="row justify-content-center mb-3 d-none">
+            <div class="col-12 d-flex flex-wrap justify-content-between align-items-start gap-3">
+                <div>
+                    <h2 class="titulo-ficha-asociado mb-1">
+                        <i class="bi bi-calendar-event me-2"></i>Actividades del Club
+                    </h2>
+                    <p class="subtitulo-ficha-asociado mb-0">
+                        Consulta las actividades programadas y disponibles para los asociados
+                    </p>
+                </div>
+                <a href="dashboard.html?v=7" class="btn btn-volver-panel">
+                    <i class="bi bi-arrow-left me-1"></i>Volver al Panel
+                </a>
+            </div>
+        </div>
+
+        <!-- Burbuja única de Actividades Registradas (solo Asociado) -->
+        <div data-solo-asociado class="row mb-4 d-none">
+            <div class="col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3">
+                <div class="burbuja-kpi burbuja-total">
+                    <span class="burbuja-icono burbuja-ico-total">
+                        <i class="bi bi-calendar-check"></i>
+                    </span>
+                    <div>
+                        <div id="actKpiActividades" class="burbuja-numero">0</div>
+                        <div class="burbuja-etiqueta">Actividades Registradas</div>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- Tabla de actividades (visible para ambos roles; Acciones solo para Admin) -->
-        <div id="seccionTablaActividades" class="row justify-content-center mt-4">
-            <div class="col-lg-10">
-                <div class="card shadow-sm">
-                    <!-- Encabezado con contador total de actividades -->
-                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+
+        <!-- Tabla expandida de actividades (se va rellenando a medida que se crean nuevas actividades) -->
+        <div id="seccionTablaActividades" class="row justify-content-center mt-2">
+            <div class="col-12">
+                <!-- Alerta de confirmación de acciones -->
+                <div id="alertaAdminActividades" class="alert alert-success d-none mb-3" role="status"></div>
+                <div class="card shadow-sm card-actividades-expandida">
+                    <!-- Encabezado con botón crear (solo Admin) y contador total de actividades -->
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center gap-2">
                         <h5 class="mb-0"><i class="bi bi-calendar-event me-2"></i>Actividades Registradas</h5>
-                        <span id="totalActividades" class="badge bg-secondary">0</span>
+                        <div class="d-flex align-items-center gap-2">
+                            <button type="button" id="btnNuevaActividadHeader" data-solo-admin class="btn-header-crear-admin d-none">
+                                <i class="bi bi-plus-lg"></i> Nueva
+                            </button>
+                            <span id="totalActividades" class="badge bg-secondary">0</span>
+                        </div>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-striped table-hover align-middle mb-0">
@@ -124,9 +111,10 @@
                                     <th scope="col">Actividad</th>
                                     <th scope="col">Fecha</th>
                                     <th scope="col">Municipio</th>
+                                    <th scope="col">Tope / Meta</th>
                                     <th scope="col">Total recaudado</th>
-                                    <!-- Columna Acciones visible únicamente para Admin -->
-                                    <th id="encabezadoAcciones" data-solo-admin class="d-none" scope="col">
+                                    <!-- Columna Acciones: Admin (Editar/Eliminar), Asociado (Abonar) -->
+                                    <th id="encabezadoAcciones" scope="col" class="text-center">
                                         Acciones
                                     </th>
                                 </tr>
@@ -134,7 +122,7 @@
                             <!-- Filas generadas dinámicamente por actividades.js -->
                             <tbody id="listaActividades">
                                 <tr>
-                                    <td colspan="6" class="text-center py-4">
+                                    <td colspan="7" class="text-center py-4">
                                         Cargando actividades...
                                     </td>
                                 </tr>
@@ -146,10 +134,89 @@
         </div>
     </div>
 
+    <!-- Modal para que el Asociado realice un abono a una actividad -->
+    <div class="modal fade modal-asociado-alerta" id="modalAbonarActividad" tabindex="-1" aria-labelledby="tituloModalAbonoAct" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="tituloModalAbonoAct" class="modal-title">
+                        <i class="bi bi-cash-coin me-2"></i>Abonar a Actividad
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div id="detalleActividadAbono" class="p-3 rounded-3 mb-3" style="background: #faf3ee; border: 1px solid #e6d3c5; color: #3d241c; font-size: 0.9rem;"></div>
+                    <form id="formAbonarActividad" class="form-prestamo-asociado">
+                        <input type="hidden" id="abonoIdActividad">
+                        <div class="mb-3">
+                            <label for="montoAbonoActividad" class="form-label">Monto a abonar ($ COP)</label>
+                            <input type="number" id="montoAbonoActividad" class="form-control" step="any" min="1" placeholder="Ej: 50000" required>
+                        </div>
+                        <p id="msgAbonoActividad" class="small fw-semibold mb-3" style="color: #b4232c;" role="status"></p>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-volver-panel" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" id="btnConfirmarAbonoActividad" class="btn btn-guardar-perfil">
+                                <i class="bi bi-check-circle me-1"></i>Confirmar Abono
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de creación y edición de Actividad (solo Admin) -->
+    <div class="modal fade modal-admin-crud" id="modalActividadAdmin" tabindex="-1" aria-labelledby="tituloFormActividad" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="tituloFormActividad" class="modal-title">
+                        <i class="bi bi-calendar-plus me-2"></i>Nueva Actividad
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formActividad">
+                        <input type="hidden" id="idActividad" name="idActividad">
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <label for="nombreActividad" class="form-label">Nombre de la Actividad</label>
+                                <input type="text" id="nombreActividad" name="nombreActividad" class="form-control" maxlength="50" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="fechaEvento" class="form-label">Fecha Programada</label>
+                                <input type="date" id="fechaEvento" name="fechaEvento" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="municipio" class="form-label">Municipio</label>
+                                <input type="text" id="municipio" name="municipio" class="form-control" maxlength="50" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="metaRecaudo" class="form-label">Tope / Meta de Monto (COP)</label>
+                                <input type="number" id="metaRecaudo" name="metaRecaudo" class="form-control" step="any" min="1" placeholder="Ej. 5000000" required>
+                            </div>
+                            <div id="campoTotalRecaudado" class="col-md-6 d-none">
+                                <label for="totalRecaudo" class="form-label">Total Recaudado (COP)</label>
+                                <input type="number" id="totalRecaudo" name="totalRecaudado" class="form-control" step="any" min="0">
+                            </div>
+                            <div class="col-12 mt-3 text-end">
+                                <button type="button" id="cancelarEdicion" class="btn btn-secondary px-4 me-2" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" id="guardarActividad" class="btn btn-custom px-4">Crear Actividad</button>
+                            </div>
+                            <div class="col-12">
+                                <p id="mensajeActividad" class="mb-0 small fw-semibold" role="status"></p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts de Bootstrap, sesión/tema y CRUD de actividades -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../Controladores/sesion.js?v=4"></script>
-    <script src="../Controladores/actividades.js?v=3"></script>
+    <script src="../Controladores/sesion.js?v=8"></script>
+    <script src="../Controladores/actividades.js?v=9"></script>
 </body>
 
 </html>

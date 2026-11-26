@@ -10,132 +10,48 @@
     <title>Solicitud de Préstamos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="../Assets/css/estilos.css?v=12">
+    <link rel="stylesheet" href="../Assets/css/estilos.css?v=21">
 </head>
 
 <!-- Cuerpo de vista interna con tema dinámico por rol -->
 <body class="body-gestion">
 
-    <!-- Barra superior de navegación -->
+    <!-- Barra superior de respaldo (oculta por tema-admin / tema-asociado) -->
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
         <div class="container">
-            <!-- Marca GESTIÓN con redirección al panel principal -->
-            <a class="navbar-brand" style="color: var(--neon-green); font-weight: bold;" href="dashboard.html?v=3">
+            <a class="navbar-brand" style="color: var(--neon-green); font-weight: bold;" href="dashboard.html?v=7">
                 <i class="bi bi-layers-fill"></i> GESTIÓN
             </a>
-            <!-- Botón menú móvil -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
-            </button>
-            <!-- Enlaces entre módulos y botón Cerrar sesión -->
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-lg-center">
-                    <li class="nav-item"><a class="nav-link" href="asociados.html?v=3"><i class="bi bi-people"></i>
-                            Asociados</a></li>
-                    <li class="nav-item"><a class="nav-link" href="actividades.html?v=3"><i
-                                class="bi bi-calendar-event"></i> Actividades</a></li>
-                    <li class="nav-item"><a class="nav-link" href="pagos.html?v=3"><i class="bi bi-cash-coin"></i> Pagos</a>
-                    </li>
-                    <!-- Módulo activo actual: Préstamos -->
-                    <li class="nav-item"><a class="nav-link active" href="prestamos.html?v=3"><i class="bi bi-bank"></i>
-                            Préstamos</a></li>
-                    <!-- Enlace Reportes visible únicamente para rol Admin -->
-                    <li class="nav-item d-none" data-solo-admin><a class="nav-link" href="reportes.html?v=1"><i
-                                class="bi bi-graph-up-arrow"></i> Reportes</a></li>
-                    <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
-                        <button type="button" class="btn btn-danger btn-sm btn-cerrar-sesion" onclick="cerrarSesion()">
-                            <i class="bi bi-box-arrow-right"></i> Cerrar sesión
-                        </button>
-                    </li>
-                </ul>
-            </div>
         </div>
     </nav>
 
-    <!-- Contenedor principal amplio para la distribución lado a lado -->
+    <!-- Contenedor principal amplio -->
     <div class="container-xxl px-3 px-lg-4">
-        <!-- Vista de 2 columnas para rol Admin: Solicitud de Préstamo (izquierda) y Solicitudes (derecha) -->
+        <!-- ======================================================================
+             VISTA DE PRÉSTAMOS PARA ROL ADMIN: SOLO REVISA Y ACEPTA SOLICITUDES
+             ====================================================================== -->
         <div id="seccionPrestamosAdmin" data-solo-admin class="d-none">
-            <!-- Encabezado superior del módulo con botón Volver al Panel -->
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
                 <div>
                     <h2 class="titulo-reportes-admin mb-1">
-                        <i class="bi bi-bank2 me-2"></i>Gestión de Préstamos
+                        <i class="bi bi-bank2 me-2"></i>Aprobación de Préstamos
                     </h2>
                     <p class="subtitulo-reportes-admin mb-0">
-                        Registra, edita y administra las solicitudes de crédito de los asociados
+                        Revisa y acepta las solicitudes de préstamo, edición y eliminación enviadas por los asociados
                     </p>
                 </div>
-                <a href="dashboard.html?v=4" class="btn btn-volver-admin">
+                <a href="dashboard.html?v=7" class="btn btn-volver-admin">
                     <i class="bi bi-arrow-left me-1"></i>Volver al Panel
                 </a>
             </div>
 
-            <!-- Distribución en 2 columnas: formulario a la izquierda y tabla de solicitudes a la derecha -->
-            <div class="row g-4 align-items-start">
-                <!-- Columna izquierda: tarjeta Solicitud de Préstamo -->
-                <div class="col-lg-4">
-                    <div id="cardFormPrestamoAdmin" class="card admin-prestamo-card shadow-sm">
-                        <div class="card-header admin-prestamo-header py-3 px-4">
-                            <!-- Título dinámico: "Solicitud de Préstamo" o "Editar Préstamo" -->
-                            <h5 id="tituloFormPrestamo" class="mb-0 fw-semibold">
-                                <i class="bi bi-cash-stack me-2"></i>Solicitud de Préstamo
-                            </h5>
-                        </div>
-                        <div class="card-body p-4">
-                            <!-- Formulario controlado por prestamos.js -->
-                            <form id="formPrestamo" class="form-admin-prestamo">
-                                <!-- Campo oculto con el idPrestamos cuando se está editando -->
-                                <input type="hidden" id="idPrestamos" name="idPrestamos">
-                                <div class="row g-3">
-                                    <!-- Documento del asociado solicitante -->
-                                    <div class="col-12">
-                                        <label for="documento" class="form-label">Documento del Asociado</label>
-                                        <input type="number" id="documento" name="documento" class="form-control" placeholder="Ej. 1002345678" required>
-                                    </div>
-                                    <!-- Monto total del préstamo solicitado -->
-                                    <div class="col-12">
-                                        <label for="ValorPrestamo" class="form-label">Monto Solicitado (COP)</label>
-                                        <input type="number" id="ValorPrestamo" name="ValorPrestamo" class="form-control" step="any" min="0.01" placeholder="$ 0.00" required>
-                                    </div>
-                                    <!-- Fila doble para Plazo y Tasa de Interés -->
-                                    <div class="col-6">
-                                        <label for="NumeroCuotas" class="form-label">Plazo (Meses)</label>
-                                        <input type="number" id="NumeroCuotas" name="NumeroCuotas" class="form-control" min="1" max="72" placeholder="Ej. 12" required>
-                                    </div>
-                                    <div class="col-6">
-                                        <label for="TasaInteres" class="form-label">Tasa (%)</label>
-                                        <input type="number" id="TasaInteres" name="TasaInteres" step="any" min="0" class="form-control" placeholder="Ej. 1.5" required>
-                                    </div>
-                                    <!-- Fecha de solicitud -->
-                                    <div class="col-12">
-                                        <label for="FechaPrestamo" class="form-label">Fecha de Solicitud</label>
-                                        <input type="date" id="FechaPrestamo" name="FechaPrestamo" class="form-control" required>
-                                    </div>
-                                    <!-- Descripción opcional del propósito -->
-                                    <div class="col-12">
-                                        <label for="Proposito" class="form-label">Propósito del Préstamo</label>
-                                        <textarea id="Proposito" name="Proposito" class="form-control" rows="2" maxlength="255" placeholder="Ej. Finca Raíz, Educación..."></textarea>
-                                    </div>
-                                    <!-- Botones de acción del formulario -->
-                                    <div class="col-12 mt-3 d-flex gap-2">
-                                        <button type="button" id="cancelarEdicionPrestamo" class="btn btn-secondary flex-fill d-none">Cancelar</button>
-                                        <button type="submit" id="btnGuardarPrestamo" class="btn btn-custom flex-fill">Solicitar Préstamo</button>
-                                    </div>
-                                    <!-- Párrafo de mensajes de confirmación o error -->
-                                    <div class="col-12">
-                                        <p id="mensajePrestamo" class="mb-0 small fw-semibold" role="status"></p>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+            <!-- Alerta de confirmación al aprobar una solicitud -->
+            <div id="alertaAdminPrestamos" class="alert alert-success d-none mb-3" role="status"></div>
 
-                <!-- Columna derecha: tarjeta Solicitudes de Préstamo -->
-                <div class="col-lg-8">
+            <div class="row g-4 align-items-start">
+                <div class="col-12">
                     <div class="card admin-prestamo-card shadow-sm">
-                        <div class="card-header admin-tabla-header py-3 px-4 d-flex justify-content-between align-items-center">
+                        <div class="card-header admin-tabla-header py-3 px-4 d-flex justify-content-between align-items-center gap-2">
                             <h5 class="mb-0 fw-semibold">
                                 <i class="bi bi-list-check me-2"></i>Solicitudes de Préstamo
                             </h5>
@@ -152,16 +68,15 @@
                                         <th scope="col">Plazo</th>
                                         <th scope="col">Tasa</th>
                                         <th scope="col">Fecha</th>
-                                        <th scope="col">Propósito</th>
-                                        <!-- Columna Acciones visible únicamente para Admin -->
-                                        <th id="encabezadoAccionesPrestamo" data-solo-admin class="d-none text-center" scope="col">Acciones</th>
+                                        <th scope="col">Estado / Solicitud</th>
+                                        <th id="encabezadoAccionesPrestamo" data-solo-admin class="d-none text-center" scope="col">Aprobación</th>
                                     </tr>
                                 </thead>
-                                <!-- Filas generadas por prestamos.js -->
+                                <!-- Filas generadas dinámicamente por prestamos.js -->
                                 <tbody id="listaPrestamos">
                                     <tr>
                                         <td colspan="9" class="text-center py-4 text-muted">
-                                            Cargando préstamos...
+                                            Cargando solicitudes de préstamo...
                                         </td>
                                     </tr>
                                 </tbody>
@@ -172,17 +87,20 @@
             </div>
         </div>
 
-        <!-- Vista de 2 columnas para rol Asociado: Solicitar/Registrar Préstamo + Historial de Créditos -->
+        <!-- ======================================================================
+             VISTA DE PRÉSTAMOS PARA ROL ASOCIADO: CREAR, SOLICITAR EDICIÓN Y ELIMINACIÓN
+             ====================================================================== -->
         <div id="seccionPrestamosAsociado" data-solo-asociado class="d-none">
-            <!-- Encabezado superior con título y botón Volver al Panel -->
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
                 <h2 class="titulo-ficha-asociado mb-0">Gestión de Préstamos</h2>
-                <a href="dashboard.html?v=4" class="btn btn-volver-panel">
+                <a href="dashboard.html?v=7" class="btn btn-volver-panel">
                     <i class="bi bi-arrow-left me-1"></i>Volver al Panel
                 </a>
             </div>
 
-            <!-- Distribución en 2 columnas: formulario a la izquierda e historial de créditos a la derecha -->
+            <!-- Alerta de confirmación cuando se envía una solicitud de creación, edición o eliminación -->
+            <div id="alertaAsociadoPrestamos" class="alert alert-warning d-none mb-3" role="status"></div>
+
             <div class="row g-4 align-items-start">
                 <!-- Columna izquierda: tarjeta Solicitar / Registrar Préstamo -->
                 <div class="col-lg-4">
@@ -194,46 +112,45 @@
                         </div>
                         <div class="card-body p-4">
                             <form id="formPrestamoAsociado" class="form-prestamo-asociado">
-                                <!-- Muestra el asociado autenticado (solo puede solicitar créditos a su nombre) -->
                                 <div class="mb-3">
                                     <label for="asocSelectAsociado" class="form-label">Asociado</label>
                                     <select id="asocSelectAsociado" class="form-select" disabled>
                                         <option value="">Cargando asociado...</option>
                                     </select>
                                 </div>
-                                <!-- Monto solicitado en pesos colombianos -->
                                 <div class="mb-3">
                                     <label for="asocValorPrestamo" class="form-label">Valor del Préstamo ($ COP)</label>
-                                    <input type="number" id="asocValorPrestamo" class="form-control" step="0.01" min="0.01" placeholder="Ej: 2000000" required>
+                                    <input type="number" id="asocValorPrestamo" class="form-control" step="any" min="0.01" placeholder="Ej: 2000000" required>
+                                    <small id="infoTasaAsociado" class="d-block mt-1" style="font-size: 0.76rem; color: #7c5c50;">
+                                        La tasa de interés se asigna automáticamente según el valor del préstamo.
+                                    </small>
                                 </div>
-                                <!-- Fila doble para Tasa (%) y N° Cuotas -->
                                 <div class="row g-3 mb-3">
                                     <div class="col-6">
-                                        <label for="asocTasaInteres" class="form-label">Tasa (%)</label>
-                                        <input type="number" id="asocTasaInteres" class="form-control" step="0.01" min="0" placeholder="Ej: 1.5" required>
+                                        <label for="asocTasaInteres" class="form-label">Tasa (%) Auto</label>
+                                        <input type="number" id="asocTasaInteres" class="form-control input-tasa-auto" step="any" min="0" placeholder="Auto" readonly required title="Se calcula automáticamente según el valor del préstamo">
                                     </div>
                                     <div class="col-6">
                                         <label for="asocNumeroCuotas" class="form-label">N° Cuotas</label>
                                         <input type="number" id="asocNumeroCuotas" class="form-control" min="1" max="72" placeholder="Ej: 12" required>
                                     </div>
                                 </div>
-                                <!-- Fecha del préstamo -->
+                                <!-- Desglose en vivo: cuota base, interés adicional por cuota y total a pagar -->
+                                <div id="resumenCalculoPrestamoAsociado" class="resumen-cuota-prestamo mb-3 d-none"></div>
                                 <div class="mb-4">
                                     <label for="asocFechaPrestamo" class="form-label">Fecha del Préstamo</label>
                                     <input type="date" id="asocFechaPrestamo" class="form-control" required>
                                 </div>
-                                <!-- Botón ancho completo para guardar la solicitud -->
                                 <button type="submit" id="btnGuardarPrestamoAsociado" class="btn btn-guardar-perfil w-100">
-                                    <i class="bi bi-box-arrow-in-down me-2"></i>Guardar Préstamo
+                                    <i class="bi bi-send-check me-2"></i>Enviar Solicitud de Préstamo
                                 </button>
-                                <!-- Aviso de confirmación o error -->
                                 <p id="mensajePrestamoAsociado" class="mb-0 mt-3 small fw-semibold" role="status"></p>
                             </form>
                         </div>
                     </div>
                 </div>
 
-                <!-- Columna derecha: tarjeta Historial de Créditos -->
+                <!-- Columna derecha: tarjeta Historial de Créditos con botones independientes Editar y Eliminar -->
                 <div class="col-lg-8">
                     <div class="card ficha-asociado-card shadow-sm">
                         <div class="card-header prestamos-historial-header py-3 px-4 d-flex justify-content-between align-items-center">
@@ -247,15 +164,14 @@
                                 <thead class="prestamos-asociado-thead">
                                     <tr>
                                         <th scope="col">ID</th>
-                                        <th scope="col">Asociado</th>
                                         <th scope="col">Valor</th>
                                         <th scope="col">Tasa</th>
                                         <th scope="col">Cuotas</th>
                                         <th scope="col">Fecha</th>
+                                        <th scope="col">Estado</th>
                                         <th scope="col" class="text-center">Acciones</th>
                                     </tr>
                                 </thead>
-                                <!-- Filas llenadas dinámicamente por prestamos.js -->
                                 <tbody id="listaPrestamosAsociado">
                                     <tr>
                                         <td colspan="7" class="text-center py-4 text-muted">
@@ -271,10 +187,104 @@
         </div>
     </div>
 
+    <!-- ======================================================================
+         MODAL EMERGENTE INDEPENDIENTE 1: SOLICITAR EDICIÓN DE PRÉSTAMO (ASOCIADO)
+         ====================================================================== -->
+    <div class="modal fade modal-asociado-alerta" id="modalSolicitarEdicionAsociado" tabindex="-1" aria-labelledby="tituloModalEdicionAsoc" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="tituloModalEdicionAsoc" class="modal-title">
+                        <i class="bi bi-pencil-square me-2"></i>Solicitar Edición de Préstamo
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <!-- Alerta emergente obligatoria explicando que el Admin debe aprobar antes del cambio -->
+                    <div class="aviso-aprobacion-modal mb-3">
+                        <div class="fw-bold mb-1">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i>Requiere aprobación del administrador
+                        </div>
+                        Debes esperar a que el administrador apruebe esta solicitud antes de que se realice el cambio en tu préstamo.
+                    </div>
+
+                    <form id="formSolicitarEdicionAsociado" class="form-prestamo-asociado">
+                        <input type="hidden" id="editAsocIdPrestamo">
+                        <div class="mb-3">
+                            <label for="editAsocValorPrestamo" class="form-label">Nuevo Valor del Préstamo ($ COP)</label>
+                            <input type="number" id="editAsocValorPrestamo" class="form-control" step="any" min="0.01" required>
+                            <small id="infoTasaEdicionAsociado" class="d-block mt-1" style="font-size: 0.76rem; color: #7c5c50;">
+                                La tasa de interés se actualiza automáticamente según el monto.
+                            </small>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <label for="editAsocTasaInteres" class="form-label">Tasa (%) Auto</label>
+                                <input type="number" id="editAsocTasaInteres" class="form-control input-tasa-auto" step="any" min="0" readonly required>
+                            </div>
+                            <div class="col-6">
+                                <label for="editAsocNumeroCuotas" class="form-label">N° Cuotas</label>
+                                <input type="number" id="editAsocNumeroCuotas" class="form-control" min="1" max="72" required>
+                            </div>
+                        </div>
+                        <div id="resumenCalculoEdicionAsociado" class="resumen-cuota-prestamo mb-3 d-none"></div>
+                        <div class="mb-3">
+                            <label for="editAsocFechaPrestamo" class="form-label">Fecha del Préstamo</label>
+                            <input type="date" id="editAsocFechaPrestamo" class="form-control" required>
+                        </div>
+                        <p id="msgModalEdicionAsoc" class="small fw-semibold mb-3" style="color: #b4232c;" role="status"></p>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-volver-panel" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" id="btnEnviarSolicitudEdicion" class="btn btn-guardar-perfil">
+                                <i class="bi bi-send me-1"></i>Enviar solicitud
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================================
+         MODAL EMERGENTE INDEPENDIENTE 2: SOLICITAR ELIMINACIÓN DE PRÉSTAMO (ASOCIADO)
+         ====================================================================== -->
+    <div class="modal fade modal-asociado-alerta" id="modalSolicitarEliminacionAsociado" tabindex="-1" aria-labelledby="tituloModalEliminacionAsoc" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="tituloModalEliminacionAsoc" class="modal-title">
+                        <i class="bi bi-trash3 me-2"></i>Solicitar Eliminación de Préstamo
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <!-- Alerta emergente obligatoria explicando que el Admin debe aprobar antes de eliminar -->
+                    <div class="aviso-aprobacion-modal mb-3">
+                        <div class="fw-bold mb-1">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i>Requiere aprobación del administrador
+                        </div>
+                        Debes esperar a que el administrador apruebe esta solicitud antes de que tu préstamo sea eliminado.
+                    </div>
+
+                    <div id="resumenEliminarPrestamoAsoc" class="p-3 rounded-3 mb-3" style="background: #faf3ee; border: 1px solid #e6d3c5; color: #3d241c; font-size: 0.9rem;"></div>
+                    <input type="hidden" id="deleteAsocIdPrestamo">
+                    <p id="msgModalEliminacionAsoc" class="small fw-semibold mb-3" style="color: #b4232c;" role="status"></p>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-volver-panel" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" id="btnEnviarSolicitudEliminacion" class="btn btn-guardar-perfil">
+                            <i class="bi bi-send me-1"></i>Enviar solicitud
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts de Bootstrap, sesión/tema y controlador de Préstamos -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../Controladores/sesion.js?v=4"></script>
-    <script src="../Controladores/prestamos.js?v=5"></script>
+    <script src="../Controladores/sesion.js?v=8"></script>
+    <script src="../Controladores/prestamos.js?v=9"></script>
 </body>
 
 </html>

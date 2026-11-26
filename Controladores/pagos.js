@@ -259,7 +259,7 @@ function mostrarPagosAsociado() {
     });
 }
 
-// Construye la tabla completa de pagos de cuotas para el rol Admin
+// Construye la tabla de solo visualización de pagos de cuotas para el rol Admin
 function mostrarPagosAdmin() {
     if (!listaPagos) return;
     listaPagos.replaceChildren();
@@ -271,7 +271,7 @@ function mostrarPagosAdmin() {
     if (pagosLista.length === 0) {
         const fila = document.createElement("tr");
         const celda = document.createElement("td");
-        celda.colSpan = 7;
+        celda.colSpan = 6;
         celda.className = "text-center py-4 text-muted";
         celda.textContent = "No hay pagos de cuotas registrados.";
         fila.append(celda);
@@ -294,29 +294,6 @@ function mostrarPagosAdmin() {
             crearCelda(pago.FechaPago)
         );
 
-        const acciones = document.createElement("td");
-        acciones.className = "text-nowrap";
-
-        const botonEditar = document.createElement("button");
-        botonEditar.type = "button";
-        botonEditar.className = "btn btn-sm btn-outline-primary me-2";
-        botonEditar.style.flex = "0 0 auto";
-        botonEditar.style.padding = "4px 8px";
-        botonEditar.innerHTML = '<i class="bi bi-pencil"></i>';
-        botonEditar.title = "Editar pago";
-        botonEditar.addEventListener("click", () => abrirEdicionPago(pago));
-
-        const botonEliminar = document.createElement("button");
-        botonEliminar.type = "button";
-        botonEliminar.className = "btn btn-sm btn-outline-danger";
-        botonEliminar.style.flex = "0 0 auto";
-        botonEliminar.style.padding = "4px 8px";
-        botonEliminar.innerHTML = '<i class="bi bi-trash"></i>';
-        botonEliminar.title = "Eliminar pago";
-        botonEliminar.addEventListener("click", () => eliminarPago(pago));
-
-        acciones.append(botonEditar, botonEliminar);
-        fila.append(acciones);
         listaPagos.append(fila);
     });
 }
@@ -360,22 +337,49 @@ async function cargarPagos() {
     }
 }
 
-// Restaura el formulario de Admin al modo registro
+// Instancia del modal Bootstrap para registrar/editar pagos (Admin)
+let modalPagoInstancia = null;
+function obtenerModalPago() {
+    if (!modalPagoInstancia) {
+        const el = document.getElementById("modalPagoAdmin");
+        if (el && window.bootstrap) {
+            modalPagoInstancia = new bootstrap.Modal(el);
+        }
+    }
+    return modalPagoInstancia;
+}
+
+// Muestra alerta de confirmación encima de la tabla de pagos (Admin)
+function mostrarAlertaAdminPagos(texto, tipo = "success") {
+    const alerta = document.getElementById("alertaAdminPagos");
+    if (!alerta) return;
+    alerta.className = `alert alert-${tipo} mb-3`;
+    alerta.textContent = texto;
+}
+
+// Restaura el formulario modal de Admin al modo registro
 function resetearFormularioPago() {
     if (!formPago) return;
     formPago.reset();
     document.getElementById("idPago").value = "";
     renderizarSelectPrestamosAdmin("");
-    if (btnCancelarEdicionPago) btnCancelarEdicionPago.classList.add("d-none");
     if (tituloFormPago) {
-        tituloFormPago.innerHTML = '<i class="bi bi-wallet2"></i> Registro de Pago';
+        tituloFormPago.innerHTML = '<i class="bi bi-wallet2 me-2"></i>Registro de Pago';
     }
     if (btnGuardarPago) {
         btnGuardarPago.textContent = "Registrar Pago";
     }
 }
 
-// Carga los datos de un pago en el formulario superior de Admin para editarlos
+// Abre el modal vacío en modo creación de pago
+function abrirCreacionPago() {
+    resetearFormularioPago();
+    if (mensajePago) mensajePago.textContent = "";
+    const modal = obtenerModalPago();
+    if (modal) modal.show();
+}
+
+// Carga los datos de un pago en el modal de Admin para editarlos
 function abrirEdicionPago(pago) {
     if (!formPago) return;
     formPago.reset();
@@ -386,16 +390,16 @@ function abrirEdicionPago(pago) {
         pago.ValorCuota !== null && pago.ValorCuota !== undefined ? Number(pago.ValorCuota) : "";
     document.getElementById("FechaPago").value = pago.FechaPago ?? "";
 
-    if (btnCancelarEdicionPago) btnCancelarEdicionPago.classList.remove("d-none");
     if (tituloFormPago) {
-        tituloFormPago.innerHTML = '<i class="bi bi-pencil-square"></i> Editar Pago';
+        tituloFormPago.innerHTML = '<i class="bi bi-pencil-square me-2"></i>Editar Pago';
     }
     if (btnGuardarPago) {
         btnGuardarPago.textContent = "Guardar cambios";
     }
     if (mensajePago) mensajePago.textContent = "";
 
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const modal = obtenerModalPago();
+    if (modal) modal.show();
 }
 
 // Elimina un pago (acción exclusiva de Admin) y recarga la tabla
@@ -410,13 +414,17 @@ async function eliminarPago(pago) {
         if (document.getElementById("idPago").value === String(pago.idPago)) {
             resetearFormularioPago();
         }
-        if (mensajePago) {
-            mensajePago.textContent = resultado.mensaje || "Pago eliminado correctamente.";
-        }
+        mostrarAlertaAdminPagos(resultado.mensaje || "Pago eliminado correctamente.", "success");
         await cargarPagos();
     } catch (error) {
         alert(error.message);
     }
+}
+
+// Botón "+ Nuevo" del encabezado de la tabla de pagos
+const btnNuevoPagoHeader = document.getElementById("btnNuevoPagoHeader");
+if (btnNuevoPagoHeader) {
+    btnNuevoPagoHeader.addEventListener("click", () => abrirCreacionPago());
 }
 
 // Botón Cancelar edición (vista Admin)
@@ -449,11 +457,13 @@ if (formPago) {
         try {
             const resultado = await solicitarApiPagos(idPago ? "PUT" : "POST", datos);
             resetearFormularioPago();
-            if (mensajePago) {
-                mensajePago.textContent =
-                    resultado.mensaje ||
-                    (idPago ? "Pago actualizado correctamente." : "Comprobante de pago registrado con éxito.");
-            }
+            const modal = obtenerModalPago();
+            if (modal) modal.hide();
+            mostrarAlertaAdminPagos(
+                resultado.mensaje ||
+                    (idPago ? "Pago actualizado correctamente." : "Comprobante de pago registrado con éxito."),
+                "success"
+            );
             await cargarPagos();
         } catch (error) {
             if (mensajePago) {

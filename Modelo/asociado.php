@@ -65,14 +65,39 @@ class Asociado{
     {
         $conexionDB = new Conexion();
         $conexion = $conexionDB->conectar();
-        $sql = "SELECT idAsociado, documento, nombres, apellidos, FechaNacimiento, genero, DireccionResidencia, ciudad, telefono, email, rol
+        // Verifica si existe la columna fotoPerfil para devolverla también
+        $check = $conexion->prepare(
+            "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+             WHERE TABLE_SCHEMA = DATABASE()
+               AND TABLE_NAME = 'asociados'
+               AND COLUMN_NAME = 'fotoPerfil'"
+        );
+        $check->execute();
+        $tieneFoto = (int)$check->fetchColumn() > 0;
+
+        $columnas = "idAsociado, documento, nombres, apellidos, FechaNacimiento, genero, DireccionResidencia, ciudad, telefono, email, rol"
+            . ($tieneFoto ? ", fotoPerfil" : "");
+
+        $sql = "SELECT {$columnas}
                 FROM asociados
                 WHERE documento = :documento
                 LIMIT 1";
         $consulta = $conexion->prepare($sql);
         $consulta->execute([":documento" => $documento]);
         $fila = $consulta->fetch();
-        return $fila !== false ? $fila : null;
+        if ($fila === false) {
+            return null;
+        }
+        // Valida que el archivo de foto exista en disco antes de devolverlo
+        if (!empty($fila["fotoPerfil"])) {
+            $archivo = basename($fila["fotoPerfil"]);
+            $fila["fotoPerfil"] = is_file(__DIR__ . '/../Assets/img/perfiles/' . $archivo)
+                ? "../Assets/img/perfiles/" . $archivo
+                : null;
+        } else {
+            $fila["fotoPerfil"] = null;
+        }
+        return $fila;
     }
 
     // Método estático que permite a un asociado actualizar únicamente sus propios datos personales (sin cambiar rol ni documento)

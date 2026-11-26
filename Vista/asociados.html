@@ -13,7 +13,7 @@
     <!-- Bootstrap Icons para los íconos de navegación y acciones -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Hoja de estilos del proyecto con las paletas de Admin y Asociado -->
-    <link rel="stylesheet" href="../Assets/css/estilos.css?v=6">
+    <link rel="stylesheet" href="../Assets/css/estilos.css?v=20">
 </head>
 
 <!-- Clase body-gestion aplica el diseño de módulos internos -->
@@ -58,105 +58,21 @@
 
     <!-- Contenedor principal del módulo Asociados -->
     <div class="container">
-        <!-- Formulario superior visible solo para rol Admin (data-solo-admin + d-none por defecto) -->
-        <div id="seccionFormAsociado" data-solo-admin class="row justify-content-center d-none">
-            <div class="col-lg-8 col-md-10">
-                <div class="glass-card">
-                    <!-- Título que cambia entre "Registro de Asociado" y "Editar Asociado" -->
-                    <h3 id="tituloFormAsociado" class="mb-4 text-center" style="color: var(--neon-green);">
-                        <i class="bi bi-person-plus"></i> Registro de Asociado
-                    </h3>
-                    <!-- Formulario controlado por listarAsociados.js para crear (POST) o editar (PUT) -->
-                    <form id="formAsociado">
-                        <!-- Campo oculto que guarda el idAsociado cuando se está editando -->
-                        <input type="hidden" id="idAsociado" name="idAsociado">
-                        <div class="row g-3">
-                            <!-- Campo documento de identidad -->
-                            <div class="col-md-6">
-                                <label for="documento" class="form-label">Documento de Identidad</label>
-                                <input type="number" id="documento" name="documento" class="form-control" placeholder="Ej. 1002345678" required>
-                            </div>
-                            <!-- Campo nombres completos -->
-                            <div class="col-md-6">
-                                <label for="nombres" class="form-label">Nombres Completos</label>
-                                <input type="text" id="nombres" name="nombres" class="form-control" maxlength="50" required>
-                            </div>
-                            <!-- Campo apellidos completos -->
-                            <div class="col-md-6">
-                                <label for="apellidos" class="form-label">Apellidos Completos</label>
-                                <input type="text" id="apellidos" name="apellidos" class="form-control" maxlength="50" required>
-                            </div>
-                            <!-- Campo correo electrónico -->
-                            <div class="col-md-6">
-                                <label for="email" class="form-label">Correo Electrónico</label>
-                                <input type="email" id="email" name="email" class="form-control" placeholder="correo@ejemplo.com" maxlength="50" required>
-                            </div>
-                            <!-- Campo teléfono o celular -->
-                            <div class="col-md-6">
-                                <label for="telefono" class="form-label">Teléfono / Celular</label>
-                                <input type="tel" id="telefono" name="telefono" class="form-control" maxlength="50" required>
-                            </div>
-                            <!-- Campo fecha de nacimiento -->
-                            <div class="col-md-6">
-                                <label for="FechaNacimiento" class="form-label">Fecha de Nacimiento</label>
-                                <input type="date" id="FechaNacimiento" name="FechaNacimiento" class="form-control" required>
-                            </div>
-                            <!-- Desplegable de género -->
-                            <div class="col-md-4">
-                                <label for="genero" class="form-label">Género</label>
-                                <select id="genero" name="genero" class="form-select">
-                                    <option value="Femenino">Femenino</option>
-                                    <option value="Masculino">Masculino</option>
-                                    <option value="Otro">Otro</option>
-                                </select>
-                            </div>
-                            <!-- Campo dirección de residencia -->
-                            <div class="col-md-4">
-                                <label for="DireccionResidencia" class="form-label">Dirección</label>
-                                <input type="text" id="DireccionResidencia" name="DireccionResidencia" class="form-control" maxlength="50" placeholder="Ej. Cra 6 #15A-15">
-                            </div>
-                            <!-- Desplegable de ciudad -->
-                            <div class="col-md-4">
-                                <label for="ciudad" class="form-label">Ciudad</label>
-                                <select id="ciudad" name="ciudad" class="form-select">
-                                    <option value="">Seleccione una ciudad</option>
-                                    <option value="Sogamoso">Sogamoso</option>
-                                    <option value="Duitama">Duitama</option>
-                                    <option value="Tunja">Tunja</option>
-                                    <option value="Bogota">Bogotá</option>
-                                </select>
-                            </div>
-                            <!-- Selector de rol visible únicamente cuando se edita un asociado existente -->
-                            <div id="campoRolAsociado" class="col-md-4 d-none">
-                                <label for="rol" class="form-label">Rol</label>
-                                <select id="rol" name="rol" class="form-select">
-                                    <option value="Asociado">Asociado</option>
-                                    <option value="Admin">Admin</option>
-                                </select>
-                            </div>
-                            <!-- Botones para cancelar edición o guardar/actualizar el asociado -->
-                            <div class="col-12 mt-4 text-end">
-                                <button type="button" id="cancelarEdicionAsociado" class="btn btn-secondary px-4 me-2 d-none">Cancelar</button>
-                                <button type="submit" id="btnGuardarAsociado" class="btn btn-custom px-4">Guardar Asociado</button>
-                            </div>
-                            <!-- Párrafo para mensajes de confirmación o error -->
-                            <div class="col-12">
-                                <p id="mensajeAsociado" class="mb-0 text-white fw-semibold" role="status"></p>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
         <!-- Lista de asociados registrados (visible únicamente para rol Admin) -->
-        <div id="seccionTablaAsociados" data-solo-admin class="row justify-content-center mt-4 d-none">
+        <div id="seccionTablaAsociados" data-solo-admin class="row justify-content-center d-none">
             <div class="col-12">
+                <!-- Alerta de confirmación de acciones CRUD (Admin) -->
+                <div id="alertaAdminAsociados" class="alert alert-success d-none mb-3" role="status"></div>
                 <div class="card shadow-sm">
-                    <!-- Encabezado de la tarjeta con el contador total de asociados -->
-                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                    <!-- Encabezado de la tarjeta con botón crear y contador total de asociados -->
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center gap-2">
                         <h5 class="mb-0"><i class="bi bi-people-fill me-2"></i>Asociados Registrados</h5>
-                        <span id="totalAsociados" class="badge bg-secondary">0</span>
+                        <div class="d-flex align-items-center gap-2">
+                            <button type="button" id="btnNuevoAsociadoHeader" data-solo-admin class="btn-header-crear-admin d-none">
+                                <i class="bi bi-plus-lg"></i> Nuevo
+                            </button>
+                            <span id="totalAsociados" class="badge bg-secondary">0</span>
+                        </div>
                     </div>
                     <!-- Contenedor con desplazamiento horizontal en pantallas estrechas -->
                     <div class="table-responsive">
@@ -192,7 +108,7 @@
             </div>
         </div>
 
-        <!-- Ficha personal (visible únicamente para rol Asociado en lugar de la lista general) -->
+        <!-- Ficha personal unificada y editable directamente (visible únicamente para rol Asociado) -->
         <div id="seccionMisDatos" data-solo-asociado class="row justify-content-center d-none">
             <div class="col-lg-10 col-xl-9">
                 <!-- Encabezado superior con título, subtítulo y botón para volver al panel -->
@@ -202,115 +118,172 @@
                             <i class="bi bi-person-vcard me-2"></i>Mis Datos Personales
                         </h2>
                         <p class="subtitulo-ficha-asociado mb-0">
-                            Consulta y actualiza tu información registrada en la plataforma
+                            Consulta y actualiza tu información registrada y tu foto de perfil directamente
                         </p>
                     </div>
-                    <a href="dashboard.html?v=4" class="btn btn-volver-panel">
+                    <a href="dashboard.html?v=5" class="btn btn-volver-panel">
                         <i class="bi bi-arrow-left me-1"></i>Volver al Panel
                     </a>
                 </div>
 
-                <!-- Mensaje de confirmación o error al actualizar el perfil -->
+                <!-- Mensaje de confirmación o error al actualizar datos o foto -->
                 <div id="alertaPerfil" class="alert d-none mb-3" role="status"></div>
 
-                <!-- Tarjeta principal: Ficha del Asociado -->
+                <!-- Tarjeta única: Foto de perfil + Formulario editable de la Ficha del Asociado -->
                 <div class="card ficha-asociado-card shadow-sm">
-                    <!-- Barra superior vino con el título de la ficha y el botón Actualizar Mis Datos -->
+                    <!-- Barra superior vino con el título y la insignia del rol -->
                     <div class="card-header ficha-asociado-header d-flex flex-wrap justify-content-between align-items-center gap-2 py-3 px-4">
                         <h5 class="mb-0 fw-semibold">
                             <i class="bi bi-person-badge me-2"></i>Ficha del Asociado
                         </h5>
-                        <button type="button" id="btnAbrirEditarPerfil" class="btn btn-actualizar-datos btn-sm">
-                            <i class="bi bi-pencil-square me-1"></i>Actualizar Mis Datos
-                        </button>
+                        <span id="fichaRol" class="badge badge-rol-header">Asociado</span>
                     </div>
 
-                    <!-- Cuerpo de la ficha con los 10 datos distribuidos en 2 columnas -->
+                    <!-- Cuerpo unificado: foto de perfil arriba + campos editables abajo -->
                     <div class="card-body p-4 p-md-5">
-                        <div class="row g-4">
-                            <div class="col-md-6">
-                                <div class="ficha-etiqueta">DOCUMENTO DE IDENTIDAD</div>
-                                <div id="fichaDocumento" class="ficha-valor-destacado">-</div>
+                        <!-- Sección de foto de perfil con subida directa y colores para la inicial por defecto -->
+                        <div class="perfil-foto-bloque d-flex flex-wrap align-items-center gap-4 pb-4 mb-4">
+                            <div class="position-relative">
+                                <span id="fichaAvatarPerfil" class="ficha-avatar-circulo avatar-tono-vino">A</span>
                             </div>
-                            <div class="col-md-6">
-                                <div class="ficha-etiqueta">ROL EN EL CLUB</div>
-                                <div><span id="fichaRol" class="badge badge-rol-asociado">Asociado</span></div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="ficha-etiqueta">NOMBRES</div>
-                                <div id="fichaNombres" class="ficha-valor-fuerte">-</div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="ficha-etiqueta">APELLIDOS</div>
-                                <div id="fichaApellidos" class="ficha-valor-fuerte">-</div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="ficha-etiqueta">FECHA DE NACIMIENTO</div>
-                                <div id="fichaFechaNacimiento" class="ficha-valor">-</div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="ficha-etiqueta">GÉNERO</div>
-                                <div id="fichaGenero" class="ficha-valor">-</div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="ficha-etiqueta">CIUDAD DE RESIDENCIA</div>
-                                <div id="fichaCiudad" class="ficha-valor">-</div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="ficha-etiqueta">DIRECCIÓN DE RESIDENCIA</div>
-                                <div id="fichaDireccion" class="ficha-valor">-</div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="ficha-etiqueta">TELÉFONO / CELULAR</div>
-                                <div id="fichaTelefono" class="ficha-valor">-</div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="ficha-etiqueta">CORREO ELECTRÓNICO</div>
-                                <div id="fichaEmail" class="ficha-valor">-</div>
+                            <div class="flex-grow-1">
+                                <h4 id="fichaNombreCompleto" class="mb-1 fw-bold" style="color: #5c1d22;">Asociado</h4>
+                                <div class="small mb-3" style="color: #6e5348;">
+                                    Documento de Identidad: <strong id="fichaDocumento" style="color: #3d241c;">-</strong>
+                                </div>
+                                <div class="d-flex flex-wrap align-items-center gap-2">
+                                    <!-- Selector de archivo oculto disparado por el botón Subir foto -->
+                                    <input type="file" id="fichaInputFoto" accept="image/jpeg,image/png,image/webp,image/gif" class="d-none">
+                                    <button type="button" id="btnFichaSubirFoto" class="btn btn-guardar-perfil btn-sm">
+                                        <i class="bi bi-camera me-1"></i>Subir foto de perfil
+                                    </button>
+                                    <!-- Botón Quitar foto visible únicamente cuando el asociado ya subió una imagen -->
+                                    <button type="button" id="btnFichaQuitarFoto" class="btn btn-volver-panel btn-sm d-none">
+                                        <i class="bi bi-trash me-1"></i>Quitar foto
+                                    </button>
+                                </div>
+                                <!-- Selector de color del avatar con inicial (visible cuando no hay foto subida) -->
+                                <div id="fichaSelectorColor" class="d-flex align-items-center gap-2 mt-3">
+                                    <small class="fw-semibold" style="color: #7c5c50;">Color de inicial:</small>
+                                    <button type="button" class="btn-tono-ficha avatar-tono-vino" data-tono="avatar-tono-vino" title="Vino"></button>
+                                    <button type="button" class="btn-tono-ficha avatar-tono-terracota" data-tono="avatar-tono-terracota" title="Terracota"></button>
+                                    <button type="button" class="btn-tono-ficha avatar-tono-cobre" data-tono="avatar-tono-cobre" title="Cobre"></button>
+                                    <button type="button" class="btn-tono-ficha avatar-tono-ciruela" data-tono="avatar-tono-ciruela" title="Ciruela"></button>
+                                </div>
                             </div>
                         </div>
+
+                        <!-- Formulario editable directamente en la misma vista -->
+                        <form id="formEditarPerfil" class="form-ficha-inline">
+                            <div class="row g-3 g-md-4">
+                                <div class="col-md-6">
+                                    <label for="perfilNombres" class="ficha-etiqueta">NOMBRES</label>
+                                    <input type="text" id="perfilNombres" name="nombres" class="form-control" maxlength="50" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="perfilApellidos" class="ficha-etiqueta">APELLIDOS</label>
+                                    <input type="text" id="perfilApellidos" name="apellidos" class="form-control" maxlength="50" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="perfilFechaNacimiento" class="ficha-etiqueta">FECHA DE NACIMIENTO</label>
+                                    <input type="date" id="perfilFechaNacimiento" name="FechaNacimiento" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="perfilGenero" class="ficha-etiqueta">GÉNERO</label>
+                                    <select id="perfilGenero" name="genero" class="form-select">
+                                        <option value="Femenino">Femenino</option>
+                                        <option value="Masculino">Masculino</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="perfilCiudad" class="ficha-etiqueta">CIUDAD DE RESIDENCIA</label>
+                                    <select id="perfilCiudad" name="ciudad" class="form-select">
+                                        <option value="">Seleccione una ciudad</option>
+                                        <option value="Sogamoso">Sogamoso</option>
+                                        <option value="Duitama">Duitama</option>
+                                        <option value="Tunja">Tunja</option>
+                                        <option value="Bogota">Bogotá</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="perfilDireccion" class="ficha-etiqueta">DIRECCIÓN DE RESIDENCIA</label>
+                                    <input type="text" id="perfilDireccion" name="DireccionResidencia" class="form-control" maxlength="50">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="perfilTelefono" class="ficha-etiqueta">TELÉFONO / CELULAR</label>
+                                    <input type="tel" id="perfilTelefono" name="telefono" class="form-control" maxlength="50" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="perfilEmail" class="ficha-etiqueta">CORREO ELECTRÓNICO</label>
+                                    <input type="email" id="perfilEmail" name="email" class="form-control" maxlength="50" required>
+                                </div>
+                                <div class="col-12 pt-2 d-flex justify-content-end">
+                                    <button type="submit" id="btnGuardarPerfil" class="btn btn-guardar-perfil px-4">
+                                        <i class="bi bi-check-circle me-2"></i>Guardar Cambios
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal para que el asociado actualice sus propios datos personales -->
-    <div class="modal fade" id="modalEditarPerfil" tabindex="-1" aria-labelledby="tituloModalPerfil" aria-hidden="true">
+    <!-- Modal de registro y edición de Asociado (solo Admin) -->
+    <div class="modal fade modal-admin-crud" id="modalAsociadoAdmin" tabindex="-1" aria-labelledby="tituloFormAsociado" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content modal-ficha-asociado">
-                <div class="modal-header ficha-asociado-header">
-                    <h5 class="modal-title fw-semibold" id="tituloModalPerfil">
-                        <i class="bi bi-pencil-square me-2"></i>Actualizar Mis Datos Personales
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="tituloFormAsociado" class="modal-title">
+                        <i class="bi bi-person-plus me-2"></i>Registro de Asociado
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
-                <form id="formEditarPerfil">
-                    <div class="modal-body p-4">
+                <div class="modal-body">
+                    <form id="formAsociado">
+                        <input type="hidden" id="idAsociado" name="idAsociado">
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label for="perfilNombres" class="form-label">Nombres</label>
-                                <input type="text" id="perfilNombres" name="nombres" class="form-control" maxlength="50" required>
+                                <label for="documento" class="form-label">Documento de Identidad</label>
+                                <input type="number" id="documento" name="documento" class="form-control" placeholder="Ej. 1002345678" required>
                             </div>
                             <div class="col-md-6">
-                                <label for="perfilApellidos" class="form-label">Apellidos</label>
-                                <input type="text" id="perfilApellidos" name="apellidos" class="form-control" maxlength="50" required>
+                                <label for="nombres" class="form-label">Nombres Completos</label>
+                                <input type="text" id="nombres" name="nombres" class="form-control" maxlength="50" required>
                             </div>
                             <div class="col-md-6">
-                                <label for="perfilFechaNacimiento" class="form-label">Fecha de Nacimiento</label>
-                                <input type="date" id="perfilFechaNacimiento" name="FechaNacimiento" class="form-control" required>
+                                <label for="apellidos" class="form-label">Apellidos Completos</label>
+                                <input type="text" id="apellidos" name="apellidos" class="form-control" maxlength="50" required>
                             </div>
                             <div class="col-md-6">
-                                <label for="perfilGenero" class="form-label">Género</label>
-                                <select id="perfilGenero" name="genero" class="form-select">
+                                <label for="email" class="form-label">Correo Electrónico</label>
+                                <input type="email" id="email" name="email" class="form-control" placeholder="correo@ejemplo.com" maxlength="50" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="telefono" class="form-label">Teléfono / Celular</label>
+                                <input type="tel" id="telefono" name="telefono" class="form-control" maxlength="50" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="FechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                                <input type="date" id="FechaNacimiento" name="FechaNacimiento" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="genero" class="form-label">Género</label>
+                                <select id="genero" name="genero" class="form-select">
                                     <option value="Femenino">Femenino</option>
                                     <option value="Masculino">Masculino</option>
                                     <option value="Otro">Otro</option>
                                 </select>
                             </div>
-                            <div class="col-md-6">
-                                <label for="perfilCiudad" class="form-label">Ciudad de Residencia</label>
-                                <select id="perfilCiudad" name="ciudad" class="form-select">
+                            <div class="col-md-4">
+                                <label for="DireccionResidencia" class="form-label">Dirección</label>
+                                <input type="text" id="DireccionResidencia" name="DireccionResidencia" class="form-control" maxlength="50" placeholder="Ej. Cra 6 #15A-15">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="ciudad" class="form-label">Ciudad</label>
+                                <select id="ciudad" name="ciudad" class="form-select">
                                     <option value="">Seleccione una ciudad</option>
                                     <option value="Sogamoso">Sogamoso</option>
                                     <option value="Duitama">Duitama</option>
@@ -318,35 +291,33 @@
                                     <option value="Bogota">Bogotá</option>
                                 </select>
                             </div>
-                            <div class="col-md-6">
-                                <label for="perfilDireccion" class="form-label">Dirección de Residencia</label>
-                                <input type="text" id="perfilDireccion" name="DireccionResidencia" class="form-control" maxlength="50">
+                            <div id="campoRolAsociado" class="col-md-4 d-none">
+                                <label for="rol" class="form-label">Rol</label>
+                                <select id="rol" name="rol" class="form-select">
+                                    <option value="Asociado">Asociado</option>
+                                    <option value="Admin">Admin</option>
+                                </select>
                             </div>
-                            <div class="col-md-6">
-                                <label for="perfilTelefono" class="form-label">Teléfono / Celular</label>
-                                <input type="tel" id="perfilTelefono" name="telefono" class="form-control" maxlength="50" required>
+                            <div class="col-12 mt-3 text-end">
+                                <button type="button" id="cancelarEdicionAsociado" class="btn btn-secondary px-4 me-2" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" id="btnGuardarAsociado" class="btn btn-custom px-4">Guardar Asociado</button>
                             </div>
-                            <div class="col-md-6">
-                                <label for="perfilEmail" class="form-label">Correo Electrónico</label>
-                                <input type="email" id="perfilEmail" name="email" class="form-control" maxlength="50" required>
+                            <div class="col-12">
+                                <p id="mensajeAsociado" class="mb-0 small fw-semibold" role="status"></p>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer border-0 px-4 pb-4">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" id="btnGuardarPerfil" class="btn btn-guardar-perfil">Guardar cambios</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript de Bootstrap (menú colapsable y modal de edición de perfil) -->
+    <!-- JavaScript de Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Controlador de sesión, tema visual por rol y cierre de sesión -->
-    <script src="../Controladores/sesion.js?v=4"></script>
-    <!-- Controlador CRUD de Asociados y ficha personal del Asociado -->
-    <script src="../Controladores/listarAsociados.js?v=4"></script>
+    <script src="../Controladores/sesion.js?v=8"></script>
+    <!-- Controlador CRUD de Asociados y ficha personal editable del Asociado -->
+    <script src="../Controladores/listarAsociados.js?v=7"></script>
 </body>
 
 </html>

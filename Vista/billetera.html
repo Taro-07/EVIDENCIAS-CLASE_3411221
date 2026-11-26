@@ -1,0 +1,286 @@
+<!-- Declara documento HTML5 -->
+<!DOCTYPE html>
+<!-- Idioma español -->
+<html lang="es">
+
+<!-- Cabecera con Bootstrap 5, íconos y hoja de estilos compartida -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Billetera - Club Acerías</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="../Assets/css/estilos.css?v=23">
+</head>
+
+<!-- Cuerpo de vista interna con tema dinámico y barra lateral persistente para Asociado -->
+<body class="body-gestion">
+
+    <!-- Barra superior de respaldo (oculta automáticamente para Asociado por tema-asociado) -->
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+        <div class="container">
+            <a class="navbar-brand" style="color: var(--neon-green); font-weight: bold;" href="dashboard.html?v=6">
+                <i class="bi bi-layers-fill"></i> GESTIÓN
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html?v=6"><i class="bi bi-grid"></i> Panel</a></li>
+                    <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+                        <button type="button" class="btn btn-danger btn-sm btn-cerrar-sesion" onclick="cerrarSesion()">
+                            <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenedor principal de Mi Billetera -->
+    <div class="container">
+        <!-- Encabezado con título y botón Volver al Panel -->
+        <div class="row justify-content-center mb-3">
+            <div class="col-lg-10 d-flex flex-wrap justify-content-between align-items-start gap-3">
+                <div>
+                    <h2 class="titulo-ficha-asociado mb-1">
+                        <i class="bi bi-wallet2 me-2"></i>Mi Billetera
+                    </h2>
+                    <p class="subtitulo-ficha-asociado mb-0">
+                        Consulta tu monto total disponible, recarga saldo o retira dinero en cualquier momento
+                    </p>
+                </div>
+                <a href="dashboard.html?v=6" class="btn btn-volver-panel">
+                    <i class="bi bi-arrow-left me-1"></i>Volver al Panel
+                </a>
+            </div>
+        </div>
+
+        <!-- Tarjeta principal con el monto total actual de la billetera -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-lg-10">
+                <section class="billetera-hero-card">
+                    <div class="row align-items-center g-3">
+                        <div class="col-md-7">
+                            <span class="billetera-eyebrow">
+                                <i class="bi bi-shield-check me-1"></i>SALDO DISPONIBLE EN BILLETERA
+                            </span>
+                            <div id="saldoTotalBilletera" class="billetera-saldo-valor">$ 0</div>
+                            <p class="billetera-titular mb-0">
+                                Titular: <strong id="titularBilletera">Asociado</strong>
+                            </p>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <div class="billetera-stat-pill">
+                                        <span class="billetera-stat-label">
+                                            <i class="bi bi-arrow-down-circle me-1"></i>Recargado
+                                        </span>
+                                        <strong id="totalRecargadoBilletera">$ 0</strong>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="billetera-stat-pill">
+                                        <span class="billetera-stat-label">
+                                            <i class="bi bi-arrow-up-circle me-1"></i>Retirado
+                                        </span>
+                                        <strong id="totalRetiradoBilletera">$ 0</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Dos columnas: Añadir Dinero / Recargar (izquierda) y Retirar Dinero (derecha) -->
+        <div class="row justify-content-center g-4 mb-4">
+            <!-- Formulario para añadir dinero / recargar billetera -->
+            <div class="col-lg-5">
+                <div class="billetera-accion-card billetera-card-recarga h-100">
+                    <div class="billetera-accion-header">
+                        <span class="billetera-accion-icono ico-recarga">
+                            <i class="bi bi-plus-circle-fill"></i>
+                        </span>
+                        <div>
+                            <h5 class="mb-0 fw-bold" style="color: #5c1d22;">Añadir Dinero / Recargar</h5>
+                            <small style="color: #7c5c50;">Incrementa el saldo disponible en tu billetera</small>
+                        </div>
+                    </div>
+
+                    <form id="formRecargarBilletera" class="p-4">
+                        <!-- Botones de montos rápidos para facilitar la recarga -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold" style="color: #6e5348;">Montos rápidos</label>
+                            <div class="d-flex flex-wrap gap-2">
+                                <button type="button" class="chip-monto-rapido" data-monto-rapido="10000">+ $10.000</button>
+                                <button type="button" class="chip-monto-rapido" data-monto-rapido="20000">+ $20.000</button>
+                                <button type="button" class="chip-monto-rapido" data-monto-rapido="50000">+ $50.000</button>
+                                <button type="button" class="chip-monto-rapido" data-monto-rapido="100000">+ $100.000</button>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="montoRecarga" class="form-label fw-semibold" style="color: #5c1d22;">Monto a añadir (COP)</label>
+                            <input type="number" id="montoRecarga" class="form-control" step="any" min="1" placeholder="Ej. 50000" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="bancoRecarga" class="form-label fw-semibold" style="color: #5c1d22;">Entidad bancaria de origen</label>
+                            <select id="bancoRecarga" class="form-select" required>
+                                <option value="" selected disabled>Seleccione el banco o billetera...</option>
+                                <option value="Bancolombia">Bancolombia</option>
+                                <option value="Davivienda">Davivienda</option>
+                                <option value="Banco de Bogotá">Banco de Bogotá</option>
+                                <option value="BBVA Colombia">BBVA Colombia</option>
+                                <option value="Banco de Occidente">Banco de Occidente</option>
+                                <option value="Banco Popular">Banco Popular</option>
+                                <option value="Banco AV Villas">Banco AV Villas</option>
+                                <option value="Banco Agrario de Colombia">Banco Agrario de Colombia</option>
+                                <option value="Banco Caja Social">Banco Caja Social</option>
+                                <option value="Scotiabank Colpatria">Scotiabank Colpatria</option>
+                                <option value="Banco Itaú">Banco Itaú</option>
+                                <option value="Nequi">Nequi</option>
+                                <option value="Daviplata">Daviplata</option>
+                                <option value="Nu Colombia">Nu Colombia</option>
+                                <option value="Lulo Bank">Lulo Bank</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" id="btnRecargarBilletera" class="btn-billetera-recarga w-100">
+                            <i class="bi bi-plus-lg me-1"></i>Añadir dinero a la billetera
+                        </button>
+                        <p id="msgRecarga" class="small fw-semibold mt-3 mb-0" role="status"></p>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Formulario para retirar dinero de la billetera -->
+            <div class="col-lg-5">
+                <div class="billetera-accion-card billetera-card-retiro h-100">
+                    <div class="billetera-accion-header">
+                        <span class="billetera-accion-icono ico-retiro">
+                            <i class="bi bi-dash-circle-fill"></i>
+                        </span>
+                        <div>
+                            <h5 class="mb-0 fw-bold" style="color: #5c1d22;">Retirar Dinero</h5>
+                            <small style="color: #7c5c50;">Retira fondos disponibles de tu billetera</small>
+                        </div>
+                    </div>
+
+                    <form id="formRetirarBilletera" class="p-4">
+                        <!-- Atajos de porcentaje sobre el saldo actual -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold" style="color: #6e5348;">Atajos de retiro</label>
+                            <div class="d-flex flex-wrap gap-2">
+                                <button type="button" class="chip-monto-rapido chip-retiro" data-porcentaje-retiro="0.25">25%</button>
+                                <button type="button" class="chip-monto-rapido chip-retiro" data-porcentaje-retiro="0.50">50%</button>
+                                <button type="button" class="chip-monto-rapido chip-retiro" data-porcentaje-retiro="1">Retirar todo</button>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="montoRetiro" class="form-label fw-semibold" style="color: #5c1d22;">Monto a retirar (COP)</label>
+                            <input type="number" id="montoRetiro" class="form-control" step="any" min="1" placeholder="Ej. 20000" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="bancoRetiro" class="form-label fw-semibold" style="color: #5c1d22;">Entidad bancaria de destino</label>
+                            <select id="bancoRetiro" class="form-select" required>
+                                <option value="" selected disabled>Seleccione el banco o billetera...</option>
+                                <option value="Bancolombia">Bancolombia</option>
+                                <option value="Davivienda">Davivienda</option>
+                                <option value="Banco de Bogotá">Banco de Bogotá</option>
+                                <option value="BBVA Colombia">BBVA Colombia</option>
+                                <option value="Banco de Occidente">Banco de Occidente</option>
+                                <option value="Banco Popular">Banco Popular</option>
+                                <option value="Banco AV Villas">Banco AV Villas</option>
+                                <option value="Banco Agrario de Colombia">Banco Agrario de Colombia</option>
+                                <option value="Banco Caja Social">Banco Caja Social</option>
+                                <option value="Scotiabank Colpatria">Scotiabank Colpatria</option>
+                                <option value="Banco Itaú">Banco Itaú</option>
+                                <option value="Nequi">Nequi</option>
+                                <option value="Daviplata">Daviplata</option>
+                                <option value="Nu Colombia">Nu Colombia</option>
+                                <option value="Lulo Bank">Lulo Bank</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" id="btnRetirarBilletera" class="btn-billetera-retiro w-100">
+                            <i class="bi bi-cash-stack me-1"></i>Retirar dinero
+                        </button>
+                        <p id="msgRetiro" class="small fw-semibold mt-3 mb-0" role="status"></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Historial de movimientos de la billetera -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-lg-10">
+                <section class="panel-reciente-asociado">
+                    <div class="panel-reciente-header">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="icono-panel-pagos">
+                                <i class="bi bi-receipt-cutoff"></i>
+                            </span>
+                            <div>
+                                <h6 class="mb-0 fw-bold" style="color: #5c1d22;">Historial de Movimientos</h6>
+                                <small style="color: #7c5c50;">Registro de tus recargas y retiros en la billetera</small>
+                            </div>
+                        </div>
+                        <span id="contadorMovimientosBilletera" class="badge-actividad-reciente">0 MOVIMIENTOS</span>
+                    </div>
+                    <div id="contenedorMovimientosBilletera" class="p-3 p-md-4">
+                        <div class="estado-vacio-reciente">
+                            <i class="bi bi-hourglass-split"></i>
+                            <h6 class="fw-bold mb-1" style="color: #5c1d22;">Cargando movimientos...</h6>
+                            <p class="small text-muted mb-0">Un momento por favor.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de alerta emergente para confirmar la solicitud de recarga o retiro -->
+    <div class="modal fade modal-asociado-alerta" id="modalConfirmarBilletera" tabindex="-1" aria-labelledby="tituloModalConfirmBilletera" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="tituloModalConfirmBilletera" class="modal-title">
+                        <i class="bi bi-shield-check me-2"></i>Confirmar Solicitud
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="aviso-aprobacion-modal mb-3">
+                        <div class="fw-bold mb-1">
+                            <i class="bi bi-info-circle-fill me-1"></i>Verifica los datos antes de continuar
+                        </div>
+                        <span id="textoConfirmacionBilletera">¿Deseas confirmar esta operación en tu billetera?</span>
+                    </div>
+
+                    <div id="resumenConfirmacionBilletera" class="p-3 rounded-3 mb-4" style="background: #faf3ee; border: 1px solid #e6d3c5; color: #3d241c; font-size: 0.92rem;"></div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-volver-panel" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" id="btnConfirmarMovimientoModal" class="btn btn-guardar-perfil">
+                            <i class="bi bi-check-circle me-1"></i>Confirmar solicitud
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts de Bootstrap, sesión/barra lateral y controlador de billetera -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../Controladores/sesion.js?v=8"></script>
+    <script src="../Controladores/billetera.js?v=2"></script>
+</body>
+
+</html>

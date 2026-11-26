@@ -80,8 +80,13 @@ try {
         throw new Exception("Método HTTP no permitido");
     }
 
-    // Solo el rol admin puede editar (PUT) o eliminar (DELETE); el asociado puede consultar sus saldos y registrar sus propios comprobantes (POST)
-    if (in_array($metodo, ["PUT", "DELETE"], true) && $rolSesion !== "admin") {
+    // El administrador solo visualiza la lista de pagos (GET); el asociado consulta (GET) y registra sus propios pagos (POST)
+    if ($rolSesion === "admin" && $metodo !== "GET") {
+        http_response_code(403);
+        throw new Exception("El administrador solo puede visualizar la lista de pagos registrados");
+    }
+
+    if (in_array($metodo, ["PUT", "DELETE"], true)) {
         http_response_code(403);
         throw new Exception("No tienes permisos para realizar esta acción");
     }
